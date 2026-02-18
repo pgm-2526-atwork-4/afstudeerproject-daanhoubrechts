@@ -1,5 +1,27 @@
 :host {
   display: block;
-  min-height: 100vh;
-  background-color: lightgreen;
+  background-color: #f0fdf4;
+}
+
+.dashboard {
+  max-width: 800px;
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-lg);
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--spacing-md);
+  }
 }
