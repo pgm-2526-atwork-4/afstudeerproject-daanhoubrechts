@@ -5,6 +5,6 @@ import { Button } from '../components/button/button';
   selector: 'app-dashboard',
   imports: [Button],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
+  styleUrl: './dashboard.scss',
 })
 export class Dashboard {}
