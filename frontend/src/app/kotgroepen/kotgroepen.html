@@ -1,0 +1,23 @@
+<section class="kotgroepen">
+  <h1>Kotgroepen</h1>
+  <p class="intro">Overzicht van alle kotgroepen.</p>
+
+  @if (loading()) {
+    <p class="loading">Laden...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (kotgroepen().length === 0) {
+    <p class="empty">Er staan nog geen kotgroepen in de lijst.</p>
+  } @else {
+    <ul class="list">
+      @for (kg of kotgroepen(); track kg.id) {
+        <li class="card">
+          <h2>{{ kg.name }}</h2>
+          @if (kg.address) {
+            <p class="address">{{ kg.address }}</p>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>
