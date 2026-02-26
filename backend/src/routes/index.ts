@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { supabase } from '../lib/supabase.js';
+import { profileRoutes } from './profiles.js';
+import { authRoutes } from './auth.js';
 
 export const routes = Router();
+
+routes.use('/auth', authRoutes);
+routes.use('/profiles', profileRoutes);
 
 routes.get('/kotgroepen', async (_req, res) => {
   try {
