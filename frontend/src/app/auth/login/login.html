@@ -1,0 +1,47 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Inloggen</h1>
+
+    @if (errorMessage()) {
+      <div class="error-banner" role="alert">{{ errorMessage() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="email">E-mailadres</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="jou@email.be"
+        />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <span class="field-error">Voer een geldig e-mailadres in.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Wachtwoord</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <span class="field-error">Wachtwoord moet minstens 6 tekens bevatten.</span>
+        }
+      </div>
+
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Bezig...' : 'Inloggen' }}
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Nog geen account? <a routerLink="/register">Registreer je hier</a>
+    </p>
+  </div>
+</div>
