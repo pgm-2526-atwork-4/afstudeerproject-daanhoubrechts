@@ -1,13 +1,13 @@
 <section class="kotgroepen">
   <h1>Kotgroepen</h1>
-  <p class="intro">Overzicht van alle kotgroepen.</p>
+  <p class="intro">Overzicht van de kotgroepen waartoe je behoort.</p>
 
   @if (loading()) {
     <p class="loading">Laden...</p>
   } @else if (error()) {
     <p class="error">{{ error() }}</p>
   } @else if (kotgroepen().length === 0) {
-    <p class="empty">Er staan nog geen kotgroepen in de lijst.</p>
+    <p class="empty">Je bent nog aan geen kotgroep gekoppeld.</p>
   } @else {
     <ul class="list">
       @for (kg of kotgroepen(); track kg.id) {
