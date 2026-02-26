@@ -1,5 +1,25 @@
 <nav>
+  <div class="nav-links">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-    <a routerLink="/kotgroepen" routerLinkActive="active">Kotgroepen</a>
+
+    @if (authService.isLoggedIn()) {
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/kotgroepen" routerLinkActive="active">Kotgroepen</a>
+    }
+  </div>
+
+  <div class="nav-auth">
+    @if (authService.isLoggedIn()) {
+      <span class="nav-user">
+        {{ authService.fullName() }}
+        @if (authService.userRole()) {
+          <span class="nav-role">({{ authService.userRole() }})</span>
+        }
+      </span>
+      <button class="nav-logout" (click)="logout()">Uitloggen</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">Inloggen</a>
+      <a routerLink="/register" routerLinkActive="active" class="nav-register">Registreren</a>
+    }
+  </div>
 </nav>
