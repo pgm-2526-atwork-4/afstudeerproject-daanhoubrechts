@@ -27,12 +27,15 @@ authRoutes.post('/login', async (req, res) => {
   });
 });
 
+const ALLOWED_ROLES = ['kotgenoot', 'kotbaas'];
+
 authRoutes.post('/register', async (req, res) => {
-  const { email, password, first_name, last_name } = req.body as {
+  const { email, password, first_name, last_name, role } = req.body as {
     email: string;
     password: string;
     first_name: string;
     last_name: string;
+    role?: string;
   };
 
   if (!email || !password || !first_name || !last_name) {
@@ -40,16 +43,23 @@ authRoutes.post('/register', async (req, res) => {
     return;
   }
 
+  const profileRole = role && ALLOWED_ROLES.includes(role) ? role : 'kotgenoot';
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     // DB trigger gebruikt deze metadata om het profiel aan te maken
-    options: { data: { first_name, last_name } },
+    options: { data: { first_name, last_name, role: profileRole } },
   });
 
   if (error) {
     res.status(400).json({ error: error.message });
     return;
+  }
+
+  // Trigger maakt profiel aan maar zet role niet uit metadata; wij zetten role expliciet
+  if (data.user) {
+    await supabaseAdmin.from('profiles').update({ role: profileRole }).eq('id', data.user.id);
   }
 
   if (!data.session) {
