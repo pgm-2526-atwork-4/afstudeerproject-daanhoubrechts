@@ -85,7 +85,8 @@
       @case (4) {
       <div class="step-content step-profile-photo">
         <p class="step-label">Profielfoto instellen</p>
-
+        <p class="step-hint">Optioneel — je kan dit later altijd aanpassen.</p>
+        <app-avatar-upload (fileSelected)="onAvatarSelected($event)" />
       </div>
       }
       }

@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { UserRole } from '../../models/user-role.enum';
+import { AvatarUpload } from '../../components/avatar-upload/avatar-upload';
 
 function passwordMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -25,7 +26,7 @@ function passwordMatchValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, AvatarUpload],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -49,6 +50,7 @@ export class Register implements OnInit {
     { updateOn: 'blur' },
   );
 
+  readonly selectedAvatarFile = signal<File | null>(null);
   loading = signal(false);
   errorMessage = signal<string | null>(null);
 
@@ -102,6 +104,10 @@ export class Register implements OnInit {
     }
   }
 
+  onAvatarSelected(file: File): void {
+    this.selectedAvatarFile.set(file);
+  }
+
   async submit(): Promise<void> {
     if (this.form.invalid) return;
 
@@ -113,6 +119,12 @@ export class Register implements OnInit {
 
     try {
       await this.authService.register(registerPayload);
+
+      // avatar uploaden nadat account bestaat en tokens zijn opgeslagen
+      const avatarFile = this.selectedAvatarFile();
+      if (avatarFile) {
+        await this.authService.uploadAvatar(avatarFile);
+      }
     } catch (err: unknown) {
       this.errorMessage.set(err instanceof Error ? err.message : 'Registratie mislukt.');
     } finally {
