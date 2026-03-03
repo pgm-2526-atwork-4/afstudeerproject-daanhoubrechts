@@ -17,16 +17,16 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: 2px dashed #d1d5db;
-  background: #f9fafb;
+  border: 2px dashed var(--color-border);
+  background: var(--color-bg);
   cursor: pointer;
   overflow: hidden;
   transition: border-color 0.2s, background 0.2s;
 
   &:hover,
   .avatar-upload.drag-over & {
-    border-color: #6366f1;
-    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--color-primary);
+    background: rgba(22, 163, 74, 0.05);
   }
 
   &.has-image {

@@ -11,7 +11,7 @@
 .back-link {
   display: inline-block;
   margin-bottom: var(--spacing-md);
-  color: var(--color-primary, #4f46e5);
+  color: var(--color-primary);
   text-decoration: none;
   font-size: 0.9375rem;
 
@@ -58,8 +58,8 @@
     }
 
     &.active {
-      color: var(--color-primary, #4f46e5);
-      border-bottom-color: var(--color-primary, #4f46e5);
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
       font-weight: 600;
     }
   }
@@ -79,9 +79,9 @@
   font-size: 0.9375rem;
   line-height: 1.7;
   color: var(--color-text);
-  background: var(--color-surface, #f9fafb);
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: var(--spacing-lg);
   margin: 0;
 }
@@ -110,9 +110,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  background: var(--color-surface, #f9fafb);
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: var(--spacing-lg);
 }
 
@@ -154,8 +154,8 @@
 }
 
 .qr-img {
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   display: block;
 }
 
@@ -176,8 +176,8 @@
   textarea {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid var(--color-border, #e5e7eb);
-    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
     font-size: 0.9375rem;
     font-family: inherit;
     background: var(--color-surface, #fff);
@@ -187,8 +187,8 @@
 
     &:focus {
       outline: none;
-      border-color: var(--color-primary, #4f46e5);
-      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.15);
     }
   }
 
@@ -208,7 +208,7 @@
 // buttons (lokale stijlen, geen aparte component nodig hier)
 .btn {
   padding: var(--spacing-sm) var(--spacing-lg);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: none;
   cursor: pointer;
   font-size: 0.9375rem;
@@ -222,11 +222,11 @@
   }
 
   &--primary {
-    background: var(--color-primary, #4f46e5);
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-white);
 
     &:hover:not(:disabled) {
-      background: var(--color-primary-dark, #4338ca);
+      background: var(--color-primary-hover);
     }
   }
 
