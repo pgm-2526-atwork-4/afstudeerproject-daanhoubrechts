@@ -125,6 +125,21 @@ export class AuthService {
     this._userProfile.set(updated);
   }
 
+  async uploadAvatar(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await firstValueFrom(
+      this.http.post<{ avatar_url: string; profile: Profile }>(
+        `${environment.apiUrl}/profiles/avatar`,
+        formData,
+      ),
+    );
+
+    this._userProfile.set(response.profile);
+    return response.avatar_url;
+  }
+
   getStoredToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
   }
