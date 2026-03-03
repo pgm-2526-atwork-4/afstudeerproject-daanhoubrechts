@@ -4,6 +4,8 @@ import { authGuard, guestGuard } from './core/auth/auth.guard';
 import { Home } from './pages/home/home';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Kotgroepen } from './pages/kotgroepen/kotgroepen';
+import { Kotinfo } from './pages/kotinfo/kotinfo';
+import { Settings } from './pages/settings/settings';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
 
@@ -13,5 +15,7 @@ export const routes: Routes = [
   { path: 'register', component: Register, canActivate: [guestGuard] },
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
   { path: 'kotgroepen', component: Kotgroepen, canActivate: [authGuard] },
+  { path: 'kotgroepen/:id/kotinfo', component: Kotinfo, canActivate: [authGuard] },
+  { path: 'settings', component: Settings, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },
 ];
