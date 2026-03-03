@@ -1,6 +1,15 @@
 <section class="kotgroepen">
-  <h1>Kotgroepen</h1>
-  <p class="intro">Overzicht van de kotgroepen waartoe je behoort.</p>
+  <div class="kotgroepen__top">
+    <div>
+      <h1>Kotgroepen</h1>
+      <p class="intro">Overzicht van de kotgroepen waartoe je behoort.</p>
+    </div>
+    @if (authService.userRole() === 'kotbaas') {
+      <button class="btn btn--primary" (click)="openCreateModal()">
+        + Nieuwe kotgroep
+      </button>
+    }
+  </div>
 
   @if (loading()) {
     <p class="loading">Laden...</p>
@@ -12,12 +21,53 @@
     <ul class="list">
       @for (kg of kotgroepen(); track kg.id) {
         <li class="card">
-          <h2>{{ kg.name }}</h2>
-          @if (kg.address) {
-            <p class="address">{{ kg.address }}</p>
-          }
+          <a [routerLink]="['/kotgroepen', kg.id, 'kotinfo']" class="card__link">
+            <h2>{{ kg.name }}</h2>
+            @if (kg.address) {
+              <p class="address">{{ kg.address }}</p>
+            }
+          </a>
         </li>
       }
     </ul>
   }
 </section>
+
+@if (showCreateModal()) {
+  <div class="modal-backdrop" (click)="closeCreateModal()">
+    <div class="modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h2 id="modal-title">Nieuwe kotgroep aanmaken</h2>
+      <form (ngSubmit)="createKotgroep()" class="create-form">
+        <label for="kg-name">Naam <span aria-hidden="true">*</span></label>
+        <input
+          id="kg-name"
+          type="text"
+          [(ngModel)]="nameInput"
+          name="name"
+          placeholder="bijv. Kot Gentsesteenweg 42"
+          required
+          autofocus
+        />
+        <label for="kg-address">Adres</label>
+        <input
+          id="kg-address"
+          type="text"
+          [(ngModel)]="addressInput"
+          name="address"
+          placeholder="bijv. Gentsesteenweg 42, 9000 Gent"
+        />
+        @if (createError()) {
+          <p class="form-error">{{ createError() }}</p>
+        }
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" [disabled]="creating()">
+            {{ creating() ? 'Aanmaken...' : 'Aanmaken' }}
+          </button>
+          <button type="button" class="btn btn--ghost" (click)="closeCreateModal()" [disabled]="creating()">
+            Annuleren
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
