@@ -1,0 +1,104 @@
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.avatar-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px dashed #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+
+  &:hover,
+  .avatar-upload.drag-over & {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.05);
+  }
+
+  &.has-image {
+    border-style: solid;
+    border-color: #e5e7eb;
+  }
+
+  .avatar-upload.disabled & {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.avatar-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: white;
+
+  .avatar-area:hover & {
+    opacity: 1;
+  }
+}
+
+.overlay-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.overlay-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.avatar-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem;
+}
+
+.placeholder-icon {
+  font-size: 2rem;
+  line-height: 1;
+  color: #9ca3af;
+}
+
+.placeholder-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+}
+
+.placeholder-hint {
+  font-size: 0.65rem;
+  color: #9ca3af;
+  text-align: center;
+}

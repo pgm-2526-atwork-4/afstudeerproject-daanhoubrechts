@@ -1,0 +1,33 @@
+<div
+  class="avatar-upload"
+  [class.drag-over]="dragOver()"
+  [class.disabled]="disabled()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+>
+  <label class="avatar-area" [class.has-image]="displayUrl()" for="avatar-input">
+    @if (displayUrl()) {
+    <img [src]="displayUrl()!" alt="Profielfoto preview" class="avatar-preview" />
+    <div class="avatar-overlay">
+      <span class="overlay-icon">📷</span>
+      <span class="overlay-text">Wijzigen</span>
+    </div>
+    } @else {
+    <div class="avatar-placeholder">
+      <span class="placeholder-icon">👤</span>
+      <span class="placeholder-text">Foto toevoegen</span>
+      <span class="placeholder-hint">of sleep hier naartoe</span>
+    </div>
+    }
+  </label>
+
+  <input
+    id="avatar-input"
+    type="file"
+    accept="image/*"
+    class="file-input"
+    [disabled]="disabled()"
+    (change)="onFileChange($event)"
+  />
+</div>
