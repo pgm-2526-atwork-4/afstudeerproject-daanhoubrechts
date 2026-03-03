@@ -107,6 +107,45 @@ authRoutes.post('/refresh', async (req, res) => {
   });
 });
 
+authRoutes.post('/change-password', requireAuth, async (req, res) => {
+  const { current_password, new_password } = req.body as {
+    current_password: string;
+    new_password: string;
+  };
+
+  if (!current_password || !new_password) {
+    res.status(400).json({ error: 'Huidig en nieuw wachtwoord zijn verplicht.' });
+    return;
+  }
+
+  if (new_password.length < 6) {
+    res.status(400).json({ error: 'Nieuw wachtwoord moet minimaal 6 tekens zijn.' });
+    return;
+  }
+
+  // huidig wachtwoord verifiëren via sign-in
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: req.user!.email!,
+    password: current_password,
+  });
+
+  if (signInError) {
+    res.status(401).json({ error: 'Huidig wachtwoord klopt niet.' });
+    return;
+  }
+
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(req.user!.id, {
+    password: new_password,
+  });
+
+  if (error) {
+    res.status(400).json({ error: error.message });
+    return;
+  }
+
+  res.json({ success: true });
+});
+
 authRoutes.get('/me', requireAuth, async (req, res) => {
   const { data, error } = await supabaseAdmin
     .from('profiles')

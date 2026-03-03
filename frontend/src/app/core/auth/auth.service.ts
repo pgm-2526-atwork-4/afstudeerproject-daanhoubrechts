@@ -118,6 +118,15 @@ export class AuthService {
     }
   }
 
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post(`${environment.apiUrl}/auth/change-password`, {
+        current_password: currentPassword,
+        new_password: newPassword,
+      }),
+    );
+  }
+
   async updateProfile(update: ProfileUpdate): Promise<void> {
     const updated = await firstValueFrom(
       this.http.patch<Profile>(`${environment.apiUrl}/profiles/me`, update),
