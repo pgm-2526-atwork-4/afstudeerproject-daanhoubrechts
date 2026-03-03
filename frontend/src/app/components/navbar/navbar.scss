@@ -48,6 +48,12 @@ a {
   color: var(--color-white);
   font-size: 0.9rem;
   opacity: 0.85;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
 }
 
 .nav-role {

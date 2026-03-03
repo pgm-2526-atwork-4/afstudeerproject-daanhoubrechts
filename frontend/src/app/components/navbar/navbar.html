@@ -10,12 +10,12 @@
 
   <div class="nav-auth">
     @if (authService.isLoggedIn()) {
-      <span class="nav-user">
+      <a routerLink="/settings" routerLinkActive="active" class="nav-user">
         {{ authService.fullName() }}
         @if (authService.userRole()) {
           <span class="nav-role">({{ authService.userRole() }})</span>
         }
-      </span>
+      </a>
       <button class="nav-logout" (click)="logout()">Uitloggen</button>
     } @else {
       <a routerLink="/login" routerLinkActive="active">Inloggen</a>
