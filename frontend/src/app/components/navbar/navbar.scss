@@ -33,13 +33,13 @@ a {
 }
 
 .nav-register {
-  background: #6366f1;
+  background: var(--color-primary);
   padding: 0.375rem 0.875rem;
   border-radius: 6px;
   font-weight: 600;
 
   &:hover {
-    background: #4f46e5;
+    background: var(--color-primary-hover);
     text-decoration: none;
   }
 }
