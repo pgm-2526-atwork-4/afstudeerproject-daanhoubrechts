@@ -1,0 +1,39 @@
+<section class="join-page">
+  @if (loading()) {
+    <div class="card">
+      <p class="state-msg">Uitnodiging laden...</p>
+    </div>
+  } @else if (error()) {
+    <div class="card">
+      <p class="state-msg error">{{ error() }}</p>
+      <a routerLink="/kotgroepen" class="back-link">Terug naar kotgroepen</a>
+    </div>
+  } @else if (invite()) {
+    <div class="card">
+      <h1>Uitnodiging voor {{ invite()!.name }}</h1>
+      @if (invite()!.address) {
+        <p class="address">{{ invite()!.address }}</p>
+      }
+      <p class="hint">
+        Je wordt uitgenodigd om deel te nemen aan deze kotgroep. Na het accepteren zie je dit kot in je overzicht.
+      </p>
+
+      @if (error()) {
+        <p class="state-msg error">{{ error() }}</p>
+      }
+
+      <div class="actions">
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="joinKot()"
+          [disabled]="accepting()"
+        >
+          {{ accepting() ? 'Deelnemen...' : 'Deelnemen aan dit kot' }}
+        </button>
+        <a routerLink="/kotgroepen" class="link-muted">Toch niet</a>
+      </div>
+    </div>
+  }
+</section>
+

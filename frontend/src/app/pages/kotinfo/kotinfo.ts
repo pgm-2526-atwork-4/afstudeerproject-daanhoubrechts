@@ -39,6 +39,11 @@ export class Kotinfo implements OnInit {
   readonly wifiQrDataUrl = signal<string | null>(null);
   readonly qrLoading = signal(false);
 
+  // invite state (alleen zichtbaar voor kotbaas)
+  readonly inviteToken = signal<string | null>(null);
+  readonly inviteLoading = signal(false);
+  readonly inviteError = signal<string | null>(null);
+
   // kotbaas check: is de ingelogde user degene die de groep aangemaakt heeft?
   readonly isKotbaas = computed(() => {
     const user = this.authService.currentUser();
@@ -162,5 +167,42 @@ export class Kotinfo implements OnInit {
     } finally {
       this.qrLoading.set(false);
     }
+  }
+
+  get inviteUrl(): string | null {
+    const token = this.inviteToken();
+    if (!token) return null;
+    return `${window.location.origin}/join?token=${encodeURIComponent(token)}`;
+  }
+
+  generateInvite(): void {
+    const id = this.group()?.id;
+    if (!id || !this.isKotbaas()) {
+      return;
+    }
+
+    this.inviteLoading.set(true);
+    this.inviteError.set(null);
+
+    this.http.post<{ token: string }>(`${environment.apiUrl}/kotgroepen/${id}/invites`, {}).subscribe({
+      next: (data) => {
+        this.inviteToken.set(data.token);
+        this.inviteLoading.set(false);
+      },
+      error: (err) => {
+        this.inviteError.set(err.error?.error ?? 'Uitnodiging aanmaken mislukt.');
+        this.inviteLoading.set(false);
+      },
+    });
+  }
+
+  copyInviteUrl(): void {
+    const url = this.inviteUrl;
+    if (!url || !navigator.clipboard) {
+      return;
+    }
+    navigator.clipboard.writeText(url).catch(() => {
+      // clipboard faalt stil, URL blijft zichtbaar zodat user zelf kan kopiëren
+    });
   }
 }

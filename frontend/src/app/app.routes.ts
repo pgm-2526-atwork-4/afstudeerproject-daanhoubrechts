@@ -8,6 +8,7 @@ import { Kotinfo } from './pages/kotinfo/kotinfo';
 import { Settings } from './pages/settings/settings';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
+import { Join } from './pages/join/join';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
   { path: 'kotgroepen', component: Kotgroepen, canActivate: [authGuard] },
   { path: 'kotgroepen/:id/kotinfo', component: Kotinfo, canActivate: [authGuard] },
+  { path: 'join', component: Join, canActivate: [authGuard] },
   { path: 'settings', component: Settings, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },
 ];

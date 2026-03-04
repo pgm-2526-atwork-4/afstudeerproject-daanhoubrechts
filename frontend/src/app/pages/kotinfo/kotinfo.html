@@ -13,6 +13,33 @@
           <p class="address">{{ group()!.address }}</p>
         }
       </div>
+
+      @if (isKotbaas()) {
+        <div class="invite-card" aria-label="Kotgenoten uitnodigen">
+          <p class="invite-title">Kotgenoten uitnodigen</p>
+          <p class="invite-hint">
+            Genereer een link en stuur die naar je kotgenoten. Zij kunnen via die link deelnemen aan deze kotgroep.
+          </p>
+
+          <div class="invite-actions">
+            <button class="btn btn--primary" type="button" (click)="generateInvite()" [disabled]="inviteLoading()">
+              {{ inviteLoading() ? 'Link maken...' : 'Maak uitnodigingslink' }}
+            </button>
+            @if (inviteError()) {
+              <p class="invite-error">{{ inviteError() }}</p>
+            }
+          </div>
+
+          @if (inviteUrl) {
+            <div class="invite-link-row">
+              <input class="invite-input" [value]="inviteUrl" readonly />
+              <button type="button" class="btn btn--ghost" (click)="copyInviteUrl()">
+                Kopieer link
+              </button>
+            </div>
+          }
+        </div>
+      }
     </header>
 
     <nav class="kotinfo__tabs" role="tablist">
