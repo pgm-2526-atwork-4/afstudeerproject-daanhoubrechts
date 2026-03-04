@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { randomUUID } from 'crypto';
 import { supabaseAdmin } from '../lib/supabase.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 
@@ -183,6 +184,50 @@ kotgroepenRoutes.patch('/:id', requireAuth, async (req, res) => {
     }
 
     res.json(updated);
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+  }
+});
+
+// uitnodigingslink genereren (alleen de kotbaas die de groep aangemaakt heeft)
+kotgroepenRoutes.post('/:id/invites', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const kotgroupId = req.params['id'];
+
+    const { data: group, error: groupError } = await supabaseAdmin
+      .from('kotgroups')
+      .select('id, created_by')
+      .eq('id', kotgroupId)
+      .single();
+
+    if (groupError || !group) {
+      res.status(404).json({ error: 'Kotgroep niet gevonden.' });
+      return;
+    }
+    if (group.created_by !== userId) {
+      res.status(403).json({ error: 'Alleen de kotbaas kan een uitnodiging aanmaken.' });
+      return;
+    }
+
+    const token = randomUUID().replace(/-/g, '');
+
+    const { data: invite, error: insertError } = await supabaseAdmin
+      .from('kotgroup_invites')
+      .insert({
+        kotgroup_id: group.id,
+        token,
+        created_by: userId,
+      })
+      .select('token')
+      .single();
+
+    if (insertError) {
+      res.status(500).json({ error: insertError.message });
+      return;
+    }
+
+    res.status(201).json({ token: invite.token });
   } catch (e) {
     res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
   }
