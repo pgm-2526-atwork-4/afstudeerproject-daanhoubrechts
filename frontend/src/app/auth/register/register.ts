@@ -8,7 +8,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { UserRole } from '../../models/user-role.enum';
@@ -34,6 +34,7 @@ export class Register implements OnInit {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
+  private route = inject(ActivatedRoute);
 
   readonly totalSteps = 4;
   readonly currentStep = signal(1);
@@ -53,6 +54,10 @@ export class Register implements OnInit {
   readonly selectedAvatarFile = signal<File | null>(null);
   loading = signal(false);
   errorMessage = signal<string | null>(null);
+
+  get returnUrl(): string | null {
+    return this.route.snapshot.queryParamMap.get('returnUrl');
+  }
 
   get roleOptions(): { value: UserRole; label: string }[] {
     return [
@@ -117,8 +122,10 @@ export class Register implements OnInit {
     const raw = this.form.getRawValue();
     const { passwordConfirm: _, ...registerPayload } = raw;
 
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? undefined;
+
     try {
-      await this.authService.register(registerPayload);
+      await this.authService.register(registerPayload, returnUrl);
 
       // avatar uploaden nadat account bestaat en tokens zijn opgeslagen
       const avatarFile = this.selectedAvatarFile();

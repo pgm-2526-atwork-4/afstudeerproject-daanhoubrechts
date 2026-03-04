@@ -41,7 +41,8 @@
     </form>
 
     <p class="auth-link">
-      Nog geen account? <a routerLink="/register">Registreer je hier</a>
+      Nog geen account?
+      <a [routerLink]="['/register']" [queryParams]="returnUrl ? { returnUrl } : {}">Registreer je hier</a>
     </p>
   </div>
 </div>

@@ -71,24 +71,32 @@ export class AuthService {
     this._loading.set(false);
   }
 
-  async login(data: LoginData): Promise<void> {
+  async login(data: LoginData, returnUrl?: string): Promise<void> {
     const response = await firstValueFrom(
       this.http.post<AuthTokens & { user: AuthUser }>(`${environment.apiUrl}/auth/login`, data),
     );
     this.storeTokens(response);
     this._currentUser.set(response.user);
     await this.loadMe();
-    this.router.navigate(['/dashboard']);
+    this.navigateAfterAuth(returnUrl);
   }
 
-  async register(data: RegisterData): Promise<void> {
+  async register(data: RegisterData, returnUrl?: string): Promise<void> {
     const response = await firstValueFrom(
       this.http.post<AuthTokens & { user: AuthUser }>(`${environment.apiUrl}/auth/register`, data),
     );
     this.storeTokens(response);
     this._currentUser.set(response.user);
     await this.loadMe();
-    this.router.navigate(['/dashboard']);
+    this.navigateAfterAuth(returnUrl);
+  }
+
+  private navigateAfterAuth(returnUrl?: string): void {
+    if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//')) {
+      this.router.navigateByUrl(returnUrl);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   async logout(): Promise<void> {

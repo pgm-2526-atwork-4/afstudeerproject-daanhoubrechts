@@ -109,7 +109,8 @@
     </form>
 
     <p class="auth-link">
-      Al een account? <a routerLink="/login">Log hier in</a>
+      Al een account?
+      <a [routerLink]="['/login']" [queryParams]="returnUrl ? { returnUrl } : {}">Log hier in</a>
     </p>
   </div>
 </div>
