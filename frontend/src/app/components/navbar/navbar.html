@@ -11,6 +11,17 @@
   <div class="nav-auth">
     @if (authService.isLoggedIn()) {
       <a routerLink="/settings" routerLinkActive="active" class="nav-user">
+        @if (avatarUrl()) {
+          <img
+            [src]="avatarUrl()!"
+            [alt]="authService.fullName() ?? 'Avatar'"
+            class="nav-avatar"
+          />
+        } @else {
+          <span class="nav-avatar nav-avatar--placeholder">
+            {{ (authService.fullName() ?? '?').charAt(0).toUpperCase() }}
+          </span>
+        }
         {{ authService.fullName() }}
         @if (authService.userRole()) {
           <span class="nav-role">({{ authService.userRole() }})</span>

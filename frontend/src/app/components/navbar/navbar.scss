@@ -45,6 +45,9 @@ a {
 }
 
 .nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--color-white);
   font-size: 0.9rem;
   opacity: 0.85;
@@ -53,6 +56,24 @@ a {
   &:hover {
     opacity: 1;
     text-decoration: underline;
+  }
+}
+
+.nav-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+
+  &--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-size: 0.8rem;
+    font-weight: 600;
   }
 }
 
