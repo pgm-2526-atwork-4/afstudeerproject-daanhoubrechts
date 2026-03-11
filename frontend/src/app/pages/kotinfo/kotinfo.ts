@@ -157,9 +157,17 @@ export class Kotinfo implements OnInit {
   private async generateQr(ssid: string, password: string): Promise<void> {
     this.qrLoading.set(true);
     try {
-      // wifi QR formaat dat door telefoons herkend wordt
+      // standaard WiFi QR formaat
+      // formaat: WIFI:T:<type>;S:<ssid>;P:<password>;;
+      //   T = beveiligingstype (WPA/WPA2, WEP, of leeg voor open netwerk)
+      //   S = netwerknaam (SSID)
+      //   P = wachtwoord
+      //   ;; = afsluiting van het formaat
       const wifiString = `WIFI:T:WPA;S:${ssid};P:${password};;`;
+
       const QRCode = await import('qrcode');
+
+      // omzetten naar een data URL voor in de template
       const dataUrl = await QRCode.toDataURL(wifiString, { width: 220, margin: 2 });
       this.wifiQrDataUrl.set(dataUrl);
     } catch {
@@ -184,16 +192,18 @@ export class Kotinfo implements OnInit {
     this.inviteLoading.set(true);
     this.inviteError.set(null);
 
-    this.http.post<{ token: string }>(`${environment.apiUrl}/kotgroepen/${id}/invites`, {}).subscribe({
-      next: (data) => {
-        this.inviteToken.set(data.token);
-        this.inviteLoading.set(false);
-      },
-      error: (err) => {
-        this.inviteError.set(err.error?.error ?? 'Uitnodiging aanmaken mislukt.');
-        this.inviteLoading.set(false);
-      },
-    });
+    this.http
+      .post<{ token: string }>(`${environment.apiUrl}/kotgroepen/${id}/invites`, {})
+      .subscribe({
+        next: (data) => {
+          this.inviteToken.set(data.token);
+          this.inviteLoading.set(false);
+        },
+        error: (err) => {
+          this.inviteError.set(err.error?.error ?? 'Uitnodiging aanmaken mislukt.');
+          this.inviteLoading.set(false);
+        },
+      });
   }
 
   copyInviteUrl(): void {
