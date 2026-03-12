@@ -1,5 +1,21 @@
-<app-navbar />
-<main>
-  <router-outlet />
-</main>
-<app-footer />
+<div class="app-layout">
+  @if (authService.isLoggedIn()) {
+  <app-sidebar />
+  }
+
+  <div class="app-content">
+    @if (!authService.isLoggedIn()) {
+    <div class="top-nav-placeholder">
+      <a routerLink="/">Home</a>
+      <div style="flex:1"></div>
+      <a routerLink="/login">Inloggen</a>
+      <a routerLink="/register">Registreren</a>
+    </div>
+    }
+
+    <main>
+      <router-outlet />
+    </main>
+    <app-footer />
+  </div>
+</div>
