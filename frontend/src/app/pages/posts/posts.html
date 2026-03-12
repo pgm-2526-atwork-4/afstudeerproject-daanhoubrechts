@@ -1,0 +1,412 @@
+<section class="posts">
+  <header class="posts__header">
+    <a [routerLink]="backLink()" class="back-link">← Terug</a>
+    <div class="posts__title-row">
+      <h1>Posts</h1>
+      <button class="btn btn--primary" type="button" (click)="openCreateModal()">+ Nieuwe post</button>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="state-msg">Laden...</div>
+  } @else if (error()) {
+    <div class="state-msg state-msg--error">{{ error() }}</div>
+  } @else if (posts().length === 0) {
+    <div class="empty-feed">
+      <p>Nog geen posts. Schrijf de eerste!</p>
+    </div>
+  } @else {
+    <div class="feed">
+      @for (post of posts(); track post.id) {
+        <article class="post-card">
+
+          <!-- header: avatar + auteur + tijd + delete -->
+          <div class="post-card__header">
+            <div class="post-card__avatar">
+              @if (post.author?.avatar_url) {
+                <img [src]="post.author!.avatar_url" [alt]="post.author!.first_name" />
+              } @else {
+                <span class="post-card__initials">
+                  {{ getInitials(post.author?.first_name ?? '?', post.author?.last_name ?? '') }}
+                </span>
+              }
+            </div>
+            <div class="post-card__author-info">
+              <span class="post-card__name">
+                {{ post.author?.first_name }} {{ post.author?.last_name }}
+              </span>
+              <span class="post-card__time">{{ timeAgo(post.created_at) }}</span>
+            </div>
+            @if (post.author_id === currentUserId()) {
+              <div class="post-menu-wrapper">
+                <button
+                  class="post-card__menu-btn"
+                  type="button"
+                  (click)="toggleMenu(post.id, $event)"
+                  title="Meer opties"
+                >
+                  <span>•••</span>
+                </button>
+                @if (openMenuPostId() === post.id) {
+                  <div class="post-menu">
+                    <button class="post-menu__item post-menu__item--disabled" type="button" disabled>
+                      Bewerken
+                    </button>
+                    <button
+                      class="post-menu__item post-menu__item--danger"
+                      type="button"
+                      (click)="deletePost(post.id)"
+                    >
+                      Verwijderen
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- body: titel, inhoud, afbeelding, poll -->
+          <div class="post-card__body">
+            @if (post.title) {
+              <h2 class="post-card__title">{{ post.title }}</h2>
+            }
+            @if (post.content) {
+              <p class="post-card__content" [innerHTML]="renderContent(post.content)"></p>
+            }
+            @if (post.image_url) {
+              <img
+                class="post-card__image"
+                [src]="post.image_url"
+                alt="Post afbeelding"
+                loading="lazy"
+              />
+            }
+
+            @if (post.poll_options.length > 0) {
+              <div class="poll">
+                <p class="poll__label">Stem</p>
+                @for (option of post.poll_options; track option.id) {
+                  <button
+                    class="poll__option"
+                    [class.poll__option--voted]="post.user_vote === option.id"
+                    type="button"
+                    (click)="voteOnPoll(post.id, option.id)"
+                  >
+                    <span class="poll__bar" [style.width.%]="getPollPercentage(post, option.id)"></span>
+                    <span class="poll__option-text">{{ option.text }}</span>
+                    <span class="poll__option-stats">
+                      {{ option.vote_count }}
+                      @if (post.user_vote) { · {{ getPollPercentage(post, option.id) }}% }
+                    </span>
+                  </button>
+                }
+                <p class="poll__total">
+                  {{ getPollTotal(post) }} {{ getPollTotal(post) === 1 ? 'stem' : 'stemmen' }}
+                </p>
+              </div>
+            }
+          </div>
+
+          <!-- footer: reacties knop -->
+          <div class="post-card__footer">
+            <button
+              class="post-card__comments-btn"
+              type="button"
+              (click)="toggleComments(post.id)"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              {{ post.comment_count }} {{ post.comment_count === 1 ? 'reactie' : 'reacties' }}
+              <span class="post-card__chevron" [class.post-card__chevron--open]="expandedPosts().has(post.id)">
+                ›
+              </span>
+            </button>
+          </div>
+
+          <!-- comments sectie -->
+          @if (expandedPosts().has(post.id)) {
+            <div class="comments-section">
+
+              @if (loadingComments().has(post.id)) {
+                <p class="state-msg state-msg--inline">Laden...</p>
+              } @else {
+                @for (comment of (postComments().get(post.id) ?? []); track comment.id) {
+                  <div class="comment" [style.padding-left]="getCommentIndent(comment.depth)">
+                    <div class="comment__header">
+                      <div class="comment__avatar">
+                        @if (comment.author?.avatar_url) {
+                          <img [src]="comment.author!.avatar_url" [alt]="comment.author!.first_name" />
+                        } @else {
+                          {{ getInitials(comment.author?.first_name ?? '?', comment.author?.last_name ?? '') }}
+                        }
+                      </div>
+                      <div class="comment__meta">
+                        <span class="comment__name">
+                          {{ comment.author?.first_name }} {{ comment.author?.last_name }}
+                        </span>
+                        <span class="comment__time">{{ timeAgo(comment.created_at) }}</span>
+                      </div>
+                      @if (comment.author_id === currentUserId()) {
+                        <div class="comment-menu-wrapper">
+                          <button
+                            class="comment__menu-btn"
+                            type="button"
+                            (click)="toggleCommentMenu(comment.id, $event)"
+                            title="Meer opties"
+                          >
+                            •••
+                          </button>
+                          @if (openMenuCommentId() === comment.id) {
+                            <div class="post-menu">
+                              <button
+                                class="post-menu__item post-menu__item--danger"
+                                type="button"
+                                (click)="deleteComment(post.id, comment.id)"
+                              >
+                                Verwijderen
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                    <p class="comment__content">{{ comment.content }}</p>
+                    <button
+                      class="comment__reply-btn"
+                      type="button"
+                      (click)="startReply(post.id, comment.id, comment.author?.first_name ?? '')"
+                    >
+                      Reageer
+                    </button>
+
+                    <!-- reply form onder een specifieke comment -->
+                    @if (replyingTo()?.commentId === comment.id && replyingTo()?.postId === post.id) {
+                      <div class="reply-form">
+                        <textarea
+                          class="reply-form__input"
+                          [(ngModel)]="replyInput"
+                          [name]="'reply-' + comment.id"
+                          [placeholder]="'Reageer op ' + replyingTo()!.authorName + '...'"
+                          rows="2"
+                        ></textarea>
+                        @if (commentError()) {
+                          <p class="form-error">{{ commentError() }}</p>
+                        }
+                        <div class="reply-form__actions">
+                          <button
+                            class="btn btn--primary btn--sm"
+                            type="button"
+                            (click)="submitComment(post.id)"
+                            [disabled]="submittingComment()"
+                          >
+                            {{ submittingComment() ? '...' : 'Plaatsen' }}
+                          </button>
+                          <button class="btn btn--ghost btn--sm" type="button" (click)="cancelReply()">
+                            Annuleer
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- nieuwe top-level reactie -->
+                @if (replyingTo()?.commentId === null && replyingTo()?.postId === post.id) {
+                  <div class="new-comment-form">
+                    <textarea
+                      class="reply-form__input"
+                      [(ngModel)]="replyInput"
+                      [name]="'new-comment-' + post.id"
+                      placeholder="Schrijf een reactie..."
+                      rows="2"
+                    ></textarea>
+                    @if (commentError()) {
+                      <p class="form-error">{{ commentError() }}</p>
+                    }
+                    <div class="reply-form__actions">
+                      <button
+                        class="btn btn--primary btn--sm"
+                        type="button"
+                        (click)="submitComment(post.id)"
+                        [disabled]="submittingComment()"
+                      >
+                        {{ submittingComment() ? '...' : 'Plaatsen' }}
+                      </button>
+                      <button class="btn btn--ghost btn--sm" type="button" (click)="cancelReply()">
+                        Annuleer
+                      </button>
+                    </div>
+                  </div>
+                } @else {
+                  <button
+                    class="add-comment-btn"
+                    type="button"
+                    (click)="startReply(post.id, null, '')"
+                  >
+                    + Reageer op deze post
+                  </button>
+                }
+              }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>
+
+<!-- modal: nieuwe post aanmaken -->
+@if (showCreateModal()) {
+  <div class="modal-overlay" (click)="closeCreateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2>Nieuwe post</h2>
+        <button class="modal__close" type="button" (click)="closeCreateModal()">×</button>
+      </div>
+
+      <form class="post-form" (ngSubmit)="submitPost()">
+        <div class="post-form__field">
+          <label for="post-title">Titel (optioneel)</label>
+          <input
+            id="post-title"
+            type="text"
+            [(ngModel)]="titleInput"
+            name="title"
+            placeholder="Geef je post een titel..."
+          />
+        </div>
+
+        <div class="post-form__field">
+          <label>Inhoud</label>
+          <div class="post-form__toolbar">
+            <button
+              class="toolbar-btn"
+              type="button"
+              (mousedown)="$event.preventDefault()"
+              (click)="applyFormat('bold', editor)"
+              title="Vet (Ctrl+B)"
+            >
+              <strong>B</strong>
+            </button>
+            <button
+              class="toolbar-btn toolbar-btn--italic"
+              type="button"
+              (mousedown)="$event.preventDefault()"
+              (click)="applyFormat('italic', editor)"
+              title="Cursief (Ctrl+I)"
+            >
+              <em>I</em>
+            </button>
+            <button
+              class="toolbar-btn toolbar-btn--underline"
+              type="button"
+              (mousedown)="$event.preventDefault()"
+              (click)="applyFormat('underline', editor)"
+              title="Onderlijnd (Ctrl+U)"
+            >
+              <span>U</span>
+            </button>
+          </div>
+          <div
+            #editor
+            class="post-editor"
+            contenteditable="true"
+            data-placeholder="Schrijf hier je post..."
+            (input)="onEditorInput(editor)"
+            (keydown.control.b)="$event.preventDefault(); applyFormat('bold', editor)"
+            (keydown.meta.b)="$event.preventDefault(); applyFormat('bold', editor)"
+            (keydown.control.i)="$event.preventDefault(); applyFormat('italic', editor)"
+            (keydown.meta.i)="$event.preventDefault(); applyFormat('italic', editor)"
+            (keydown.control.u)="$event.preventDefault(); applyFormat('underline', editor)"
+            (keydown.meta.u)="$event.preventDefault(); applyFormat('underline', editor)"
+          ></div>
+        </div>
+
+        <!-- afbeelding upload -->
+        <div class="post-form__field">
+          <label>Afbeelding (optioneel)</label>
+          @if (imagePreview) {
+            <div class="image-preview">
+              <img [src]="imagePreview" alt="Preview" />
+              <button class="btn btn--ghost btn--sm" type="button" (click)="removeImage()">
+                Verwijder
+              </button>
+            </div>
+          } @else {
+            <label class="file-upload-label" for="post-image">
+              Kies afbeelding
+              <input
+                id="post-image"
+                type="file"
+                accept="image/*"
+                (change)="onImageSelected($event)"
+                hidden
+              />
+            </label>
+          }
+        </div>
+
+        <!-- poll toggle -->
+        <div class="post-form__field">
+          <label class="toggle-label">
+            <input
+              type="checkbox"
+              name="hasPoll"
+              [checked]="hasPoll()"
+              (change)="hasPoll.set(!hasPoll())"
+            />
+            Poll toevoegen
+          </label>
+        </div>
+
+        @if (hasPoll()) {
+          <div class="post-form__poll">
+            @for (option of pollOptions; track $index; let i = $index) {
+              <div class="poll-option-row">
+                <input
+                  type="text"
+                  [(ngModel)]="pollOptions[i]"
+                  [name]="'poll_option_' + i"
+                  [placeholder]="'Optie ' + (i + 1)"
+                />
+                @if (pollOptions.length > 2) {
+                  <button
+                    class="btn btn--ghost btn--sm poll-option-row__remove"
+                    type="button"
+                    (click)="removePollOption(i)"
+                  >
+                    ×
+                  </button>
+                }
+              </div>
+            }
+            @if (pollOptions.length < 6) {
+              <button class="btn btn--ghost btn--sm" type="button" (click)="addPollOption()">
+                + Optie toevoegen
+              </button>
+            }
+          </div>
+        }
+
+        @if (createError()) {
+          <p class="form-error">{{ createError() }}</p>
+        }
+
+        <div class="post-form__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="creating()">
+            {{ creating() ? 'Posten...' : 'Post plaatsen' }}
+          </button>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            (click)="closeCreateModal()"
+            [disabled]="creating()"
+          >
+            Annuleren
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
