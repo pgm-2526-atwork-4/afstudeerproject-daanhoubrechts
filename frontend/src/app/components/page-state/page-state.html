@@ -1,0 +1,7 @@
+@if (loading()) {
+  <p class="page-state page-state--loading">{{ loadingMessage() }}</p>
+} @else if (error()) {
+  <p class="page-state page-state--error">{{ error() }}</p>
+} @else if (empty()) {
+  <p class="page-state page-state--empty">{{ emptyMessage() }}</p>
+}
