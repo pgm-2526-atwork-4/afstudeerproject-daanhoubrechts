@@ -13,6 +13,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { UserRole } from '../../models/user-role.enum';
 import { AvatarUpload } from '../../components/avatar-upload/avatar-upload';
+import { Alert } from '../../components/alert/alert';
+import { FormField } from '../../components/form-field/form-field';
 
 function passwordMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -26,7 +28,7 @@ function passwordMatchValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink, AvatarUpload],
+  imports: [ReactiveFormsModule, RouterLink, AvatarUpload, Alert, FormField],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })

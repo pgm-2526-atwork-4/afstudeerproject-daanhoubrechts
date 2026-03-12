@@ -2,29 +2,11 @@
   <h1 class="settings-title">Instellingen</h1>
 
   <div class="settings-layout">
-    <nav class="settings-nav">
-      <button
-        class="nav-item"
-        [class.active]="activeSection() === 'profiel'"
-        (click)="setSection('profiel')"
-      >
-        Profiel
-      </button>
-      <button
-        class="nav-item"
-        [class.active]="activeSection() === 'wachtwoord'"
-        (click)="setSection('wachtwoord')"
-      >
-        Wachtwoord
-      </button>
-      <button
-        class="nav-item"
-        [class.active]="activeSection() === 'voorkeuren'"
-        (click)="setSection('voorkeuren')"
-      >
-        Voorkeuren
-      </button>
-    </nav>
+    <app-tabs
+      [tabs]="settingsTabs"
+      [activeTab]="activeSection()"
+      (tabChange)="setSection($any($event))"
+    />
 
     <div class="settings-content">
 
@@ -38,13 +20,11 @@
               (fileSelected)="onAvatarSelected($event)"
             />
             @if (pendingAvatarFile()) {
-              <button class="btn btn-primary" (click)="saveAvatar()" [disabled]="avatarLoading()">
+              <button class="btn btn--primary" (click)="saveAvatar()" [disabled]="avatarLoading()">
                 {{ avatarLoading() ? 'Uploaden...' : 'Opslaan' }}
               </button>
             }
-            @if (avatarError()) {
-              <p class="form-error">{{ avatarError() }}</p>
-            }
+            <app-alert [message]="avatarError()" />
           </div>
 
           <h2>Gegevens</h2>
@@ -56,35 +36,30 @@
           </p>
 
           <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="settings-form" novalidate>
-            <div class="form-group">
-              <label for="first_name">Voornaam</label>
+            <app-form-field
+              label="Voornaam"
+              for="first_name"
+              [error]="profileForm.controls.first_name.invalid && profileForm.controls.first_name.touched ? 'Voornaam is verplicht (min. 2 tekens).' : null"
+            >
               <input id="first_name" type="text" formControlName="first_name" />
-              @if (profileForm.controls.first_name.invalid && profileForm.controls.first_name.touched) {
-                <span class="form-error">Voornaam is verplicht (min. 2 tekens).</span>
-              }
-            </div>
+            </app-form-field>
 
-            <div class="form-group">
-              <label for="last_name">Achternaam</label>
+            <app-form-field
+              label="Achternaam"
+              for="last_name"
+              [error]="profileForm.controls.last_name.invalid && profileForm.controls.last_name.touched ? 'Achternaam is verplicht (min. 2 tekens).' : null"
+            >
               <input id="last_name" type="text" formControlName="last_name" />
-              @if (profileForm.controls.last_name.invalid && profileForm.controls.last_name.touched) {
-                <span class="form-error">Achternaam is verplicht (min. 2 tekens).</span>
-              }
-            </div>
+            </app-form-field>
 
-            <div class="form-group">
-              <label for="phone_number">Telefoonnummer</label>
+            <app-form-field label="Telefoonnummer" for="phone_number">
               <input id="phone_number" type="tel" formControlName="phone_number" placeholder="Optioneel" />
-            </div>
+            </app-form-field>
 
-            @if (profileError()) {
-              <p class="form-error">{{ profileError() }}</p>
-            }
-            @if (profileSuccess()) {
-              <p class="form-success">Gegevens opgeslagen.</p>
-            }
+            <app-alert [message]="profileError()" />
+            <app-alert [message]="profileSuccess() ? 'Gegevens opgeslagen.' : null" type="success" />
 
-            <button type="submit" class="btn btn-primary" [disabled]="profileLoading()">
+            <button type="submit" class="btn btn--primary" [disabled]="profileLoading()">
               {{ profileLoading() ? 'Opslaan...' : 'Opslaan' }}
             </button>
           </form>
@@ -96,38 +71,34 @@
           <h2>Wachtwoord wijzigen</h2>
 
           <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="settings-form" novalidate>
-            <div class="form-group">
-              <label for="currentPassword">Huidig wachtwoord</label>
+            <app-form-field
+              label="Huidig wachtwoord"
+              for="currentPassword"
+              [error]="passwordForm.controls.currentPassword.invalid && passwordForm.controls.currentPassword.touched ? 'Huidig wachtwoord is verplicht.' : null"
+            >
               <input id="currentPassword" type="password" formControlName="currentPassword" />
-              @if (passwordForm.controls.currentPassword.invalid && passwordForm.controls.currentPassword.touched) {
-                <span class="form-error">Huidig wachtwoord is verplicht.</span>
-              }
-            </div>
+            </app-form-field>
 
-            <div class="form-group">
-              <label for="newPassword">Nieuw wachtwoord</label>
+            <app-form-field
+              label="Nieuw wachtwoord"
+              for="newPassword"
+              [error]="passwordForm.controls.newPassword.invalid && passwordForm.controls.newPassword.touched ? 'Minimaal 6 tekens.' : null"
+            >
               <input id="newPassword" type="password" formControlName="newPassword" />
-              @if (passwordForm.controls.newPassword.invalid && passwordForm.controls.newPassword.touched) {
-                <span class="form-error">Minimaal 6 tekens.</span>
-              }
-            </div>
+            </app-form-field>
 
-            <div class="form-group">
-              <label for="confirmPassword">Bevestig nieuw wachtwoord</label>
+            <app-form-field
+              label="Bevestig nieuw wachtwoord"
+              for="confirmPassword"
+              [error]="passwordForm.controls.confirmPassword.invalid && passwordForm.controls.confirmPassword.touched ? 'Wachtwoorden komen niet overeen.' : null"
+            >
               <input id="confirmPassword" type="password" formControlName="confirmPassword" />
-              @if (passwordForm.controls.confirmPassword.invalid && passwordForm.controls.confirmPassword.touched) {
-                <span class="form-error">Wachtwoorden komen niet overeen.</span>
-              }
-            </div>
+            </app-form-field>
 
-            @if (passwordError()) {
-              <p class="form-error">{{ passwordError() }}</p>
-            }
-            @if (passwordSuccess()) {
-              <p class="form-success">Wachtwoord gewijzigd.</p>
-            }
+            <app-alert [message]="passwordError()" />
+            <app-alert [message]="passwordSuccess() ? 'Wachtwoord gewijzigd.' : null" type="success" />
 
-            <button type="submit" class="btn btn-primary" [disabled]="passwordLoading()">
+            <button type="submit" class="btn btn--primary" [disabled]="passwordLoading()">
               {{ passwordLoading() ? 'Wijzigen...' : 'Wachtwoord wijzigen' }}
             </button>
           </form>
@@ -141,7 +112,7 @@
           <div class="preference-item">
             <div class="preference-info">
               <span class="preference-label">Meldingen</span>
-              <span class="preference-desc">Ontvang meldingen over je kот en kotgroep.</span>
+              <span class="preference-desc">Ontvang meldingen over je kot en kotgroep.</span>
             </div>
             <button
               class="toggle"
@@ -172,9 +143,7 @@
             </button>
           </div>
 
-          @if (preferencesSuccess()) {
-            <p class="form-success">Voorkeuren opgeslagen.</p>
-          }
+          <app-alert [message]="preferencesSuccess() ? 'Voorkeuren opgeslagen.' : null" type="success" />
         </section>
       }
 

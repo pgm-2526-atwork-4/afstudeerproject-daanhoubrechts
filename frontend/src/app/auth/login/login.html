@@ -2,13 +2,14 @@
   <div class="auth-card">
     <h1>Inloggen</h1>
 
-    @if (errorMessage()) {
-      <div class="error-banner" role="alert">{{ errorMessage() }}</div>
-    }
+    <app-alert [message]="errorMessage()" />
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="field">
-        <label for="email">E-mailadres</label>
+      <app-form-field
+        label="E-mailadres"
+        for="email"
+        [error]="form.controls.email.invalid && form.controls.email.touched ? 'Voer een geldig e-mailadres in.' : null"
+      >
         <input
           id="email"
           type="email"
@@ -16,13 +17,13 @@
           autocomplete="email"
           placeholder="jou@email.be"
         />
-        @if (form.controls.email.invalid && form.controls.email.touched) {
-          <span class="field-error">Voer een geldig e-mailadres in.</span>
-        }
-      </div>
+      </app-form-field>
 
-      <div class="field">
-        <label for="password">Wachtwoord</label>
+      <app-form-field
+        label="Wachtwoord"
+        for="password"
+        [error]="form.controls.password.invalid && form.controls.password.touched ? 'Wachtwoord moet minstens 6 tekens bevatten.' : null"
+      >
         <input
           id="password"
           type="password"
@@ -30,10 +31,7 @@
           autocomplete="current-password"
           placeholder="••••••••"
         />
-        @if (form.controls.password.invalid && form.controls.password.touched) {
-          <span class="field-error">Wachtwoord moet minstens 6 tekens bevatten.</span>
-        }
-      </div>
+      </app-form-field>
 
       <button type="submit" [disabled]="loading()">
         {{ loading() ? 'Bezig...' : 'Inloggen' }}

@@ -6,12 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 import { KotgroupDetail, UpdateKotgroupData } from '../../models/kotgroup.interface';
 import { environment } from '../../../environments/environment';
+import { Tabs, Tab as TabItem } from '../../components/tabs/tabs';
+import { Alert } from '../../components/alert/alert';
+import { PageState } from '../../components/page-state/page-state';
 
 type Tab = 'regels' | 'wifi';
 
 @Component({
   selector: 'app-kotinfo',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, Tabs, Alert, PageState],
   templateUrl: './kotinfo.html',
   styleUrl: './kotinfo.scss',
 })
@@ -50,6 +53,11 @@ export class Kotinfo implements OnInit {
     const g = this.group();
     return !!user && !!g && g.created_by === user.id;
   });
+
+  readonly kotinfoTabs: TabItem[] = [
+    { id: 'regels', label: 'Regels' },
+    { id: 'wifi', label: 'Wifi' },
+  ];
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

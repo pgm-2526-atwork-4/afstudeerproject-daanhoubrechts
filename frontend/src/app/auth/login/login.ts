@@ -3,10 +3,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { Alert } from '../../components/alert/alert';
+import { FormField } from '../../components/form-field/form-field';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, Alert, FormField],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })

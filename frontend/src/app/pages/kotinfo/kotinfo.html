@@ -1,10 +1,14 @@
 <section class="kotinfo">
-  @if (loading()) {
-    <p class="state-msg">Laden...</p>
-  } @else if (error()) {
-    <p class="state-msg error">{{ error() }}</p>
+  <app-page-state
+    [loading]="loading()"
+    [error]="error()"
+  />
+
+  @if (error()) {
     <a routerLink="/kotgroepen" class="back-link">← Terug naar kotgroepen</a>
-  } @else if (group()) {
+  }
+
+  @if (!loading() && !error() && group()) {
     <header class="kotinfo__header">
       <a routerLink="/kotgroepen" class="back-link">← Terug</a>
       <div>
@@ -25,9 +29,7 @@
             <button class="btn btn--primary" type="button" (click)="generateInvite()" [disabled]="inviteLoading()">
               {{ inviteLoading() ? 'Link maken...' : 'Maak uitnodigingslink' }}
             </button>
-            @if (inviteError()) {
-              <p class="invite-error">{{ inviteError() }}</p>
-            }
+            <app-alert [message]="inviteError()" />
           </div>
 
           @if (inviteUrl) {
@@ -42,30 +44,18 @@
       }
     </header>
 
-    <nav class="kotinfo__tabs" role="tablist">
-      <button
-        role="tab"
-        [class.active]="activeTab() === 'regels'"
-        (click)="setTab('regels')"
-        [attr.aria-selected]="activeTab() === 'regels'"
-      >
-        Regels
-      </button>
-      <button
-        role="tab"
-        [class.active]="activeTab() === 'wifi'"
-        (click)="setTab('wifi')"
-        [attr.aria-selected]="activeTab() === 'wifi'"
-      >
-        Wifi
-      </button>
+    <app-tabs
+      [tabs]="kotinfoTabs"
+      [activeTab]="activeTab()"
+      (tabChange)="setTab($any($event))"
+    >
       <a
         [routerLink]="['/kotgroepen', group()!.id, 'posts']"
         class="kotinfo__posts-link"
       >
         Posts
       </a>
-    </nav>
+    </app-tabs>
 
     <div class="kotinfo__content">
 
@@ -81,9 +71,7 @@
                 rows="10"
                 placeholder="Schrijf hier de regels van het kot..."
               ></textarea>
-              @if (saveError()) {
-                <p class="form-error">{{ saveError() }}</p>
-              }
+              <app-alert [message]="saveError()" />
               <div class="form-actions">
                 <button type="submit" class="btn btn--primary" [disabled]="saving()">
                   {{ saving() ? 'Opslaan...' : 'Opslaan' }}
@@ -128,9 +116,7 @@
                 name="wifi_password"
                 placeholder="Wifiwachtwoord"
               />
-              @if (saveError()) {
-                <p class="form-error">{{ saveError() }}</p>
-              }
+              <app-alert [message]="saveError()" />
               <div class="form-actions">
                 <button type="submit" class="btn btn--primary" [disabled]="saving()">
                   {{ saving() ? 'Opslaan...' : 'Opslaan' }}

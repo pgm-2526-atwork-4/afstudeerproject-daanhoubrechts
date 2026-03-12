@@ -6,10 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 import { Kotgroup, CreateKotgroupData } from '../../models/kotgroup.interface';
 import { environment } from '../../../environments/environment';
+import { Modal } from '../../components/modal/modal';
+import { Alert } from '../../components/alert/alert';
+import { PageState } from '../../components/page-state/page-state';
 
 @Component({
   selector: 'app-kotgroepen',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, Modal, Alert, PageState],
   templateUrl: './kotgroepen.html',
   styleUrl: './kotgroepen.scss',
 })

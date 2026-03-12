@@ -7,11 +7,15 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Post, Comment, FlatComment } from '../../models/post.interface';
 import { environment } from '../../../environments/environment';
+import { UserAvatar } from '../../components/user-avatar/user-avatar';
+import { Modal } from '../../components/modal/modal';
+import { Alert } from '../../components/alert/alert';
+import { PageState } from '../../components/page-state/page-state';
 
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, UserAvatar, Modal, Alert, PageState],
   templateUrl: './posts.html',
   styleUrl: './posts.scss',
 })
