@@ -1,0 +1,21 @@
+<div class="poll">
+  <p class="poll__label">Stem</p>
+  @for (option of post().poll_options; track option.id) {
+    <button
+      class="poll__option"
+      [class.poll__option--voted]="post().user_vote === option.id"
+      type="button"
+      (click)="vote.emit(option.id)"
+    >
+      <span class="poll__bar" [style.width.%]="getPollPercentage(option.id)"></span>
+      <span class="poll__option-text">{{ option.text }}</span>
+      <span class="poll__option-stats">
+        {{ option.vote_count }}
+        @if (post().user_vote) { · {{ getPollPercentage(option.id) }}% }
+      </span>
+    </button>
+  }
+  <p class="poll__total">
+    {{ getPollTotal() }} {{ getPollTotal() === 1 ? 'stem' : 'stemmen' }}
+  </p>
+</div>
