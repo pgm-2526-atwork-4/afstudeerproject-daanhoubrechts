@@ -11,11 +11,14 @@ import { UserAvatar } from '../../components/user-avatar/user-avatar';
 import { Modal } from '../../components/modal/modal';
 import { Alert } from '../../components/alert/alert';
 import { PageState } from '../../components/page-state/page-state';
+import { PostMenu } from '../../components/post-menu/post-menu';
+import { PollBlock } from '../../components/poll-block/poll-block';
+import { CommentsSection, ReplyTarget, SubmitCommentEvent, DeleteCommentEvent } from '../../components/comments-section/comments-section';
 
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [RouterLink, FormsModule, UserAvatar, Modal, Alert, PageState],
+  imports: [RouterLink, FormsModule, UserAvatar, Modal, Alert, PageState, PostMenu, PollBlock, CommentsSection],
   templateUrl: './posts.html',
   styleUrl: './posts.scss',
 })
@@ -23,8 +26,6 @@ export class Posts implements OnInit {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
-
-  protected readonly Math = Math;
 
   readonly kotgroupId = signal<string | null>(null);
   readonly posts = signal<Post[]>([]);
@@ -64,8 +65,7 @@ export class Posts implements OnInit {
   readonly loadingComments = signal<Set<string>>(new Set());
 
   // reply state (null commentId = reactie op post zelf)
-  readonly replyingTo = signal<{ postId: string; commentId: string | null; authorName: string } | null>(null);
-  replyInput = '';
+  readonly replyingTo = signal<ReplyTarget | null>(null);
   readonly submittingComment = signal(false);
   readonly commentError = signal<string | null>(null);
 
@@ -114,6 +114,10 @@ export class Posts implements OnInit {
     event.stopPropagation();
     this.openMenuCommentId.set(null);
     this.openMenuPostId.update((current) => (current === postId ? null : postId));
+  }
+
+  onPostMenuAction(index: number, postId: string): void {
+    if (index === 1) this.deletePost(postId);
   }
 
   toggleCommentMenu(commentId: string, event: MouseEvent): void {
@@ -225,7 +229,6 @@ export class Posts implements OnInit {
     const current = new Set(this.expandedPosts());
     if (current.has(postId)) {
       current.delete(postId);
-      // reply state opruimen
       if (this.replyingTo()?.postId === postId) this.replyingTo.set(null);
     } else {
       current.add(postId);
@@ -278,22 +281,19 @@ export class Posts implements OnInit {
     ]);
   }
 
-  startReply(postId: string, commentId: string | null, authorName: string): void {
-    this.replyingTo.set({ postId, commentId, authorName });
-    this.replyInput = '';
+  onStartReply(target: ReplyTarget): void {
+    this.replyingTo.set(target);
     this.commentError.set(null);
   }
 
-  cancelReply(): void {
+  onCancelReply(): void {
     this.replyingTo.set(null);
-    this.replyInput = '';
   }
 
-  async submitComment(postId: string): Promise<void> {
-    const content = this.replyInput.trim();
+  async onSubmitComment(event: SubmitCommentEvent): Promise<void> {
+    const { postId, content, parentCommentId } = event;
     if (!content) return;
 
-    const replyTo = this.replyingTo();
     this.submittingComment.set(true);
     this.commentError.set(null);
 
@@ -301,16 +301,16 @@ export class Posts implements OnInit {
       const comment = await firstValueFrom(
         this.http.post<Comment>(`${environment.apiUrl}/posts/${postId}/comments`, {
           content,
-          parent_comment_id: replyTo?.commentId ?? null,
+          parent_comment_id: parentCommentId,
         }),
       );
 
       const map = new Map(this.postComments());
       const current = [...(map.get(postId) ?? [])];
 
-      if (replyTo?.commentId) {
+      if (parentCommentId) {
         // reply direct na zijn parent (en bestaande replies) inlassen
-        const parentIdx = current.findIndex((c) => c.id === replyTo.commentId);
+        const parentIdx = current.findIndex((c) => c.id === parentCommentId);
         const parentDepth = parentIdx >= 0 ? current[parentIdx].depth : 0;
         const flat: FlatComment = { ...comment, depth: parentDepth + 1, replies: [] };
         let insertIdx = parentIdx + 1;
@@ -327,7 +327,6 @@ export class Posts implements OnInit {
         posts.map((p) => (p.id === postId ? { ...p, comment_count: p.comment_count + 1 } : p)),
       );
 
-      this.replyInput = '';
       this.replyingTo.set(null);
     } catch (err) {
       const e = err as HttpErrorResponse;
@@ -337,7 +336,8 @@ export class Posts implements OnInit {
     }
   }
 
-  async deleteComment(postId: string, commentId: string): Promise<void> {
+  async onDeleteComment(event: DeleteCommentEvent): Promise<void> {
+    const { postId, commentId } = event;
     try {
       await firstValueFrom(
         this.http.delete(`${environment.apiUrl}/posts/${postId}/comments/${commentId}`),
@@ -402,17 +402,6 @@ export class Posts implements OnInit {
     }
   }
 
-  getPollTotal(post: Post): number {
-    return post.poll_options.reduce((sum, o) => sum + o.vote_count, 0);
-  }
-
-  getPollPercentage(post: Post, optionId: string): number {
-    const total = this.getPollTotal(post);
-    if (!total) return 0;
-    const option = post.poll_options.find((o) => o.id === optionId);
-    return Math.round(((option?.vote_count ?? 0) / total) * 100);
-  }
-
   // --- helpers ---
 
   timeAgo(dateString: string): string {
@@ -428,17 +417,5 @@ export class Posts implements OnInit {
 
   renderContent(content: string | null): string {
     return content ?? '';
-  }
-
-  getInitials(firstName: string, lastName: string): string {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-  }
-
-  getCommentIndent(depth: number): string {
-    return `${Math.min(depth * 1.5, 5)}rem`;
-  }
-
-  trackById(_index: number, item: { id: string }): string {
-    return item.id;
   }
 }
