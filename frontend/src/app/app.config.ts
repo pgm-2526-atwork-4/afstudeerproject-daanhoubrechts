@@ -1,6 +1,17 @@
-import { APP_INITIALIZER, ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  LucideAngularModule,
+  Home,
+  BarChart2,
+  Building2,
+  Info,
+  FileText,
+  Wrench,
+  LogOut,
+} from 'lucide-angular';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth.interceptor';
@@ -11,6 +22,9 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
+    importProvidersFrom(
+      LucideAngularModule.pick({ Home, BarChart2, Building2, Info, FileText, Wrench, LogOut }),
+    ),
     // wacht op auth init voor de router begint te navigeren
     {
       provide: APP_INITIALIZER,
