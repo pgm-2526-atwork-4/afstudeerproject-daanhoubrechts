@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -7,5 +7,14 @@ import { Component, Input } from '@angular/core';
   styleUrl: './button.scss',
 })
 export class Button {
-  @Input() label = 'Button';
+  readonly variant = input<'primary' | 'secondary' | 'ghost'>('primary');
+  readonly size = input<'sm' | 'md'>('md');
+  readonly disabled = input(false);
+  readonly type = input<'button' | 'submit' | 'reset'>('button');
+
+  readonly classes = computed(() => {
+    const parts = ['btn', `btn--${this.variant()}`];
+    if (this.size() === 'sm') parts.push('btn--sm');
+    return parts.join(' ');
+  });
 }
