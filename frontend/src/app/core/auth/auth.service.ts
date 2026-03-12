@@ -59,12 +59,7 @@ export class AuthService {
     return `${p.first_name} ${p.last_name}`.trim() || p.email;
   });
 
-  constructor() {
-    this.init();
-  }
-
-  private async init(): Promise<void> {
-    // al een token opgeslagen? Sessie herstellen bij opstarten
+  async init(): Promise<void> {
     if (this.getStoredToken()) {
       await this.loadMe();
     }
