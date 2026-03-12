@@ -11,6 +11,7 @@ import {
   FileText,
   Wrench,
   LogOut,
+  Pencil,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -23,7 +24,16 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(
-      LucideAngularModule.pick({ Home, BarChart2, Building2, Info, FileText, Wrench, LogOut }),
+      LucideAngularModule.pick({
+        Home,
+        BarChart2,
+        Building2,
+        Info,
+        FileText,
+        Wrench,
+        LogOut,
+        Pencil,
+      }),
     ),
     // wacht op auth init voor de router begint te navigeren
     {

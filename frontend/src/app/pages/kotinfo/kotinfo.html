@@ -1,7 +1,11 @@
 <section class="kotinfo">
-  <app-page-state [loading]="loading()" [error]="error()" />
 
-  @if (error()) {
+  @if (loading()) {
+  <app-page-state [loading]="true" />
+  }
+
+  @if (!loading() && error()) {
+  <app-page-state [error]="error()" />
   <a routerLink="/kotgroepen" class="back-link">← Terug naar kotgroepen</a>
   }
 
@@ -46,6 +50,7 @@
 
   </div>
   }
+
 </section>
 
 <!-- Modal: naam & adres bewerken -->
