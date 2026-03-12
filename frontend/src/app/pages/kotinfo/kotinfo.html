@@ -1,63 +1,48 @@
 <section class="kotinfo">
-  <app-page-state
-    [loading]="loading()"
-    [error]="error()"
-  />
+  <app-page-state [loading]="loading()" [error]="error()" />
 
   @if (error()) {
-    <a routerLink="/kotgroepen" class="back-link">← Terug naar kotgroepen</a>
+  <a routerLink="/kotgroepen" class="back-link">← Terug naar kotgroepen</a>
   }
 
   @if (!loading() && !error() && group()) {
-    <header class="kotinfo__header">
-      <a routerLink="/kotgroepen" class="back-link">← Terug</a>
-      <div>
-        <h1>{{ group()!.name }}</h1>
-        @if (group()!.address) {
-          <p class="address">{{ group()!.address }}</p>
-        }
-      </div>
-
-      @if (isKotbaas()) {
-        <app-invite-card [kotgroupId]="group()!.id" />
+  <header class="kotinfo__header">
+    <a routerLink="/kotgroepen" class="back-link">← Terug</a>
+    <div>
+      <h1>{{ group()!.name }}</h1>
+      @if (group()!.address) {
+      <p class="address">{{ group()!.address }}</p>
       }
-    </header>
-
-    <app-tabs
-      [tabs]="kotinfoTabs"
-      [activeTab]="activeTab()"
-      (tabChange)="setTab($any($event))"
-    >
-      <a
-        [routerLink]="['/kotgroepen', group()!.id, 'posts']"
-        class="kotinfo__posts-link"
-      >
-        Posts
-      </a>
-    </app-tabs>
-
-    <div class="kotinfo__content">
-
-      @if (activeTab() === 'regels') {
-        <div class="tab-panel" role="tabpanel">
-          <app-rules-tab
-            [group]="group()!"
-            [isKotbaas]="isKotbaas()"
-            (groupUpdated)="onGroupUpdated($event)"
-          />
-        </div>
-      }
-
-      @if (activeTab() === 'wifi') {
-        <div class="tab-panel" role="tabpanel">
-          <app-wifi-tab
-            [group]="group()!"
-            [isKotbaas]="isKotbaas()"
-            (groupUpdated)="onGroupUpdated($event)"
-          />
-        </div>
-      }
-
     </div>
+
+    @if (isKotbaas()) {
+    <app-invite-card [kotgroupId]="group()!.id" />
+    }
+  </header>
+
+  <app-tabs [tabs]="kotinfoTabs" [activeTab]="activeTab()" (tabChange)="setTab($any($event))">
+    <a [routerLink]="['/kotgroepen', group()!.id, 'posts']" class="kotinfo__posts-link">
+      Posts
+    </a>
+    <a [routerLink]="['/kotgroepen', group()!.id, 'issues']" class="kotinfo__posts-link">
+      Issues
+    </a>
+  </app-tabs>
+
+  <div class="kotinfo__content">
+
+    @if (activeTab() === 'regels') {
+    <div class="tab-panel" role="tabpanel">
+      <app-rules-tab [group]="group()!" [isKotbaas]="isKotbaas()" (groupUpdated)="onGroupUpdated($event)" />
+    </div>
+    }
+
+    @if (activeTab() === 'wifi') {
+    <div class="tab-panel" role="tabpanel">
+      <app-wifi-tab [group]="group()!" [isKotbaas]="isKotbaas()" (groupUpdated)="onGroupUpdated($event)" />
+    </div>
+    }
+
+  </div>
   }
 </section>
