@@ -1,0 +1,32 @@
+.user-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+
+  &--sm {
+    width: 28px;
+    height: 28px;
+    font-size: 0.65rem;
+  }
+
+  &--md {
+    width: 40px;
+    height: 40px;
+    font-size: 0.85rem;
+  }
+
+  &--lg {
+    width: 64px;
+    height: 64px;
+    font-size: 1.25rem;
+  }
+
+  &--placeholder {
+    background-color: var(--primary, #4f46e5);
+    color: #fff;
+  }
+}
