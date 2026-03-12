@@ -45,22 +45,6 @@
   }
 }
 
-.kotinfo__posts-link {
-  margin-left: auto;
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  transition: color 0.15s, border-color 0.15s;
-
-  &:hover {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
-  }
-}
-
 .kotinfo__content {
   .tab-panel {
     display: flex;

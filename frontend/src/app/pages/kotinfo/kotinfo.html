@@ -21,12 +21,6 @@
   </header>
 
   <app-tabs [tabs]="kotinfoTabs" [activeTab]="activeTab()" (tabChange)="setTab($any($event))">
-    <a [routerLink]="['/kotgroepen', group()!.id, 'posts']" class="kotinfo__posts-link">
-      Posts
-    </a>
-    <a [routerLink]="['/kotgroepen', group()!.id, 'issues']" class="kotinfo__posts-link">
-      Issues
-    </a>
   </app-tabs>
 
   <div class="kotinfo__content">
