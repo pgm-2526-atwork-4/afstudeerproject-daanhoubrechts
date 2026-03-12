@@ -1,6 +1,8 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { LucideAngularModule } from 'lucide-angular';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { KotgroupDetail } from '../../models/kotgroup.interface';
@@ -10,12 +12,23 @@ import { PageState } from '../../components/page-state/page-state';
 import { InviteCard } from '../../components/invite-card/invite-card';
 import { WifiTab } from '../../components/wifi-tab/wifi-tab';
 import { RulesTab } from '../../components/rules-tab/rules-tab';
+import { Modal } from '../../components/modal/modal';
 
 type Tab = 'regels' | 'wifi';
 
 @Component({
   selector: 'app-kotinfo',
-  imports: [RouterLink, Tabs, PageState, InviteCard, WifiTab, RulesTab],
+  imports: [
+    RouterLink,
+    Tabs,
+    PageState,
+    InviteCard,
+    WifiTab,
+    RulesTab,
+    FormsModule,
+    Modal,
+    LucideAngularModule,
+  ],
   templateUrl: './kotinfo.html',
   styleUrl: './kotinfo.scss',
 })
@@ -28,6 +41,13 @@ export class Kotinfo implements OnInit {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly activeTab = signal<Tab>('regels');
+
+  // modal edit state
+  readonly editModalOpen = signal(false);
+  readonly editName = signal('');
+  readonly editAddress = signal('');
+  readonly savingHeader = signal(false);
+  readonly headerError = signal<string | null>(null);
 
   readonly isKotbaas = computed(() => {
     const user = this.authService.currentUser();
@@ -69,5 +89,48 @@ export class Kotinfo implements OnInit {
 
   onGroupUpdated(updated: KotgroupDetail): void {
     this.group.set(updated);
+  }
+
+  openEditModal(): void {
+    const g = this.group();
+    if (!g) return;
+    this.editName.set(g.name);
+    this.editAddress.set(g.address ?? '');
+    this.headerError.set(null);
+    this.editModalOpen.set(true);
+  }
+
+  closeEditModal(): void {
+    if (this.savingHeader()) return;
+    this.editModalOpen.set(false);
+    this.headerError.set(null);
+  }
+
+  saveHeader(): void {
+    const g = this.group();
+    if (!g) return;
+    const name = this.editName().trim();
+    if (!name) {
+      this.headerError.set('Naam mag niet leeg zijn.');
+      return;
+    }
+    this.savingHeader.set(true);
+    this.headerError.set(null);
+
+    const address = this.editAddress().trim() || null;
+
+    this.http
+      .patch<KotgroupDetail>(`${environment.apiUrl}/kotgroepen/${g.id}`, { name, address })
+      .subscribe({
+        next: (updated) => {
+          this.group.set(updated);
+          this.editModalOpen.set(false);
+          this.savingHeader.set(false);
+        },
+        error: (err) => {
+          this.headerError.set(err.error?.error ?? err.message ?? 'Opslaan mislukt.');
+          this.savingHeader.set(false);
+        },
+      });
   }
 }

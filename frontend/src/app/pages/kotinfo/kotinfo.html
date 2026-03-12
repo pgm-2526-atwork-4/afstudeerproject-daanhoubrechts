@@ -8,10 +8,17 @@
   @if (!loading() && !error() && group()) {
   <header class="kotinfo__header">
     <a routerLink="/kotgroepen" class="back-link">← Terug</a>
-    <div>
+
+    <div class="kotinfo__title-block">
       <h1>{{ group()!.name }}</h1>
       @if (group()!.address) {
       <p class="address">{{ group()!.address }}</p>
+      }
+      @if (isKotbaas()) {
+      <button class="btn btn--ghost btn--sm edit-btn" (click)="openEditModal()">
+        <lucide-icon name="pencil" size="14" />
+        Bewerken
+      </button>
       }
     </div>
 
@@ -40,3 +47,35 @@
   </div>
   }
 </section>
+
+<!-- Modal: naam & adres bewerken -->
+@if (editModalOpen()) {
+<app-modal title="Kotinfo bewerken" (closed)="closeEditModal()">
+  <form class="edit-form" (ngSubmit)="saveHeader()">
+    <div class="form-group">
+      <label for="edit-name">Naam</label>
+      <input id="edit-name" type="text" [ngModel]="editName()" (ngModelChange)="editName.set($event)" name="editName"
+        placeholder="Naam van het kot" class="edit-input" [disabled]="savingHeader()" required />
+    </div>
+
+    <div class="form-group">
+      <label for="edit-address">Adres</label>
+      <input id="edit-address" type="text" [ngModel]="editAddress()" (ngModelChange)="editAddress.set($event)"
+        name="editAddress" placeholder="Adres (optioneel)" class="edit-input" [disabled]="savingHeader()" />
+    </div>
+
+    @if (headerError()) {
+    <p class="edit-error">{{ headerError() }}</p>
+    }
+
+    <div class="edit-actions">
+      <button type="submit" class="btn btn--primary" [disabled]="savingHeader()">
+        @if (savingHeader()) { Opslaan… } @else { Opslaan }
+      </button>
+      <button type="button" class="btn btn--ghost" (click)="closeEditModal()" [disabled]="savingHeader()">
+        Annuleren
+      </button>
+    </div>
+  </form>
+</app-modal>
+}
