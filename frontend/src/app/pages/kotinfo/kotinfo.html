@@ -19,28 +19,7 @@
       </div>
 
       @if (isKotbaas()) {
-        <div class="invite-card" aria-label="Kotgenoten uitnodigen">
-          <p class="invite-title">Kotgenoten uitnodigen</p>
-          <p class="invite-hint">
-            Genereer een link en stuur die naar je kotgenoten. Zij kunnen via die link deelnemen aan deze kotgroep.
-          </p>
-
-          <div class="invite-actions">
-            <button class="btn btn--primary" type="button" (click)="generateInvite()" [disabled]="inviteLoading()">
-              {{ inviteLoading() ? 'Link maken...' : 'Maak uitnodigingslink' }}
-            </button>
-            <app-alert [message]="inviteError()" />
-          </div>
-
-          @if (inviteUrl) {
-            <div class="invite-link-row">
-              <input class="invite-input" [value]="inviteUrl" readonly />
-              <button type="button" class="btn btn--ghost" (click)="copyInviteUrl()">
-                Kopieer link
-              </button>
-            </div>
-          }
-        </div>
+        <app-invite-card [kotgroupId]="group()!.id" />
       }
     </header>
 
@@ -61,107 +40,21 @@
 
       @if (activeTab() === 'regels') {
         <div class="tab-panel" role="tabpanel">
-          @if (editingRules()) {
-            <form (ngSubmit)="saveRules()" class="edit-form">
-              <label for="rules">Regels</label>
-              <textarea
-                id="rules"
-                [(ngModel)]="rulesInput"
-                name="rules"
-                rows="10"
-                placeholder="Schrijf hier de regels van het kot..."
-              ></textarea>
-              <app-alert [message]="saveError()" />
-              <div class="form-actions">
-                <button type="submit" class="btn btn--primary" [disabled]="saving()">
-                  {{ saving() ? 'Opslaan...' : 'Opslaan' }}
-                </button>
-                <button type="button" class="btn btn--ghost" (click)="cancelEditRules()" [disabled]="saving()">
-                  Annuleren
-                </button>
-              </div>
-            </form>
-          } @else {
-            @if (group()!.rules) {
-              <pre class="rules-text">{{ group()!.rules }}</pre>
-            } @else {
-              <p class="empty-state">Er zijn nog geen regels ingesteld.</p>
-            }
-            @if (isKotbaas()) {
-              <button class="btn btn--secondary" (click)="startEditRules()">
-                Regels aanpassen
-              </button>
-            }
-          }
+          <app-rules-tab
+            [group]="group()!"
+            [isKotbaas]="isKotbaas()"
+            (groupUpdated)="onGroupUpdated($event)"
+          />
         </div>
       }
 
       @if (activeTab() === 'wifi') {
         <div class="tab-panel" role="tabpanel">
-          @if (editingWifi()) {
-            <form (ngSubmit)="saveWifi()" class="edit-form">
-              <label for="wifi-ssid">Netwerknaam (SSID)</label>
-              <input
-                id="wifi-ssid"
-                type="text"
-                [(ngModel)]="wifiSsidInput"
-                name="wifi_ssid"
-                placeholder="bijv. KotWifi_5G"
-              />
-              <label for="wifi-password">Wachtwoord</label>
-              <input
-                id="wifi-password"
-                type="text"
-                [(ngModel)]="wifiPasswordInput"
-                name="wifi_password"
-                placeholder="Wifiwachtwoord"
-              />
-              <app-alert [message]="saveError()" />
-              <div class="form-actions">
-                <button type="submit" class="btn btn--primary" [disabled]="saving()">
-                  {{ saving() ? 'Opslaan...' : 'Opslaan' }}
-                </button>
-                <button type="button" class="btn btn--ghost" (click)="cancelEditWifi()" [disabled]="saving()">
-                  Annuleren
-                </button>
-              </div>
-            </form>
-          } @else {
-            <div class="wifi-info">
-              @if (group()!.wifi_ssid || group()!.wifi_password) {
-                <div class="wifi-details">
-                  @if (group()!.wifi_ssid) {
-                    <div class="wifi-row">
-                      <span class="wifi-label">Netwerknaam</span>
-                      <span class="wifi-value">{{ group()!.wifi_ssid }}</span>
-                    </div>
-                  }
-                  @if (group()!.wifi_password) {
-                    <div class="wifi-row">
-                      <span class="wifi-label">Wachtwoord</span>
-                      <span class="wifi-value wifi-value--password">{{ group()!.wifi_password }}</span>
-                    </div>
-                  }
-                </div>
-
-                @if (qrLoading()) {
-                  <p class="state-msg">QR code genereren...</p>
-                } @else if (wifiQrDataUrl()) {
-                  <div class="qr-wrapper">
-                    <p class="qr-hint">Scan om direct te verbinden</p>
-                    <img [src]="wifiQrDataUrl()!" alt="Wifi QR code" class="qr-img" />
-                  </div>
-                }
-              } @else {
-                <p class="empty-state">Nog geen wifigegevens ingesteld.</p>
-              }
-            </div>
-            @if (isKotbaas()) {
-              <button class="btn btn--secondary" (click)="startEditWifi()">
-                Wifi aanpassen
-              </button>
-            }
-          }
+          <app-wifi-tab
+            [group]="group()!"
+            [isKotbaas]="isKotbaas()"
+            (groupUpdated)="onGroupUpdated($event)"
+          />
         </div>
       }
 
