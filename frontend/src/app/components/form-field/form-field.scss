@@ -14,19 +14,20 @@
     color: var(--color-error, #dc2626);
   }
 
-  input,
-  textarea,
-  select {
-    padding: 0.6rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: var(--radius-sm, 4px);
+  ::ng-deep input,
+  ::ng-deep textarea,
+  ::ng-deep select {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1.5px solid var(--color-border, #e5e7eb);
+    border-radius: var(--radius-md, 8px);
     font-size: 0.95rem;
+    font-family: inherit;
     color: var(--color-text, #111827);
     background: var(--color-white, #fff);
     transition:
-      border-color 0.15s,
-      box-shadow 0.15s;
-    width: 100%;
+      border-color 0.2s,
+      box-shadow 0.2s;
 
     &:focus {
       outline: none;
