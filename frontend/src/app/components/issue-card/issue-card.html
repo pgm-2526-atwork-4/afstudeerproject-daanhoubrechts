@@ -1,0 +1,152 @@
+<article class="issue-card">
+
+    <!-- header: badges + menu -->
+    <div class="issue-card__header">
+        <app-issue-status-badge [status]="issue().status" [priority]="issue().priority" />
+        @if (canEdit()) {
+        <app-post-menu [actions]="[{ label: 'Bewerken' }, { label: 'Verwijderen', danger: true }]"
+            [isOpen]="openMenuIssueId() === issue().id" (trigger)="onMenuTrigger($event)"
+            (actionSelected)="onMenuAction($event)" />
+        }
+    </div>
+
+    <!-- body: titel + inhoud + galerij -->
+    <div class="issue-card__body">
+        <h2 class="issue-card__title">{{ issue().title }}</h2>
+
+        @if (issue().content) {
+        <div class="issue-card__content" [innerHTML]="safeContent(issue().content!)"></div>
+        }
+
+        @if (issue().images.length > 0) {
+        <div class="issue-card__gallery">
+            @for (img of issue().images; track img.id) {
+            <a [href]="img.image_url" target="_blank" rel="noopener">
+                <img [src]="img.image_url" alt="Issue afbeelding" width="120" height="90" loading="lazy" />
+            </a>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- meta-rij: auteur + datum + visibility + status select -->
+    <div class="issue-card__meta">
+        <app-user-avatar [avatarUrl]="issue().author?.avatar_url ?? null" [firstName]="issue().author?.first_name ?? ''"
+            [lastName]="issue().author?.last_name ?? ''" size="sm" />
+        <span class="issue-card__author">
+            {{ issue().author?.first_name }} {{ issue().author?.last_name }}
+        </span>
+        <span class="issue-card__time">{{ timeAgo(issue().created_at) }}</span>
+
+        <!-- visibility icon -->
+        <span class="issue-card__visibility" [title]="issue().visibility">
+            @if (issue().visibility === 'kotbaas_only') {
+            <!-- slot/slotje -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                aria-label="Alleen kotbaas">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            } @else if (issue().visibility === 'kotgenoten_only') {
+            <!-- personen -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                aria-label="Alleen kotgenoten">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            } @else {
+            <!-- globe -->
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                aria-label="Iedereen">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            }
+        </span>
+
+        <!-- status select (alleen als canEdit) -->
+        @if (canEdit()) {
+        <select class="issue-card__status-select" [value]="issue().status" [disabled]="patchingStatus()"
+            (change)="patchStatus($any($event.target).value)">
+            <option value="open">Open</option>
+            <option value="in_progress">In behandeling</option>
+            <option value="resolved">Opgelost</option>
+            <option value="closed">Gesloten</option>
+        </select>
+        }
+    </div>
+
+    <!-- footer: comments toggle -->
+    <div class="issue-card__footer">
+        <button class="issue-card__comments-btn" type="button" (click)="toggleComments()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            {{ issue().comment_count }} {{ issue().comment_count === 1 ? 'reactie' : 'reacties' }}
+            <span class="issue-card__chevron" [class.issue-card__chevron--open]="showComments()">›</span>
+        </button>
+    </div>
+
+    <!-- comments sectie -->
+    @if (showComments()) {
+    <div class="issue-card__comments">
+
+        @if (commentsLoading()) {
+        <p class="comments-loading">Reacties laden...</p>
+        }
+
+        @for (comment of comments(); track comment.id) {
+        <div class="comment" [style.padding-left.rem]="comment.depth * 1.5">
+            <div class="comment__header">
+                <app-user-avatar [avatarUrl]="comment.author?.avatar_url ?? null"
+                    [firstName]="comment.author?.first_name ?? ''" [lastName]="comment.author?.last_name ?? ''"
+                    size="sm" />
+                <span class="comment__author">{{ comment.author?.first_name }} {{ comment.author?.last_name }}</span>
+                <span class="comment__time">{{ timeAgo(comment.created_at) }}</span>
+                @if (comment.author_id === currentUserId() || isKotbaas()) {
+                <app-post-menu size="sm" [actions]="[{ label: 'Verwijderen', danger: true }]"
+                    [isOpen]="openMenuCommentId() === comment.id" (trigger)="toggleCommentMenu(comment.id, $event)"
+                    (actionSelected)="onDeleteComment(comment.id)" />
+                }
+            </div>
+            <p class="comment__content">{{ comment.content }}</p>
+            <button class="comment__reply-btn" type="button" (click)="setReplyingTo(comment.id)">
+                Beantwoorden
+            </button>
+
+            @if (replyingTo() === comment.id) {
+            <div class="comment__reply-form">
+                <input type="text" placeholder="Schrijf een reactie..." [(ngModel)]="newCommentText"
+                    name="reply-{{ comment.id }}" />
+                <div class="comment__reply-actions">
+                    <button class="btn btn--primary btn--sm" type="button" [disabled]="submittingComment()"
+                        (click)="onSubmitComment(comment.id)">
+                        {{ submittingComment() ? '...' : 'Plaatsen' }}
+                    </button>
+                    <button class="btn btn--ghost btn--sm" type="button"
+                        (click)="setReplyingTo(null)">Annuleren</button>
+                </div>
+            </div>
+            }
+        </div>
+        }
+
+        <app-alert [message]="commentError()" />
+
+        <!-- nieuwe comment -->
+        <div class="comment-new">
+            <input type="text" placeholder="Schrijf een reactie..." [(ngModel)]="newCommentText" name="new-comment" />
+            <button class="btn btn--primary btn--sm" type="button" [disabled]="submittingComment()"
+                (click)="onSubmitComment(null)">
+                {{ submittingComment() ? '...' : 'Plaatsen' }}
+            </button>
+        </div>
+
+    </div>
+    }
+
+</article>
