@@ -7,6 +7,7 @@ import { AvatarUpload } from '../../components/avatar-upload/avatar-upload';
 import { Alert } from '../../components/alert/alert';
 import { Tabs, Tab } from '../../components/tabs/tabs';
 import { FormField } from '../../components/form-field/form-field';
+import { PreferenceToggle } from '../../components/preference-toggle/preference-toggle';
 
 type SettingsSection = 'profiel' | 'wachtwoord' | 'voorkeuren';
 
@@ -21,7 +22,7 @@ function passwordMatchValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-settings',
-  imports: [ReactiveFormsModule, AvatarUpload, Alert, Tabs, FormField],
+  imports: [ReactiveFormsModule, AvatarUpload, Alert, Tabs, FormField, PreferenceToggle],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })

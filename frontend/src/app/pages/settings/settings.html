@@ -109,39 +109,21 @@
         <section class="settings-section">
           <h2>Voorkeuren</h2>
 
-          <div class="preference-item">
-            <div class="preference-info">
-              <span class="preference-label">Meldingen</span>
-              <span class="preference-desc">Ontvang meldingen over je kot en kotgroep.</span>
-            </div>
-            <button
-              class="toggle"
-              [class.on]="notifications()"
-              [disabled]="preferencesLoading()"
-              (click)="toggleNotifications()"
-              role="switch"
-              [attr.aria-checked]="notifications()"
-            >
-              <span class="toggle-thumb"></span>
-            </button>
-          </div>
+          <app-preference-toggle
+            label="Meldingen"
+            description="Ontvang meldingen over je kot en kotgroep."
+            [value]="notifications()"
+            [disabled]="preferencesLoading()"
+            (toggled)="toggleNotifications()"
+          />
 
-          <div class="preference-item">
-            <div class="preference-info">
-              <span class="preference-label">Donkere modus</span>
-              <span class="preference-desc">Schakel over naar een donker thema.</span>
-            </div>
-            <button
-              class="toggle"
-              [class.on]="lightDarkMode()"
-              [disabled]="preferencesLoading()"
-              (click)="toggleLightDarkMode()"
-              role="switch"
-              [attr.aria-checked]="lightDarkMode()"
-            >
-              <span class="toggle-thumb"></span>
-            </button>
-          </div>
+          <app-preference-toggle
+            label="Donkere modus"
+            description="Schakel over naar een donker thema."
+            [value]="lightDarkMode()"
+            [disabled]="preferencesLoading()"
+            (toggled)="toggleLightDarkMode()"
+          />
 
           <app-alert [message]="preferencesSuccess() ? 'Voorkeuren opgeslagen.' : null" type="success" />
         </section>
