@@ -2,27 +2,21 @@
   <h1 class="settings-title">Instellingen</h1>
 
   <div class="settings-layout">
-    <app-tabs
-      [tabs]="settingsTabs"
-      [activeTab]="activeSection()"
-      (tabChange)="setSection($any($event))"
-    />
+    <div class="settings-card">
+      <app-tabs [tabs]="settingsTabs" [activeTab]="activeSection()" (tabChange)="setSection($any($event))" />
 
-    <div class="settings-content">
+      <div class="settings-content">
 
-      @if (activeSection() === 'profiel') {
+        @if (activeSection() === 'profiel') {
         <section class="settings-section">
           <h2>Profielfoto</h2>
           <div class="avatar-wrapper">
-            <app-avatar-upload
-              [currentUrl]="authService.userProfile()?.avatar_url ?? null"
-              [disabled]="avatarLoading()"
-              (fileSelected)="onAvatarSelected($event)"
-            />
+            <app-avatar-upload [currentUrl]="authService.userProfile()?.avatar_url ?? null" [disabled]="avatarLoading()"
+              (fileSelected)="onAvatarSelected($event)" />
             @if (pendingAvatarFile()) {
-              <button class="btn btn--primary" (click)="saveAvatar()" [disabled]="avatarLoading()">
-                {{ avatarLoading() ? 'Uploaden...' : 'Opslaan' }}
-              </button>
+            <button class="btn btn--primary" (click)="saveAvatar()" [disabled]="avatarLoading()">
+              {{ avatarLoading() ? 'Uploaden...' : 'Opslaan' }}
+            </button>
             }
             <app-alert [message]="avatarError()" />
           </div>
@@ -36,19 +30,13 @@
           </p>
 
           <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="settings-form" novalidate>
-            <app-form-field
-              label="Voornaam"
-              for="first_name"
-              [error]="profileForm.controls.first_name.invalid && profileForm.controls.first_name.touched ? 'Voornaam is verplicht (min. 2 tekens).' : null"
-            >
+            <app-form-field label="Voornaam" for="first_name"
+              [error]="profileForm.controls.first_name.invalid && profileForm.controls.first_name.touched ? 'Voornaam is verplicht (min. 2 tekens).' : null">
               <input id="first_name" type="text" formControlName="first_name" />
             </app-form-field>
 
-            <app-form-field
-              label="Achternaam"
-              for="last_name"
-              [error]="profileForm.controls.last_name.invalid && profileForm.controls.last_name.touched ? 'Achternaam is verplicht (min. 2 tekens).' : null"
-            >
+            <app-form-field label="Achternaam" for="last_name"
+              [error]="profileForm.controls.last_name.invalid && profileForm.controls.last_name.touched ? 'Achternaam is verplicht (min. 2 tekens).' : null">
               <input id="last_name" type="text" formControlName="last_name" />
             </app-form-field>
 
@@ -64,34 +52,25 @@
             </button>
           </form>
         </section>
-      }
+        }
 
-      @if (activeSection() === 'wachtwoord') {
+        @if (activeSection() === 'wachtwoord') {
         <section class="settings-section">
           <h2>Wachtwoord wijzigen</h2>
 
           <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="settings-form" novalidate>
-            <app-form-field
-              label="Huidig wachtwoord"
-              for="currentPassword"
-              [error]="passwordForm.controls.currentPassword.invalid && passwordForm.controls.currentPassword.touched ? 'Huidig wachtwoord is verplicht.' : null"
-            >
+            <app-form-field label="Huidig wachtwoord" for="currentPassword"
+              [error]="passwordForm.controls.currentPassword.invalid && passwordForm.controls.currentPassword.touched ? 'Huidig wachtwoord is verplicht.' : null">
               <input id="currentPassword" type="password" formControlName="currentPassword" />
             </app-form-field>
 
-            <app-form-field
-              label="Nieuw wachtwoord"
-              for="newPassword"
-              [error]="passwordForm.controls.newPassword.invalid && passwordForm.controls.newPassword.touched ? 'Minimaal 6 tekens.' : null"
-            >
+            <app-form-field label="Nieuw wachtwoord" for="newPassword"
+              [error]="passwordForm.controls.newPassword.invalid && passwordForm.controls.newPassword.touched ? 'Minimaal 6 tekens.' : null">
               <input id="newPassword" type="password" formControlName="newPassword" />
             </app-form-field>
 
-            <app-form-field
-              label="Bevestig nieuw wachtwoord"
-              for="confirmPassword"
-              [error]="passwordForm.controls.confirmPassword.invalid && passwordForm.controls.confirmPassword.touched ? 'Wachtwoorden komen niet overeen.' : null"
-            >
+            <app-form-field label="Bevestig nieuw wachtwoord" for="confirmPassword"
+              [error]="passwordForm.controls.confirmPassword.invalid && passwordForm.controls.confirmPassword.touched ? 'Wachtwoorden komen niet overeen.' : null">
               <input id="confirmPassword" type="password" formControlName="confirmPassword" />
             </app-form-field>
 
@@ -103,32 +82,23 @@
             </button>
           </form>
         </section>
-      }
+        }
 
-      @if (activeSection() === 'voorkeuren') {
+        @if (activeSection() === 'voorkeuren') {
         <section class="settings-section">
           <h2>Voorkeuren</h2>
 
-          <app-preference-toggle
-            label="Meldingen"
-            description="Ontvang meldingen over je kot en kotgroep."
-            [value]="notifications()"
-            [disabled]="preferencesLoading()"
-            (toggled)="toggleNotifications()"
-          />
+          <app-preference-toggle label="Meldingen" description="Ontvang meldingen over je kot en kotgroep."
+            [value]="notifications()" [disabled]="preferencesLoading()" (toggled)="toggleNotifications()" />
 
-          <app-preference-toggle
-            label="Donkere modus"
-            description="Schakel over naar een donker thema."
-            [value]="lightDarkMode()"
-            [disabled]="preferencesLoading()"
-            (toggled)="toggleLightDarkMode()"
-          />
+          <app-preference-toggle label="Donkere modus" description="Schakel over naar een donker thema."
+            [value]="lightDarkMode()" [disabled]="preferencesLoading()" (toggled)="toggleLightDarkMode()" />
 
           <app-alert [message]="preferencesSuccess() ? 'Voorkeuren opgeslagen.' : null" type="success" />
         </section>
-      }
+        }
 
+      </div>
     </div>
   </div>
 </div>
