@@ -1,0 +1,105 @@
+<div class="comments-section">
+
+  @if (loading()) {
+    <p class="state-msg state-msg--inline">Laden...</p>
+  } @else {
+    @for (comment of comments(); track comment.id) {
+      <div class="comment" [style.padding-left]="getCommentIndent(comment.depth)">
+        <div class="comment__header">
+          <div class="comment__avatar">
+            <app-user-avatar
+              [avatarUrl]="comment.author?.avatar_url ?? null"
+              [firstName]="comment.author?.first_name ?? ''"
+              [lastName]="comment.author?.last_name ?? ''"
+              size="sm"
+            />
+          </div>
+          <div class="comment__meta">
+            <span class="comment__name">
+              {{ comment.author?.first_name }} {{ comment.author?.last_name }}
+            </span>
+            <span class="comment__time">{{ timeAgo(comment.created_at) }}</span>
+          </div>
+          @if (comment.author_id === currentUserId()) {
+            <app-post-menu
+              size="sm"
+              [actions]="[{ label: 'Verwijderen', danger: true }]"
+              [isOpen]="openMenuCommentId() === comment.id"
+              (trigger)="onToggleMenu(comment.id, $event)"
+              (actionSelected)="deleteComment.emit({ postId: postId(), commentId: comment.id })"
+            />
+          }
+        </div>
+        <p class="comment__content">{{ comment.content }}</p>
+        <button
+          class="comment__reply-btn"
+          type="button"
+          (click)="onStartReply(comment.id, comment.author?.first_name ?? '')"
+        >
+          Reageer
+        </button>
+
+        @if (replyingTo()?.commentId === comment.id && replyingTo()?.postId === postId()) {
+          <div class="reply-form">
+            <textarea
+              class="reply-form__input"
+              [(ngModel)]="replyInput"
+              [name]="'reply-' + comment.id"
+              [placeholder]="'Reageer op ' + replyingTo()!.authorName + '...'"
+              rows="2"
+            ></textarea>
+            <app-alert [message]="commentError()" />
+            <div class="reply-form__actions">
+              <button
+                class="btn btn--primary btn--sm"
+                type="button"
+                (click)="onSubmit(comment.id)"
+                [disabled]="submittingComment()"
+              >
+                {{ submittingComment() ? '...' : 'Plaatsen' }}
+              </button>
+              <button class="btn btn--ghost btn--sm" type="button" (click)="onCancelReply()">
+                Annuleer
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- nieuwe top-level reactie -->
+    @if (replyingTo()?.commentId === null && replyingTo()?.postId === postId()) {
+      <div class="new-comment-form">
+        <textarea
+          class="reply-form__input"
+          [(ngModel)]="replyInput"
+          [name]="'new-comment-' + postId()"
+          placeholder="Schrijf een reactie..."
+          rows="2"
+        ></textarea>
+        <app-alert [message]="commentError()" />
+        <div class="reply-form__actions">
+          <button
+            class="btn btn--primary btn--sm"
+            type="button"
+            (click)="onSubmit(null)"
+            [disabled]="submittingComment()"
+          >
+            {{ submittingComment() ? '...' : 'Plaatsen' }}
+          </button>
+          <button class="btn btn--ghost btn--sm" type="button" (click)="onCancelReply()">
+            Annuleer
+          </button>
+        </div>
+      </div>
+    } @else {
+      <button
+        class="add-comment-btn"
+        type="button"
+        (click)="onStartReply(null, '')"
+      >
+        + Reageer op deze post
+      </button>
+    }
+  }
+</div>

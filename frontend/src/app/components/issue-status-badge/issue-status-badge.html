@@ -1,0 +1,6 @@
+@if (status()) {
+<span class="badge badge--{{ status() }}">{{ statusLabels[status()!] }}</span>
+}
+@if (priority()) {
+<span class="badge badge--priority-{{ priority() }}">{{ priorityLabels[priority()!] }}</span>
+}

@@ -4,112 +4,107 @@
 
     <div class="step-indicator" aria-label="Registratiestappen">
       @for (s of [1,2,3,4]; track s) {
-      <span class="step-dot" [class.active]="currentStep() >= s" [class.current]="currentStep() === s"></span>
+        <span class="step-dot" [class.active]="currentStep() >= s" [class.current]="currentStep() === s"></span>
       }
     </div>
 
-    @if (errorMessage()) {
-    <div class="error-banner" role="alert">{{ errorMessage() }}</div>
-    }
+    <app-alert [message]="errorMessage()" />
 
     <form [formGroup]="form" (ngSubmit)="currentStep() === totalSteps ? submit() : nextStep()">
       @switch (currentStep()) {
-      @case (1) {
-      <div class="step-content">
-        <div class="field-row">
-          <div class="field">
-            <label for="first_name">Voornaam</label>
-            <input id="first_name" type="text" formControlName="first_name" autocomplete="given-name"
-              placeholder="Jan" />
-            @if (form.controls.first_name.invalid && form.controls.first_name.touched) {
-            <span class="field-error">Voornaam is verplicht (min. 2 tekens).</span>
-            }
+        @case (1) {
+          <div class="step-content">
+            <div class="field-row">
+              <app-form-field
+                label="Voornaam"
+                for="first_name"
+                [error]="form.controls.first_name.invalid && form.controls.first_name.touched ? 'Voornaam is verplicht (min. 2 tekens).' : null"
+              >
+                <input id="first_name" type="text" formControlName="first_name" autocomplete="given-name" placeholder="Jan" />
+              </app-form-field>
+
+              <app-form-field
+                label="Achternaam"
+                for="last_name"
+                [error]="form.controls.last_name.invalid && form.controls.last_name.touched ? 'Achternaam is verplicht (min. 2 tekens).' : null"
+              >
+                <input id="last_name" type="text" formControlName="last_name" autocomplete="family-name" placeholder="Janssen" />
+              </app-form-field>
+            </div>
+
+            <app-form-field
+              label="E-mailadres"
+              for="email"
+              [error]="form.controls.email.invalid && form.controls.email.touched ? 'Voer een geldig e-mailadres in.' : null"
+            >
+              <input id="email" type="email" formControlName="email" autocomplete="email" placeholder="jou&#64;email.be" />
+            </app-form-field>
           </div>
-          <div class="field">
-            <label for="last_name">Achternaam</label>
-            <input id="last_name" type="text" formControlName="last_name" autocomplete="family-name"
-              placeholder="Janssen" />
-            @if (form.controls.last_name.invalid && form.controls.last_name.touched) {
-            <span class="field-error">Achternaam is verplicht (min. 2 tekens).</span>
-            }
+        }
+        @case (2) {
+          <div class="step-content">
+            <app-form-field
+              label="Wachtwoord"
+              for="password"
+              [error]="form.controls.password.invalid && form.controls.password.touched ? 'Wachtwoord moet minstens 6 tekens bevatten.' : null"
+            >
+              <input id="password" type="password" formControlName="password" autocomplete="new-password" placeholder="••••••••" />
+            </app-form-field>
+
+            <app-form-field
+              label="Wachtwoord herhalen"
+              for="passwordConfirm"
+              [error]="form.controls.passwordConfirm.invalid && form.controls.passwordConfirm.touched
+                ? (form.controls.passwordConfirm.errors?.['passwordMismatch'] ? 'Wachtwoorden komen niet overeen.' : 'Herhaal je wachtwoord.')
+                : null"
+            >
+              <input id="passwordConfirm" type="password" formControlName="passwordConfirm" autocomplete="new-password" placeholder="••••••••" />
+            </app-form-field>
           </div>
-        </div>
-        <div class="field">
-          <label for="email">E-mailadres</label>
-          <input id="email" type="email" formControlName="email" autocomplete="email" placeholder="jou&#64;email.be" />
-          @if (form.controls.email.invalid && form.controls.email.touched) {
-          <span class="field-error">Voer een geldig e-mailadres in.</span>
-          }
-        </div>
-      </div>
-      }
-      @case (2) {
-      <div class="step-content">
-        <div class="field">
-          <label for="password">Wachtwoord</label>
-          <input id="password" type="password" formControlName="password" autocomplete="new-password"
-            placeholder="••••••••" />
-          @if (form.controls.password.invalid && form.controls.password.touched) {
-          <span class="field-error">Wachtwoord moet minstens 6 tekens bevatten.</span>
-          }
-        </div>
-        <div class="field">
-          <label for="passwordConfirm">Wachtwoord herhalen</label>
-          <input id="passwordConfirm" type="password" formControlName="passwordConfirm" autocomplete="new-password"
-            placeholder="••••••••" />
-          @if (form.controls.passwordConfirm.invalid && form.controls.passwordConfirm.touched) {
-          <span class="field-error">
-            @if (form.controls.passwordConfirm.errors?.['passwordMismatch']) {
-            Wachtwoorden komen niet overeen.
-            } @else {
-            Herhaal je wachtwoord.
-            }
-          </span>
-          }
-        </div>
-      </div>
-      }
-      @case (3) {
-      <div class="step-content">
-        <p class="step-label">Ik ben een</p>
-        <div class="role-options">
-          @for (opt of roleOptions; track opt.value) {
-          <label class="role-option">
-            <input type="radio" [value]="opt.value" formControlName="role" />
-            <span class="role-label">{{ opt.label }}</span>
-          </label>
-          }
-        </div>
-      </div>
-      }
-      @case (4) {
-      <div class="step-content step-profile-photo">
-        <p class="step-label">Profielfoto instellen</p>
-        <p class="step-hint">Optioneel — je kan dit later altijd aanpassen.</p>
-        <app-avatar-upload (fileSelected)="onAvatarSelected($event)" />
-      </div>
-      }
+        }
+        @case (3) {
+          <div class="step-content">
+            <p class="step-label">Ik ben een</p>
+            <div class="role-options">
+              @for (opt of roleOptions; track opt.value) {
+                <label class="role-option">
+                  <input type="radio" [value]="opt.value" formControlName="role" />
+                  <span class="role-label">{{ opt.label }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+        @case (4) {
+          <div class="step-content step-profile-photo">
+            <p class="step-label">Profielfoto instellen</p>
+            <p class="step-hint">Optioneel — je kan dit later altijd aanpassen.</p>
+            <app-avatar-upload (fileSelected)="onAvatarSelected($event)" />
+          </div>
+        }
       }
 
       <div class="form-actions">
         @if (currentStep() > 1) {
-        <button type="button" class="btn-secondary" (click)="prevStep()">
-          Vorige
-        </button>
-        }
-        @if (currentStep() < totalSteps) { <button type="submit" class="btn-primary">
-          Volgende
+          <button type="button" class="btn-secondary" (click)="prevStep()">
+            Vorige
           </button>
-          } @else {
+        }
+        @if (currentStep() < totalSteps) {
+          <button type="submit" class="btn-primary">
+            Volgende
+          </button>
+        } @else {
           <button type="submit" class="btn-primary" [disabled]="loading()">
             {{ loading() ? 'Bezig...' : 'Account aanmaken' }}
           </button>
-          }
+        }
       </div>
     </form>
 
     <p class="auth-link">
-      Al een account? <a routerLink="/login">Log hier in</a>
+      Al een account?
+      <a [routerLink]="['/login']" [queryParams]="returnUrl ? { returnUrl } : {}">Log hier in</a>
     </p>
   </div>
 </div>

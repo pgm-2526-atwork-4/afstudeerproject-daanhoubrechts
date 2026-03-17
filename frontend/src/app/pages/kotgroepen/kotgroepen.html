@@ -11,13 +11,14 @@
     }
   </div>
 
-  @if (loading()) {
-    <p class="loading">Laden...</p>
-  } @else if (error()) {
-    <p class="error">{{ error() }}</p>
-  } @else if (kotgroepen().length === 0) {
-    <p class="empty">Je bent nog aan geen kotgroep gekoppeld.</p>
-  } @else {
+  <app-page-state
+    [loading]="loading()"
+    [error]="error()"
+    [empty]="kotgroepen().length === 0"
+    emptyMessage="Je bent nog aan geen kotgroep gekoppeld."
+  />
+
+  @if (!loading() && !error() && kotgroepen().length > 0) {
     <ul class="list">
       @for (kg of kotgroepen(); track kg.id) {
         <li class="card">
@@ -34,40 +35,35 @@
 </section>
 
 @if (showCreateModal()) {
-  <div class="modal-backdrop" (click)="closeCreateModal()">
-    <div class="modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <h2 id="modal-title">Nieuwe kotgroep aanmaken</h2>
-      <form (ngSubmit)="createKotgroep()" class="create-form">
-        <label for="kg-name">Naam <span aria-hidden="true">*</span></label>
-        <input
-          id="kg-name"
-          type="text"
-          [(ngModel)]="nameInput"
-          name="name"
-          placeholder="bijv. Kot Gentsesteenweg 42"
-          required
-          autofocus
-        />
-        <label for="kg-address">Adres</label>
-        <input
-          id="kg-address"
-          type="text"
-          [(ngModel)]="addressInput"
-          name="address"
-          placeholder="bijv. Gentsesteenweg 42, 9000 Gent"
-        />
-        @if (createError()) {
-          <p class="form-error">{{ createError() }}</p>
-        }
-        <div class="form-actions">
-          <button type="submit" class="btn btn--primary" [disabled]="creating()">
-            {{ creating() ? 'Aanmaken...' : 'Aanmaken' }}
-          </button>
-          <button type="button" class="btn btn--ghost" (click)="closeCreateModal()" [disabled]="creating()">
-            Annuleren
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+  <app-modal title="Nieuwe kotgroep aanmaken" (closed)="closeCreateModal()">
+    <form (ngSubmit)="createKotgroep()" class="create-form">
+      <label for="kg-name">Naam <span aria-hidden="true">*</span></label>
+      <input
+        id="kg-name"
+        type="text"
+        [(ngModel)]="nameInput"
+        name="name"
+        placeholder="bijv. Kot Gentsesteenweg 42"
+        required
+        autofocus
+      />
+      <label for="kg-address">Adres</label>
+      <input
+        id="kg-address"
+        type="text"
+        [(ngModel)]="addressInput"
+        name="address"
+        placeholder="bijv. Gentsesteenweg 42, 9000 Gent"
+      />
+      <app-alert [message]="createError()" />
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary" [disabled]="creating()">
+          {{ creating() ? 'Aanmaken...' : 'Aanmaken' }}
+        </button>
+        <button type="button" class="btn btn--ghost" (click)="closeCreateModal()" [disabled]="creating()">
+          Annuleren
+        </button>
+      </div>
+    </form>
+  </app-modal>
 }

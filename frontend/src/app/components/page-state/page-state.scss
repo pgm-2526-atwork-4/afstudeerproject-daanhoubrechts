@@ -1,0 +1,20 @@
+.page-state {
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+
+  &--loading {
+    color: var(--text-muted, #6b7280);
+  }
+
+  &--error {
+    color: #991b1b;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+  }
+
+  &--empty {
+    color: var(--text-muted, #6b7280);
+    font-style: italic;
+  }
+}

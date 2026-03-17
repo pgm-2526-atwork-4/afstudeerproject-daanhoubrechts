@@ -1,0 +1,32 @@
+@if (editing()) {
+  <form (ngSubmit)="save()" class="edit-form">
+    <label for="rules">Regels</label>
+    <textarea
+      id="rules"
+      [(ngModel)]="rulesInput"
+      name="rules"
+      rows="10"
+      placeholder="Schrijf hier de regels van het kot..."
+    ></textarea>
+    <app-alert [message]="saveError()" />
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary" [disabled]="saving()">
+        {{ saving() ? 'Opslaan...' : 'Opslaan' }}
+      </button>
+      <button type="button" class="btn btn--ghost" (click)="cancelEdit()" [disabled]="saving()">
+        Annuleren
+      </button>
+    </div>
+  </form>
+} @else {
+  @if (group().rules) {
+    <pre class="rules-text">{{ group().rules }}</pre>
+  } @else {
+    <p class="empty-state">Er zijn nog geen regels ingesteld.</p>
+  }
+  @if (isKotbaas()) {
+    <button class="btn btn--secondary" (click)="startEdit()">
+      Regels aanpassen
+    </button>
+  }
+}

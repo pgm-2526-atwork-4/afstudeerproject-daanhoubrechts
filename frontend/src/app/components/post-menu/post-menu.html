@@ -1,0 +1,26 @@
+<button
+  class="menu-trigger"
+  [class.menu-trigger--sm]="size() === 'sm'"
+  type="button"
+  (click)="trigger.emit($event)"
+  title="Meer opties"
+>
+  •••
+</button>
+
+@if (isOpen()) {
+  <div class="menu">
+    @for (action of actions(); track $index; let i = $index) {
+      <button
+        class="menu__item"
+        [class.menu__item--disabled]="action.disabled"
+        [class.menu__item--danger]="action.danger"
+        type="button"
+        [disabled]="action.disabled"
+        (click)="actionSelected.emit(i)"
+      >
+        {{ action.label }}
+      </button>
+    }
+  </div>
+}

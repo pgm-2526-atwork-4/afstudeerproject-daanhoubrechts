@@ -4,6 +4,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { AvatarUpload } from '../../components/avatar-upload/avatar-upload';
+import { Alert } from '../../components/alert/alert';
+import { Tabs, Tab } from '../../components/tabs/tabs';
+import { FormField } from '../../components/form-field/form-field';
+import { PreferenceToggle } from '../../components/preference-toggle/preference-toggle';
 
 type SettingsSection = 'profiel' | 'wachtwoord' | 'voorkeuren';
 
@@ -18,7 +22,7 @@ function passwordMatchValidator(): ValidatorFn {
 
 @Component({
   selector: 'app-settings',
-  imports: [ReactiveFormsModule, AvatarUpload],
+  imports: [ReactiveFormsModule, AvatarUpload, Alert, Tabs, FormField, PreferenceToggle],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
@@ -28,6 +32,12 @@ export class Settings {
   private destroyRef = inject(DestroyRef);
 
   readonly activeSection = signal<SettingsSection>('profiel');
+
+  readonly settingsTabs: Tab[] = [
+    { id: 'profiel', label: 'Profiel' },
+    { id: 'wachtwoord', label: 'Wachtwoord' },
+    { id: 'voorkeuren', label: 'Voorkeuren' },
+  ];
 
   profileForm = this.fb.nonNullable.group({
     first_name: [this.authService.userProfile()?.first_name ?? '', [Validators.required, Validators.minLength(2)]],

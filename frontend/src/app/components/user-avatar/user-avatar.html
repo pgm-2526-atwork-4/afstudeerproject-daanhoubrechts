@@ -1,0 +1,12 @@
+@if (avatarUrl()) {
+  <img
+    [src]="avatarUrl()!"
+    [alt]="altText()"
+    class="user-avatar"
+    [class]="'user-avatar--' + size()"
+  />
+} @else {
+  <span class="user-avatar user-avatar--placeholder" [class]="'user-avatar--' + size()">
+    {{ initials() }}
+  </span>
+}

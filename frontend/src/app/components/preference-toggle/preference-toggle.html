@@ -1,0 +1,18 @@
+<div class="preference-item">
+  <div class="preference-info">
+    <span class="preference-label">{{ label() }}</span>
+    @if (description()) {
+      <span class="preference-desc">{{ description() }}</span>
+    }
+  </div>
+  <button
+    class="toggle"
+    [class.on]="value()"
+    [disabled]="disabled()"
+    (click)="toggled.emit()"
+    role="switch"
+    [attr.aria-checked]="value()"
+  >
+    <span class="toggle-thumb"></span>
+  </button>
+</div>

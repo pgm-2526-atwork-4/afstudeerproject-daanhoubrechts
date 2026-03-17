@@ -18,6 +18,8 @@ export interface CreateKotgroupData {
 }
 
 export interface UpdateKotgroupData {
+  name?: string;
+  address?: string | null;
   rules?: string | null;
   wifi_ssid?: string | null;
   wifi_password?: string | null;

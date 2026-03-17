@@ -1,0 +1,135 @@
+<section class="issues">
+    <header class="issues__header">
+        <a [routerLink]="backLink()" class="back-link">← Terug</a>
+        <div class="issues__title-row">
+            <h1>Issues</h1>
+            <button class="btn btn--primary" type="button" (click)="openCreateModal()">+ Nieuwe issue</button>
+        </div>
+    </header>
+
+    <app-page-state [loading]="loading()" [error]="error()" [empty]="!loading() && !error() && issues().length === 0"
+        emptyMessage="Nog geen issues aangemeld." />
+
+    @if (!loading() && !error() && issues().length > 0) {
+    <div class="feed">
+        @for (issue of issues(); track issue.id) {
+        <app-issue-card [issue]="issue" [currentUserId]="currentUserId()" [isKotbaas]="isKotbaas()"
+            [openMenuIssueId]="openMenuIssueId()" (deleted)="deleteIssue($event)"
+            (editRequested)="openEditModal($event)" (menuTrigger)="toggleMenu($event.issueId, $event.event)" />
+        }
+    </div>
+    }
+</section>
+
+<!-- create/edit modal -->
+@if (showModal()) {
+<app-modal [title]="editingIssue() ? 'Issue bewerken' : 'Nieuwe issue'" (closed)="closeModal()">
+    <form class="issue-form" (ngSubmit)="submitIssue()">
+
+        <!-- titel -->
+        <div class="issue-form__field">
+            <label for="issue-title">Titel</label>
+            <input id="issue-title" type="text" [(ngModel)]="titleInput" name="title"
+                placeholder="Omschrijf het probleem in één zin..." />
+        </div>
+
+        <!-- rich text inhoud -->
+        <div class="issue-form__field">
+            <label>Beschrijving (optioneel)</label>
+            <div class="issue-form__toolbar">
+                <button class="toolbar-btn" type="button" (mousedown)="$event.preventDefault()"
+                    (click)="applyFormat('bold', editor)" title="Vet">
+                    <strong>B</strong>
+                </button>
+                <button class="toolbar-btn toolbar-btn--italic" type="button" (mousedown)="$event.preventDefault()"
+                    (click)="applyFormat('italic', editor)" title="Cursief">
+                    <em>I</em>
+                </button>
+                <button class="toolbar-btn toolbar-btn--underline" type="button" (mousedown)="$event.preventDefault()"
+                    (click)="applyFormat('underline', editor)" title="Onderlijnd">
+                    <span>U</span>
+                </button>
+            </div>
+            <div #editor class="issue-editor" contenteditable="true" data-placeholder="Voeg details toe..."
+                (input)="onEditorInput(editor)"
+                (keydown.control.b)="$event.preventDefault(); applyFormat('bold', editor)"
+                (keydown.meta.b)="$event.preventDefault(); applyFormat('bold', editor)"
+                (keydown.control.i)="$event.preventDefault(); applyFormat('italic', editor)"
+                (keydown.meta.i)="$event.preventDefault(); applyFormat('italic', editor)"
+                (keydown.control.u)="$event.preventDefault(); applyFormat('underline', editor)"
+                (keydown.meta.u)="$event.preventDefault(); applyFormat('underline', editor)"></div>
+        </div>
+
+        <!-- visibility -->
+        <div class="issue-form__field">
+            <label for="issue-visibility">Zichtbaarheid</label>
+            <select id="issue-visibility" [(ngModel)]="visibilityInput" name="visibility">
+                <option value="everyone">Iedereen</option>
+                <option value="kotbaas_only">Alleen kotbaas</option>
+                <option value="kotgenoten_only">Alleen kotgenoten</option>
+            </select>
+        </div>
+
+        <!-- priority -->
+        <div class="issue-form__field">
+            <label for="issue-priority">Prioriteit</label>
+            <select id="issue-priority" [(ngModel)]="priorityInput" name="priority">
+                <option value="low">Laag</option>
+                <option value="medium">Medium</option>
+                <option value="high">Hoog</option>
+                <option value="urgent">Urgent</option>
+            </select>
+        </div>
+
+        <!-- status (alleen bij bewerken) -->
+        @if (editingIssue()) {
+        <div class="issue-form__field">
+            <label for="issue-status">Status</label>
+            <select id="issue-status" [(ngModel)]="statusInput" name="status">
+                <option value="open">Open</option>
+                <option value="in_progress">In behandeling</option>
+                <option value="resolved">Opgelost</option>
+                <option value="closed">Gesloten</option>
+            </select>
+        </div>
+        }
+
+        <!-- afbeeldingen (alleen bij aanmaken) -->
+        @if (!editingIssue()) {
+        <div class="issue-form__field">
+            <label>Afbeeldingen (optioneel)</label>
+            @if (imagePreviews.length > 0) {
+            <div class="image-preview-row">
+                @for (preview of imagePreviews; track $index; let i = $index) {
+                <div class="image-preview-row__item">
+                    <img [src]="preview" alt="Preview" />
+                    <button class="image-preview-row__remove btn btn--ghost btn--sm" type="button"
+                        (click)="removeImagePreview(i)">
+                        ×
+                    </button>
+                </div>
+                }
+            </div>
+            }
+            <label class="file-upload-label" for="issue-images">
+                Afbeeldingen kiezen
+                <input id="issue-images" type="file" accept="image/*" multiple (change)="onImagesSelected($event)"
+                    hidden />
+            </label>
+        </div>
+        }
+
+        <app-alert [message]="modalError()" />
+
+        <div class="issue-form__actions">
+            <button class="btn btn--primary" type="submit" [disabled]="creating()">
+                {{ creating() ? 'Opslaan...' : (editingIssue() ? 'Opslaan' : 'Aanmaken') }}
+            </button>
+            <button class="btn btn--ghost" type="button" (click)="closeModal()" [disabled]="creating()">
+                Annuleren
+            </button>
+        </div>
+
+    </form>
+</app-modal>
+}

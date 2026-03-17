@@ -59,36 +59,39 @@ export class AuthService {
     return `${p.first_name} ${p.last_name}`.trim() || p.email;
   });
 
-  constructor() {
-    this.init();
-  }
-
-  private async init(): Promise<void> {
-    // al een token opgeslagen? Sessie herstellen bij opstarten
+  async init(): Promise<void> {
     if (this.getStoredToken()) {
       await this.loadMe();
     }
     this._loading.set(false);
   }
 
-  async login(data: LoginData): Promise<void> {
+  async login(data: LoginData, returnUrl?: string): Promise<void> {
     const response = await firstValueFrom(
       this.http.post<AuthTokens & { user: AuthUser }>(`${environment.apiUrl}/auth/login`, data),
     );
     this.storeTokens(response);
     this._currentUser.set(response.user);
     await this.loadMe();
-    this.router.navigate(['/dashboard']);
+    this.navigateAfterAuth(returnUrl);
   }
 
-  async register(data: RegisterData): Promise<void> {
+  async register(data: RegisterData, returnUrl?: string): Promise<void> {
     const response = await firstValueFrom(
       this.http.post<AuthTokens & { user: AuthUser }>(`${environment.apiUrl}/auth/register`, data),
     );
     this.storeTokens(response);
     this._currentUser.set(response.user);
     await this.loadMe();
-    this.router.navigate(['/dashboard']);
+    this.navigateAfterAuth(returnUrl);
+  }
+
+  private navigateAfterAuth(returnUrl?: string): void {
+    if (returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//')) {
+      this.router.navigateByUrl(returnUrl);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   async logout(): Promise<void> {
