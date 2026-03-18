@@ -189,6 +189,71 @@ kotgroepenRoutes.patch('/:id', requireAuth, async (req, res) => {
   }
 });
 
+// leden van een kotgroep ophalen (user moet lid zijn)
+kotgroepenRoutes.get('/:id/members', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const kotgroupId = req.params['id'];
+
+    const { data: membership, error: memberError } = await supabaseAdmin
+      .from('kotgroup_members')
+      .select('kotgroup_id')
+      .eq('user_id', userId)
+      .eq('kotgroup_id', kotgroupId)
+      .maybeSingle();
+
+    if (memberError) {
+      res.status(500).json({ error: memberError.message });
+      return;
+    }
+    if (!membership) {
+      res.status(403).json({ error: 'Geen toegang tot deze kotgroep.' });
+      return;
+    }
+
+    const { data: group, error: groupError } = await supabaseAdmin
+      .from('kotgroups')
+      .select('created_by')
+      .eq('id', kotgroupId)
+      .single();
+
+    if (groupError || !group) {
+      res.status(404).json({ error: 'Kotgroep niet gevonden.' });
+      return;
+    }
+
+    const { data: members, error: membersError } = await supabaseAdmin
+      .from('kotgroup_members')
+      .select('user_id')
+      .eq('kotgroup_id', kotgroupId);
+
+    if (membersError) {
+      res.status(500).json({ error: membersError.message });
+      return;
+    }
+
+    const userIds = (members ?? []).map((m) => m.user_id);
+    if (userIds.length === 0) {
+      res.json({ members: [], kotbaas_id: group.created_by });
+      return;
+    }
+
+    const { data: profiles, error: profilesError } = await supabaseAdmin
+      .from('profiles')
+      .select('id, first_name, last_name, avatar_url, role')
+      .in('id', userIds);
+
+    if (profilesError) {
+      res.status(500).json({ error: profilesError.message });
+      return;
+    }
+
+    res.json({ members: profiles ?? [], kotbaas_id: group.created_by });
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+  }
+});
+
 // uitnodigingslink genereren (alleen de kotbaas die de groep aangemaakt heeft)
 kotgroepenRoutes.post('/:id/invites', requireAuth, async (req, res) => {
   try {
