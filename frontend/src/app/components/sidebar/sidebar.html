@@ -51,6 +51,10 @@
                 <lucide-icon name="wrench" class="icon"></lucide-icon>
                 Issues
             </a>
+            <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'todos']" routerLinkActive="active" class="nav-item">
+                <lucide-icon name="check-square" class="icon"></lucide-icon>
+                Taken
+            </a>
         </div>
         }
     </nav>

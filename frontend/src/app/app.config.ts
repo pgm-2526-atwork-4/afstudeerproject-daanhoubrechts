@@ -12,6 +12,16 @@ import {
   Wrench,
   LogOut,
   Pencil,
+  CheckSquare,
+  Plus,
+  Users,
+  Crown,
+  Clock,
+  Circle,
+  CheckCircle2,
+  MoreHorizontal,
+  Check,
+  Trash2,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -33,6 +43,16 @@ export const appConfig: ApplicationConfig = {
         Wrench,
         LogOut,
         Pencil,
+        CheckSquare,
+        Plus,
+        Users,
+        Crown,
+        Clock,
+        Circle,
+        CheckCircle2,
+        MoreHorizontal,
+        Check,
+        Trash2,
       }),
     ),
     // wacht op auth init voor de router begint te navigeren
