@@ -1,0 +1,213 @@
+<section class="todos" (click)="$event.stopPropagation()">
+
+  @if (loading()) {
+    <app-page-state [loading]="true" />
+  }
+
+  @if (!loading() && error()) {
+    <app-page-state [error]="error()" />
+    <a [routerLink]="backLink()" class="back-link">← Terug</a>
+  }
+
+  @if (!loading() && !error()) {
+    <header class="todos__header">
+      <div class="todos__title-block">
+        <a [routerLink]="backLink()" class="back-link">← Terug</a>
+        <h1>Taken</h1>
+      </div>
+
+      <button class="btn btn--primary" (click)="openCreateModal()">
+        <lucide-icon name="plus" size="16" />
+        Nieuwe taak
+      </button>
+    </header>
+
+    <!-- lege state -->
+    @if (todos().length === 0) {
+      <div class="todos__empty">
+        <h3>Nog geen taken</h3>
+        <p>Maak een taak aan en wijs die toe aan kotgenoten.</p>
+        <button class="btn btn--primary" (click)="openCreateModal()">
+          <lucide-icon name="plus" size="16" />
+          Eerste taak aanmaken
+        </button>
+      </div>
+    }
+
+    <!-- kolommen -->
+    @if (todos().length > 0) {
+      <div class="todos__columns">
+
+        <div class="column">
+          <div class="column__header column__header--todo">
+            <span class="column__dot"></span>
+            <h3>Te doen</h3>
+            <span class="column__count">{{ todoItems().length }}</span>
+          </div>
+          <div class="column__cards">
+            @for (todo of todoItems(); track todo.id) {
+              <app-todo-card
+                [todo]="todo"
+                [currentUserId]="currentUserId()"
+                (statusChanged)="onStatusChanged($event)"
+                (editRequested)="openEditModal($event)"
+                (deleteRequested)="deleteTodo($event)"
+              />
+            }
+            @if (todoItems().length === 0) {
+              <p class="column__empty">Geen taken.</p>
+            }
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="column__header column__header--bezig">
+            <span class="column__dot"></span>
+            <h3>Bezig</h3>
+            <span class="column__count">{{ bezigItems().length }}</span>
+          </div>
+          <div class="column__cards">
+            @for (todo of bezigItems(); track todo.id) {
+              <app-todo-card
+                [todo]="todo"
+                [currentUserId]="currentUserId()"
+                (statusChanged)="onStatusChanged($event)"
+                (editRequested)="openEditModal($event)"
+                (deleteRequested)="deleteTodo($event)"
+              />
+            }
+            @if (bezigItems().length === 0) {
+              <p class="column__empty">Geen taken.</p>
+            }
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="column__header column__header--klaar">
+            <span class="column__dot"></span>
+            <h3>Klaar</h3>
+            <span class="column__count">{{ klaarItems().length }}</span>
+          </div>
+          <div class="column__cards">
+            @for (todo of klaarItems(); track todo.id) {
+              <app-todo-card
+                [todo]="todo"
+                [currentUserId]="currentUserId()"
+                (statusChanged)="onStatusChanged($event)"
+                (editRequested)="openEditModal($event)"
+                (deleteRequested)="deleteTodo($event)"
+              />
+            }
+            @if (klaarItems().length === 0) {
+              <p class="column__empty">Geen taken.</p>
+            }
+          </div>
+        </div>
+
+      </div>
+    }
+  }
+
+</section>
+
+<!-- Modal: taak aanmaken of bewerken -->
+@if (showModal()) {
+  <app-modal
+    [title]="editingTodo() ? 'Taak bewerken' : 'Nieuwe taak'"
+    (closed)="closeModal()"
+  >
+    <form class="todo-form" (ngSubmit)="submitTodo()">
+
+      <div class="form-group">
+        <label for="todo-title">Titel <span class="required">*</span></label>
+        <input
+          id="todo-title"
+          type="text"
+          [(ngModel)]="titleInput"
+          name="title"
+          placeholder="Wat moet er gedaan worden?"
+          class="form-input"
+          [disabled]="saving()"
+          required
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="todo-desc">Beschrijving</label>
+        <textarea
+          id="todo-desc"
+          [(ngModel)]="descriptionInput"
+          name="description"
+          placeholder="Extra uitleg (optioneel)"
+          class="form-input form-textarea"
+          [disabled]="saving()"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="todo-priority">Prioriteit</label>
+          <select id="todo-priority" [(ngModel)]="priorityInput" name="priority" class="form-input form-select" [disabled]="saving()">
+            <option value="laag">Laag</option>
+            <option value="normaal">Normaal</option>
+            <option value="dringend">Dringend</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="todo-status">Status</label>
+          <select id="todo-status" [(ngModel)]="statusInput" name="status" class="form-input form-select" [disabled]="saving()">
+            <option value="todo">Te doen</option>
+            <option value="bezig">Bezig</option>
+            <option value="klaar">Klaar</option>
+          </select>
+        </div>
+      </div>
+
+      @if (members().length > 0) {
+        <div class="form-group">
+          <label>Toegewezen aan</label>
+          <div class="assignee-picker">
+            @for (member of members(); track member.id) {
+              <button
+                type="button"
+                class="assignee-option"
+                [class.assignee-option--selected]="isAssigneeSelected(member.id)"
+                (click)="toggleAssignee(member.id)"
+                [disabled]="saving()"
+              >
+                <app-user-avatar
+                  [avatarUrl]="member.avatar_url"
+                  [firstName]="member.first_name"
+                  [lastName]="member.last_name"
+                  size="sm"
+                />
+                <span class="assignee-name">{{ memberName(member) }}</span>
+                @if (isAssigneeSelected(member.id)) {
+                  <lucide-icon name="check" size="14" class="assignee-check" />
+                }
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      @if (modalError()) {
+        <p class="form-error">{{ modalError() }}</p>
+      }
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary" [disabled]="saving()">
+          @if (saving()) { Opslaan… } @else { Opslaan }
+        </button>
+        <button type="button" class="btn btn--ghost" (click)="closeModal()" [disabled]="saving()">
+          Annuleren
+        </button>
+      </div>
+
+    </form>
+  </app-modal>
+}

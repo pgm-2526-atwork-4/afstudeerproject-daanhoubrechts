@@ -1,0 +1,80 @@
+<article class="todo-card" [class]="'todo-card--' + todo().priority" (click)="closeMenu()">
+
+  <div class="todo-card__top">
+    <!-- prioriteit badge -->
+    <span class="priority-badge" [class]="'priority-badge--' + todo().priority">
+      {{ priorityLabel(todo().priority) }}
+    </span>
+
+    <div class="todo-card__actions">
+      <!-- status toggle knop -->
+      <button
+        class="status-btn"
+        [class]="'status-btn--' + todo().status"
+        (click)="nextStatus(); $event.stopPropagation()"
+        [title]="'Status: ' + statusLabel(todo().status) + ' (klik om te wijzigen)'"
+      >
+        @if (todo().status === 'klaar') {
+          <lucide-icon name="check-circle-2" size="16" />
+        } @else if (todo().status === 'bezig') {
+          <lucide-icon name="clock" size="16" />
+        } @else {
+          <lucide-icon name="circle" size="16" />
+        }
+        {{ statusLabel(todo().status) }}
+      </button>
+
+      <!-- menu -->
+      <div class="menu-wrapper">
+        <button class="menu-trigger" (click)="toggleMenu($event)" title="Opties">
+          <lucide-icon name="more-horizontal" size="16" />
+        </button>
+        @if (menuOpen()) {
+          <ul class="dropdown-menu" (click)="$event.stopPropagation()">
+            <li>
+              <button (click)="onEdit($event)">
+                <lucide-icon name="pencil" size="14" />
+                Bewerken
+              </button>
+            </li>
+            <li>
+              <button class="danger" (click)="onDelete($event)">
+                <lucide-icon name="trash-2" size="14" />
+                Verwijderen
+              </button>
+            </li>
+          </ul>
+        }
+      </div>
+    </div>
+  </div>
+
+  <h4 class="todo-card__title" [class.todo-card__title--done]="todo().status === 'klaar'">
+    {{ todo().title }}
+  </h4>
+
+  @if (todo().description) {
+    <p class="todo-card__desc">{{ todo().description }}</p>
+  }
+
+  @if (todo().assignees.length > 0) {
+    <div class="todo-card__assignees">
+      <div class="assignee-stack">
+        @for (assignee of todo().assignees.slice(0, 4); track assignee.id) {
+          <span class="assignee-avatar-wrap" [title]="assignee.first_name + ' ' + assignee.last_name">
+            <app-user-avatar
+              [avatarUrl]="assignee.avatar_url"
+              [firstName]="assignee.first_name"
+              [lastName]="assignee.last_name"
+              size="sm"
+            />
+          </span>
+        }
+        @if (todo().assignees.length > 4) {
+          <span class="assignee-overflow">+{{ todo().assignees.length - 4 }}</span>
+        }
+      </div>
+    </div>
+  }
+
+</article>

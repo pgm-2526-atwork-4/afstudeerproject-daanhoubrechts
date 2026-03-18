@@ -13,8 +13,9 @@ import { InviteCard } from '../../components/invite-card/invite-card';
 import { WifiTab } from '../../components/wifi-tab/wifi-tab';
 import { RulesTab } from '../../components/rules-tab/rules-tab';
 import { Modal } from '../../components/modal/modal';
+import { MembersTab } from '../../components/members-tab/members-tab';
 
-type Tab = 'regels' | 'wifi';
+type Tab = 'regels' | 'wifi' | 'leden';
 
 @Component({
   selector: 'app-kotinfo',
@@ -25,6 +26,7 @@ type Tab = 'regels' | 'wifi';
     InviteCard,
     WifiTab,
     RulesTab,
+    MembersTab,
     FormsModule,
     Modal,
     LucideAngularModule,
@@ -58,6 +60,7 @@ export class Kotinfo implements OnInit {
   readonly kotinfoTabs: TabItem[] = [
     { id: 'regels', label: 'Regels' },
     { id: 'wifi', label: 'Wifi' },
+    { id: 'leden', label: 'Leden' },
   ];
 
   ngOnInit(): void {

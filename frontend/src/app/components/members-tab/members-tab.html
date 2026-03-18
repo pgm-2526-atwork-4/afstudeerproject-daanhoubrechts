@@ -1,0 +1,52 @@
+@if (loading()) {
+  <div class="members-loading">
+    <div class="spinner"></div>
+    <span>Leden laden…</span>
+  </div>
+}
+
+@if (!loading() && error()) {
+  <p class="members-error">{{ error() }}</p>
+}
+
+@if (!loading() && !error()) {
+  <div class="members-header">
+    <h3 class="members-count">
+      <lucide-icon name="users" size="18" />
+      {{ sortedMembers().length }} {{ sortedMembers().length === 1 ? 'lid' : 'leden' }}
+    </h3>
+  </div>
+
+  <ul class="members-list">
+    @for (member of sortedMembers(); track member.id) {
+      <li class="member-card" [class.member-card--me]="isCurrentUser(member.id)">
+        <app-user-avatar
+          [avatarUrl]="member.avatar_url"
+          [firstName]="member.first_name"
+          [lastName]="member.last_name"
+          size="md"
+        />
+
+        <div class="member-info">
+          <span class="member-name">{{ fullName(member) }}</span>
+          <span class="member-email-placeholder"></span>
+        </div>
+
+        <div class="member-badges">
+          @if (isKotbaas(member.id)) {
+            <span class="badge badge--kotbaas">
+              <lucide-icon name="crown" size="12" />
+              Kotbaas
+            </span>
+          } @else {
+            <span class="badge badge--kotgenoot">Kotgenoot</span>
+          }
+
+          @if (isCurrentUser(member.id)) {
+            <span class="badge badge--me">Jij</span>
+          }
+        </div>
+      </li>
+    }
+  </ul>
+}
