@@ -50,4 +50,9 @@
     font-weight: 700;
     color: var(--color-text);
   }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
 }

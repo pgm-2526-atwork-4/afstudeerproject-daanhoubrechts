@@ -10,6 +10,7 @@
     justify-content: space-between;
     gap: var(--spacing-md);
     margin-top: var(--spacing-sm);
+    flex-wrap: wrap;
 
     h1 {
       margin: 0;
@@ -19,6 +20,10 @@
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
+
+      @media (max-width: 480px) {
+        font-size: 1.35rem;
+      }
     }
   }
 }

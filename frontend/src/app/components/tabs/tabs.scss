@@ -2,6 +2,12 @@
   display: flex;
   gap: 0;
   border-bottom: 2px solid var(--color-border, #e5e7eb);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   &__tab {
     background: none;
@@ -17,6 +23,7 @@
       color 0.15s,
       border-color 0.15s;
     white-space: nowrap;
+    flex-shrink: 0;
 
     &:hover {
       color: var(--color-text, #111827);
@@ -26,6 +33,11 @@
       color: var(--color-primary, #16a34a);
       border-bottom-color: var(--color-primary, #16a34a);
       font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.6rem 0.875rem;
+      font-size: 0.875rem;
     }
   }
 }

@@ -61,6 +61,7 @@
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-md) var(--spacing-lg);
+  flex-wrap: wrap;
 
   .ct-card__name {
     font-weight: 600;
@@ -78,6 +79,10 @@
     align-items: center;
     gap: 4px;
     flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-md);
   }
 }
 

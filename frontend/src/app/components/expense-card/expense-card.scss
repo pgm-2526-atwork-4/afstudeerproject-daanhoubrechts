@@ -13,6 +13,10 @@
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-md);
+
+    @media (max-width: 480px) {
+      flex-wrap: wrap;
+    }
   }
 
   &__info {
@@ -54,6 +58,13 @@
     align-items: flex-end;
     gap: var(--spacing-sm);
     flex-shrink: 0;
+
+    @media (max-width: 480px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
   }
 
   &__amount {
