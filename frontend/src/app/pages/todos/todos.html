@@ -38,7 +38,13 @@
     @if (todos().length > 0) {
       <div class="todos__columns">
 
-        <div class="column">
+        <div
+          class="column"
+          [class.column--dragover]="dragOverStatus() === 'todo'"
+          (dragover)="onDragOver($event, 'todo')"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop('todo')"
+        >
           <div class="column__header column__header--todo">
             <span class="column__dot"></span>
             <h3>Te doen</h3>
@@ -46,13 +52,21 @@
           </div>
           <div class="column__cards">
             @for (todo of todoItems(); track todo.id) {
-              <app-todo-card
-                [todo]="todo"
-                [currentUserId]="currentUserId()"
-                (statusChanged)="onStatusChanged($event)"
-                (editRequested)="openEditModal($event)"
-                (deleteRequested)="deleteTodo($event)"
-              />
+              <div
+                class="todo-drag-wrapper"
+                draggable="true"
+                [class.todo-drag-wrapper--dragging]="draggingId() === todo.id"
+                (dragstart)="onDragStart(todo.id)"
+                (dragend)="onDragEnd()"
+              >
+                <app-todo-card
+                  [todo]="todo"
+                  [currentUserId]="currentUserId()"
+                  (statusChanged)="onStatusChanged($event)"
+                  (editRequested)="openEditModal($event)"
+                  (deleteRequested)="deleteTodo($event)"
+                />
+              </div>
             }
             @if (todoItems().length === 0) {
               <p class="column__empty">Geen taken.</p>
@@ -60,7 +74,13 @@
           </div>
         </div>
 
-        <div class="column">
+        <div
+          class="column"
+          [class.column--dragover]="dragOverStatus() === 'bezig'"
+          (dragover)="onDragOver($event, 'bezig')"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop('bezig')"
+        >
           <div class="column__header column__header--bezig">
             <span class="column__dot"></span>
             <h3>Bezig</h3>
@@ -68,13 +88,21 @@
           </div>
           <div class="column__cards">
             @for (todo of bezigItems(); track todo.id) {
-              <app-todo-card
-                [todo]="todo"
-                [currentUserId]="currentUserId()"
-                (statusChanged)="onStatusChanged($event)"
-                (editRequested)="openEditModal($event)"
-                (deleteRequested)="deleteTodo($event)"
-              />
+              <div
+                class="todo-drag-wrapper"
+                draggable="true"
+                [class.todo-drag-wrapper--dragging]="draggingId() === todo.id"
+                (dragstart)="onDragStart(todo.id)"
+                (dragend)="onDragEnd()"
+              >
+                <app-todo-card
+                  [todo]="todo"
+                  [currentUserId]="currentUserId()"
+                  (statusChanged)="onStatusChanged($event)"
+                  (editRequested)="openEditModal($event)"
+                  (deleteRequested)="deleteTodo($event)"
+                />
+              </div>
             }
             @if (bezigItems().length === 0) {
               <p class="column__empty">Geen taken.</p>
@@ -82,7 +110,13 @@
           </div>
         </div>
 
-        <div class="column">
+        <div
+          class="column"
+          [class.column--dragover]="dragOverStatus() === 'klaar'"
+          (dragover)="onDragOver($event, 'klaar')"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop('klaar')"
+        >
           <div class="column__header column__header--klaar">
             <span class="column__dot"></span>
             <h3>Klaar</h3>
@@ -90,13 +124,21 @@
           </div>
           <div class="column__cards">
             @for (todo of klaarItems(); track todo.id) {
-              <app-todo-card
-                [todo]="todo"
-                [currentUserId]="currentUserId()"
-                (statusChanged)="onStatusChanged($event)"
-                (editRequested)="openEditModal($event)"
-                (deleteRequested)="deleteTodo($event)"
-              />
+              <div
+                class="todo-drag-wrapper"
+                draggable="true"
+                [class.todo-drag-wrapper--dragging]="draggingId() === todo.id"
+                (dragstart)="onDragStart(todo.id)"
+                (dragend)="onDragEnd()"
+              >
+                <app-todo-card
+                  [todo]="todo"
+                  [currentUserId]="currentUserId()"
+                  (statusChanged)="onStatusChanged($event)"
+                  (editRequested)="openEditModal($event)"
+                  (deleteRequested)="deleteTodo($event)"
+                />
+              </div>
             }
             @if (klaarItems().length === 0) {
               <p class="column__empty">Geen taken.</p>
