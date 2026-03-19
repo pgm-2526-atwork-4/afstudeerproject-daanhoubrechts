@@ -209,6 +209,45 @@ postsRoutes.post('/:postId/image', requireAuth, upload.single('file'), async (re
   }
 });
 
+// PATCH /api/posts/:postId - post bewerken (alleen auteur)
+postsRoutes.patch('/:postId', requireAuth, async (req, res) => {
+  const userId = req.user!.id;
+  const { postId } = req.params;
+  const { title, content } = req.body as { title?: string | null; content?: string | null };
+
+  try {
+    const { data: post, error: postError } = await supabaseAdmin
+      .from('posts')
+      .select('author_id')
+      .eq('id', postId)
+      .single();
+
+    if (postError || !post) { res.status(404).json({ error: 'Post niet gevonden.' }); return; }
+    if (post.author_id !== userId) { res.status(403).json({ error: 'Geen toegang.' }); return; }
+
+    const trimmedTitle = title?.trim() ?? null;
+    const trimmedContent = content?.trim() ?? null;
+
+    if (!trimmedTitle && !trimmedContent) {
+      res.status(400).json({ error: 'Een post heeft minstens een titel of inhoud nodig.' });
+      return;
+    }
+
+    const { data: updated, error: updateError } = await supabaseAdmin
+      .from('posts')
+      .update({ title: trimmedTitle || null, content: trimmedContent || null })
+      .eq('id', postId)
+      .select('*')
+      .single();
+
+    if (updateError) { res.status(500).json({ error: updateError.message }); return; }
+
+    res.json(updated);
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+  }
+});
+
 // DELETE /api/posts/:postId - post verwijderen (auteur of kotbaas)
 postsRoutes.delete('/:postId', requireAuth, async (req, res) => {
   const userId = req.user!.id;
