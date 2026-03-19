@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal, computed, HostListener } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
@@ -7,6 +7,8 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Issue, IssueStatus, IssuePriority, IssueVisibility } from '../../models/issue.interface';
 import { environment } from '../../../environments/environment';
+import { PageHeader } from '../../components/page-header/page-header';
+import { FormField } from '../../components/form-field/form-field';
 import { IssueCard } from '../../components/issue-card/issue-card';
 import { Modal } from '../../components/modal/modal';
 import { Alert } from '../../components/alert/alert';
@@ -16,7 +18,7 @@ import { RichTextEditor } from '../../components/rich-text-editor/rich-text-edit
 @Component({
   selector: 'app-issues',
   standalone: true,
-  imports: [RouterLink, FormsModule, IssueCard, Modal, Alert, PageState, RichTextEditor],
+  imports: [FormsModule, PageHeader, FormField, IssueCard, Modal, Alert, PageState, RichTextEditor],
   templateUrl: './issues.html',
   styleUrl: './issues.scss',
 })

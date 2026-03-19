@@ -8,6 +8,8 @@ import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../core/auth/auth.service';
 import { Todo, TodoPriority, TodoStatus } from '../../models/todo.interface';
 import { environment } from '../../../environments/environment';
+import { PageHeader } from '../../components/page-header/page-header';
+import { FormField } from '../../components/form-field/form-field';
 import { TodoCard } from '../../components/todo-card/todo-card';
 import { Modal } from '../../components/modal/modal';
 import { PageState } from '../../components/page-state/page-state';
@@ -22,7 +24,7 @@ interface MembersResponse {
 @Component({
   selector: 'app-todos',
   standalone: true,
-  imports: [RouterLink, FormsModule, TodoCard, Modal, PageState, LucideAngularModule, UserAvatar],
+  imports: [RouterLink, FormsModule, PageHeader, FormField, TodoCard, Modal, PageState, LucideAngularModule, UserAvatar],
   templateUrl: './todos.html',
   styleUrl: './todos.scss',
 })
