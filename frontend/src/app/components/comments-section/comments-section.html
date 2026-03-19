@@ -18,7 +18,7 @@
             <span class="comment__name">
               {{ comment.author?.first_name }} {{ comment.author?.last_name }}
             </span>
-            <span class="comment__time">{{ timeAgo(comment.created_at) }}</span>
+            <span class="comment__time">{{ comment.created_at | timeAgo }}</span>
           </div>
           @if (comment.author_id === currentUserId()) {
             <app-post-menu
