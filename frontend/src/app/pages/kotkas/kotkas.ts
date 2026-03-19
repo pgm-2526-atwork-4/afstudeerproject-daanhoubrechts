@@ -7,6 +7,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../core/auth/auth.service';
 import { Expense, BalancesResponse, BalanceEntry } from '../../models/expense.interface';
 import { environment } from '../../../environments/environment';
+import { PageHeader } from '../../components/page-header/page-header';
 import { Modal } from '../../components/modal/modal';
 import { PageState } from '../../components/page-state/page-state';
 import { KotgroupMember } from '../../components/members-tab/members-tab';
@@ -26,6 +27,7 @@ interface MembersResponse {
   standalone: true,
   imports: [
     RouterLink,
+    PageHeader,
     Modal,
     PageState,
     LucideAngularModule,

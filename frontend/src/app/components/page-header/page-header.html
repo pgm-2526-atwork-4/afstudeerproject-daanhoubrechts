@@ -1,0 +1,7 @@
+<header class="page-header">
+  <a [routerLink]="backLink()" class="back-link">← Terug</a>
+  <div class="page-header__title-row">
+    <ng-content select="[title]" />
+    <ng-content select="[cta]" />
+  </div>
+</header>
