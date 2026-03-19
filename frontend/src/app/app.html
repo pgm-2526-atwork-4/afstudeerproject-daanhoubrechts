@@ -1,16 +1,20 @@
 <div class="app-layout">
-  @if (authService.isLoggedIn()) {
+  @if (showSidebar()) {
   <app-sidebar />
   }
 
   <div class="app-content">
-    @if (!authService.isLoggedIn()) {
-    <div class="top-nav-placeholder">
-      <a routerLink="/">Home</a>
-      <div style="flex:1"></div>
-      <a routerLink="/login">Inloggen</a>
-      <a routerLink="/register">Registreren</a>
-    </div>
+    @if (showTopNav()) {
+    <header class="top-nav">
+      <a routerLink="/" class="top-nav__brand">
+        <img src="assets/images/logo-kothub.png" width="32" height="32" alt="KotHub logo" />
+        <span>KotHub</span>
+      </a>
+      <nav class="top-nav__links">
+        <a routerLink="/login" class="top-nav__link">Inloggen</a>
+        <a routerLink="/register" class="top-nav__cta">Registreren</a>
+      </nav>
+    </header>
     }
 
     <main>

@@ -35,6 +35,9 @@ import {
   UserCheck,
   ShieldCheck,
   Wallet,
+  UserPlus,
+  ChevronRight,
+  Sparkles,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -79,6 +82,9 @@ export const appConfig: ApplicationConfig = {
         UserCheck,
         ShieldCheck,
         Wallet,
+        UserPlus,
+        ChevronRight,
+        Sparkles,
       }),
     ),
     // wacht op auth init voor de router begint te navigeren
