@@ -1,0 +1,94 @@
+<section class="kotkas" (click)="$event.stopPropagation()">
+
+  @if (loading()) {
+    <app-page-state [loading]="true" />
+  }
+
+  @if (!loading() && error()) {
+    <app-page-state [error]="error()" />
+    <a [routerLink]="backLink()" class="back-link">← Terug</a>
+  }
+
+  @if (!loading() && !error()) {
+    <header class="kotkas__header">
+      <div class="kotkas__title-block">
+        <a [routerLink]="backLink()" class="back-link">← Terug</a>
+        <h1>
+          <lucide-icon name="receipt" size="28" />
+          KotKas
+        </h1>
+      </div>
+      <button class="btn btn--primary" (click)="openCreateModal()">
+        <lucide-icon name="plus" size="16" />
+        Nieuwe uitgave
+      </button>
+    </header>
+
+    @if (myBalance()) {
+      <app-my-balance-card [balance]="myBalance()!" />
+    }
+
+    @if (allBalances().length > 0) {
+      <div class="section">
+        <h2 class="section__title">Saldo overzicht</h2>
+        <div class="balance-grid">
+          @for (entry of allBalances(); track entry.userId) {
+            <app-balance-card [entry]="entry" />
+          }
+        </div>
+      </div>
+    }
+
+    @if (settlements().length > 0) {
+      <div class="section">
+        <h2 class="section__title">Afrekeningen</h2>
+        <app-settlement-list [settlements]="settlements()" />
+      </div>
+    }
+
+    <div class="section">
+      <h2 class="section__title">Recente uitgaven</h2>
+
+      @if (expenses().length === 0) {
+        <div class="kotkas__empty">
+          <h3>Nog geen uitgaven</h3>
+          <p>Voeg een gedeelde aankoop toe en verdeel die onder kotgenoten.</p>
+          <button class="btn btn--primary" (click)="openCreateModal()">
+            <lucide-icon name="plus" size="16" />
+            Eerste uitgave toevoegen
+          </button>
+        </div>
+      }
+
+      @if (expenses().length > 0) {
+        <div class="expense-list">
+          @for (expense of expenses(); track expense.id) {
+            <app-expense-card
+              [expense]="expense"
+              (editRequested)="openEditModal($event)"
+              (deleteRequested)="deleteExpense($event)"
+            />
+          }
+        </div>
+      }
+    </div>
+  }
+
+</section>
+
+@if (showModal()) {
+  <app-modal
+    [title]="editingExpense() ? 'Uitgave bewerken' : 'Nieuwe uitgave'"
+    (closed)="closeModal()"
+  >
+    <app-expense-form
+      [members]="members()"
+      [saving]="saving()"
+      [error]="modalError()"
+      [editingExpense]="editingExpense()"
+      [defaultPayerId]="currentUserId() ?? ''"
+      (submitted)="onFormSubmitted($event)"
+      (cancelled)="closeModal()"
+    />
+  </app-modal>
+}
