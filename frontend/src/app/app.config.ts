@@ -38,6 +38,8 @@ import {
   UserPlus,
   ChevronRight,
   Sparkles,
+  Menu,
+  X,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -85,6 +87,8 @@ export const appConfig: ApplicationConfig = {
         UserPlus,
         ChevronRight,
         Sparkles,
+        Menu,
+        X,
       }),
     ),
     // wacht op auth init voor de router begint te navigeren
