@@ -1,7 +1,17 @@
 import { Router } from 'express';
 import { randomUUID } from 'crypto';
+import multer from 'multer';
 import { supabaseAdmin } from '../lib/supabase.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
+
+const contractUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype === 'application/pdf') cb(null, true);
+    else cb(new Error('Alleen PDF bestanden zijn toegestaan.'));
+  },
+});
 
 export const kotgroepenRoutes = Router();
 
@@ -249,6 +259,178 @@ kotgroepenRoutes.get('/:id/members', requireAuth, async (req, res) => {
     }
 
     res.json({ members: profiles ?? [], kotbaas_id: group.created_by });
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+  }
+});
+
+// helper: controleer of user kotbaas is van een groep
+async function isKotbaas(userId: string, kotgroupId: string): Promise<boolean> {
+  const { data } = await supabaseAdmin
+    .from('kotgroups')
+    .select('created_by')
+    .eq('id', kotgroupId)
+    .single();
+  return data?.created_by === userId;
+}
+
+// helper: controleer of user lid is van een groep
+async function isMember(userId: string, kotgroupId: string): Promise<boolean> {
+  const { data } = await supabaseAdmin
+    .from('kotgroup_members')
+    .select('user_id')
+    .eq('user_id', userId)
+    .eq('kotgroup_id', kotgroupId)
+    .maybeSingle();
+  return !!data;
+}
+
+// contract uploaden voor een lid (alleen kotbaas)
+kotgroepenRoutes.post(
+  '/:id/contracts/:memberId',
+  requireAuth,
+  contractUpload.single('file'),
+  async (req, res) => {
+    try {
+      const userId = req.user!.id;
+      const { id: kotgroupId, memberId } = req.params as { id: string; memberId: string };
+
+      if (!(await isKotbaas(userId, kotgroupId))) {
+        res.status(403).json({ error: 'Alleen de kotbaas kan contracten uploaden.' });
+        return;
+      }
+
+      if (!(await isMember(memberId, kotgroupId))) {
+        res.status(404).json({ error: 'Dit lid hoort niet bij deze kotgroep.' });
+        return;
+      }
+
+      if (!req.file) {
+        res.status(400).json({ error: 'Geen bestand meegestuurd.' });
+        return;
+      }
+
+      const path = `${kotgroupId}/${memberId}.pdf`;
+
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('contracts')
+        .upload(path, req.file.buffer, {
+          contentType: 'application/pdf',
+          upsert: true,
+        });
+
+      if (uploadError) {
+        res.status(500).json({ error: uploadError.message });
+        return;
+      }
+
+      const { data: urlData } = supabaseAdmin.storage.from('contracts').getPublicUrl(path);
+      res.status(201).json({ url: urlData.publicUrl, member_id: memberId });
+    } catch (e) {
+      res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+    }
+  },
+);
+
+// alle contracten van een kotgroep ophalen (alleen kotbaas)
+kotgroepenRoutes.get('/:id/contracts', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const kotgroupId = req.params['id'];
+
+    if (!(await isKotbaas(userId, kotgroupId))) {
+      res.status(403).json({ error: 'Alleen de kotbaas kan alle contracten bekijken.' });
+      return;
+    }
+
+    const { data: files, error } = await supabaseAdmin.storage
+      .from('contracts')
+      .list(kotgroupId);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    const contracts = (files ?? []).map((file) => {
+      const memberId = file.name.replace('.pdf', '');
+      const { data: urlData } = supabaseAdmin.storage
+        .from('contracts')
+        .getPublicUrl(`${kotgroupId}/${file.name}`);
+      return { member_id: memberId, url: urlData.publicUrl };
+    });
+
+    res.json(contracts);
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+  }
+});
+
+// contract van een specifiek lid ophalen (lid zelf of kotbaas)
+kotgroepenRoutes.get('/:id/contracts/:memberId', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const { id: kotgroupId, memberId } = req.params as { id: string; memberId: string };
+
+    // lid mag alleen eigen contract bekijken, kotbaas mag alles
+    const userIsMember = await isMember(userId, kotgroupId);
+    if (!userIsMember) {
+      res.status(403).json({ error: 'Geen toegang tot deze kotgroep.' });
+      return;
+    }
+
+    const userIsKotbaas = await isKotbaas(userId, kotgroupId);
+    if (!userIsKotbaas && userId !== memberId) {
+      res.status(403).json({ error: 'Je kunt alleen je eigen contract bekijken.' });
+      return;
+    }
+
+    const path = `${kotgroupId}/${memberId}.pdf`;
+
+    // check of het bestand bestaat
+    const { data: files, error: listError } = await supabaseAdmin.storage
+      .from('contracts')
+      .list(kotgroupId, { search: `${memberId}.pdf` });
+
+    if (listError) {
+      res.status(500).json({ error: listError.message });
+      return;
+    }
+
+    const exists = (files ?? []).some((f) => f.name === `${memberId}.pdf`);
+    if (!exists) {
+      res.status(404).json({ error: 'Geen contract gevonden.' });
+      return;
+    }
+
+    const { data: urlData } = supabaseAdmin.storage.from('contracts').getPublicUrl(path);
+    res.json({ url: urlData.publicUrl, member_id: memberId });
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+  }
+});
+
+// contract verwijderen (alleen kotbaas)
+kotgroepenRoutes.delete('/:id/contracts/:memberId', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const { id: kotgroupId, memberId } = req.params as { id: string; memberId: string };
+
+    if (!(await isKotbaas(userId, kotgroupId))) {
+      res.status(403).json({ error: 'Alleen de kotbaas kan contracten verwijderen.' });
+      return;
+    }
+
+    const path = `${kotgroupId}/${memberId}.pdf`;
+
+    const { error } = await supabaseAdmin.storage.from('contracts').remove([path]);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res.json({ success: true });
   } catch (e) {
     res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
   }
