@@ -22,6 +22,8 @@ import {
   MoreHorizontal,
   Check,
   Trash2,
+  Receipt,
+  ArrowRight,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -53,6 +55,8 @@ export const appConfig: ApplicationConfig = {
         MoreHorizontal,
         Check,
         Trash2,
+        Receipt,
+        ArrowRight,
       }),
     ),
     // wacht op auth init voor de router begint te navigeren
