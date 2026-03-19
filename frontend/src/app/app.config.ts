@@ -24,6 +24,12 @@ import {
   Trash2,
   Receipt,
   ArrowRight,
+  FileCheck,
+  FileX,
+  Upload,
+  Download,
+  Eye,
+  EyeOff,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -57,6 +63,12 @@ export const appConfig: ApplicationConfig = {
         Trash2,
         Receipt,
         ArrowRight,
+        FileCheck,
+        FileX,
+        Upload,
+        Download,
+        Eye,
+        EyeOff,
       }),
     ),
     // wacht op auth init voor de router begint te navigeren

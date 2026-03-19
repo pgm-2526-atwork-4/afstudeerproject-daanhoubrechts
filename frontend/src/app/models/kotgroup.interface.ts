@@ -24,3 +24,8 @@ export interface UpdateKotgroupData {
   wifi_ssid?: string | null;
   wifi_password?: string | null;
 }
+
+export interface MemberContract {
+  member_id: string;
+  url: string;
+}

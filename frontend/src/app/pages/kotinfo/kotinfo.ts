@@ -14,8 +14,9 @@ import { WifiTab } from '../../components/wifi-tab/wifi-tab';
 import { RulesTab } from '../../components/rules-tab/rules-tab';
 import { Modal } from '../../components/modal/modal';
 import { MembersTab } from '../../components/members-tab/members-tab';
+import { ContractTab } from '../../components/contract-tab/contract-tab';
 
-type Tab = 'regels' | 'wifi' | 'leden';
+type Tab = 'regels' | 'wifi' | 'contract' | 'leden';
 
 @Component({
   selector: 'app-kotinfo',
@@ -27,6 +28,7 @@ type Tab = 'regels' | 'wifi' | 'leden';
     WifiTab,
     RulesTab,
     MembersTab,
+    ContractTab,
     FormsModule,
     Modal,
     LucideAngularModule,
@@ -60,6 +62,7 @@ export class Kotinfo implements OnInit {
   readonly kotinfoTabs: TabItem[] = [
     { id: 'regels', label: 'Regels' },
     { id: 'wifi', label: 'Wifi' },
+    { id: 'contract', label: 'Contract' },
     { id: 'leden', label: 'Leden' },
   ];
 
