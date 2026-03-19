@@ -17,7 +17,6 @@ export class App {
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  // huidige url als signal zodat template reageert op navigatie
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
@@ -27,11 +26,7 @@ export class App {
     { initialValue: this.router.url },
   );
 
-  readonly showSidebar = computed(
-    () => this.authService.isLoggedIn() && this.currentUrl() !== '/',
-  );
+  readonly showSidebar = computed(() => this.authService.isLoggedIn() && this.currentUrl() !== '/');
 
-  readonly showTopNav = computed(
-    () => !this.authService.isLoggedIn() || this.currentUrl() === '/',
-  );
+  readonly showTopNav = computed(() => !this.authService.isLoggedIn() || this.currentUrl() === '/');
 }
