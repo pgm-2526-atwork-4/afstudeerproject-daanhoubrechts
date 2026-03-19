@@ -157,7 +157,7 @@ kotgroepenRoutes.patch('/:id', requireAuth, async (req, res) => {
       return;
     }
 
-    const allowedFields = ['rules', 'wifi_ssid', 'wifi_password'] as const;
+    const allowedFields = ['name', 'address', 'rules', 'wifi_ssid', 'wifi_password'] as const;
     const update: Record<string, string | null> = {};
 
     for (const field of allowedFields) {
