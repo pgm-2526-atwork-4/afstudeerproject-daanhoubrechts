@@ -5,19 +5,18 @@ import {
   signal,
   effect,
   OnInit,
-  importProvidersFrom,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
+import { LucideAngularModule } from 'lucide-angular';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { UserAvatar } from '../user-avatar/user-avatar';
 import { environment } from '../../../environments/environment';
 import { Kotgroup } from '../../models/kotgroup.interface';
-
-import { LucideAngularModule } from 'lucide-angular';
+import { SidebarStateService } from './sidebar-state.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -27,6 +26,7 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 export class Sidebar implements OnInit {
   readonly authService = inject(AuthService);
+  readonly sidebarState = inject(SidebarStateService);
   private router = inject(Router);
   private http = inject(HttpClient);
 
@@ -57,6 +57,8 @@ export class Sidebar implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.updateCurrentKotgroep(event.urlAfterRedirects);
+        // sluit sidebar op mobile na navigatie
+        this.sidebarState.close();
       });
     this.updateCurrentKotgroep(this.router.url);
   }
@@ -81,11 +83,13 @@ export class Sidebar implements OnInit {
     const target = event.target as HTMLSelectElement;
     const value = target.value;
     if (value) {
+      this.sidebarState.close();
       this.router.navigate(['/kotgroepen', value, 'kotinfo']);
     }
   }
 
   async logout(): Promise<void> {
+    this.sidebarState.close();
     await this.authService.logout();
   }
 }
