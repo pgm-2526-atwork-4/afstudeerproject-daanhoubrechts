@@ -1,9 +1,25 @@
 <div class="app-layout">
   @if (showSidebar()) {
   <app-sidebar />
+
+  @if (sidebarState.isOpen()) {
+  <div class="mobile-backdrop" (click)="sidebarState.close()" aria-hidden="true"></div>
+  }
   }
 
   <div class="app-content">
+    @if (showSidebar()) {
+    <header class="mobile-topbar">
+      <button class="mobile-topbar__burger" (click)="sidebarState.toggle()" aria-label="Menu openen">
+        <lucide-icon [name]="sidebarState.isOpen() ? 'x' : 'menu'" [size]="22"></lucide-icon>
+      </button>
+      <a routerLink="/" class="mobile-topbar__brand">
+        <img src="assets/images/logo-kothub.png" width="28" height="28" alt="KotHub logo" />
+        <span>KotHub</span>
+      </a>
+    </header>
+    }
+
     @if (showTopNav()) {
     <header class="top-nav">
       <a routerLink="/" class="top-nav__brand">

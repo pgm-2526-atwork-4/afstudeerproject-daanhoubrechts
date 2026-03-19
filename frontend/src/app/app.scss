@@ -18,6 +18,63 @@
   }
 }
 
+// mobile topbar — alleen zichtbaar op kleine schermen
+.mobile-topbar {
+  display: none;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 150;
+
+  &__burger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+
+    &:hover {
+      background: var(--color-bg);
+    }
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+// backdrop overlay wanneer mobile sidebar open is
+.mobile-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 190;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
 .top-nav {
   position: sticky;
   top: 0;
