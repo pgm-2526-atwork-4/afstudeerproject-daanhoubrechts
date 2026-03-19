@@ -1,0 +1,135 @@
+@if (isKotbaas()) {
+
+  @if (loading()) {
+    <div class="ct-loading">
+      <div class="spinner"></div>
+      <span>Contracten laden…</span>
+    </div>
+  }
+
+  @if (!loading() && error()) {
+    <p class="ct-error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (membersWithContracts().length === 0) {
+      <p class="ct-empty">Er zijn nog geen kotgenoten in deze kotgroep.</p>
+    } @else {
+      <ul class="ct-list">
+        @for (item of membersWithContracts(); track item.member.id) {
+          <li class="ct-card">
+
+            <div class="ct-card__header">
+              <app-user-avatar
+                [avatarUrl]="item.member.avatar_url"
+                [firstName]="item.member.first_name"
+                [lastName]="item.member.last_name"
+                size="sm"
+              />
+              <span class="ct-card__name">{{ fullName(item.member) }}</span>
+
+              <div class="ct-card__actions">
+                @if (item.contract) {
+                  <button
+                    class="btn-icon"
+                    [class.btn-icon--active]="isPreviewOpen(item.member.id)"
+                    (click)="togglePreview(item.member.id)"
+                    [title]="isPreviewOpen(item.member.id) ? 'Preview verbergen' : 'Preview tonen'"
+                  >
+                    <lucide-icon [name]="isPreviewOpen(item.member.id) ? 'eye-off' : 'eye'" size="16" />
+                  </button>
+                  <a
+                    [href]="item.contract.url"
+                    download
+                    target="_blank"
+                    class="btn-icon"
+                    title="Downloaden"
+                  >
+                    <lucide-icon name="download" size="16" />
+                  </a>
+                  <button
+                    class="btn-icon btn-icon--danger"
+                    (click)="deleteContract(item.member.id)"
+                    title="Contract verwijderen"
+                  >
+                    <lucide-icon name="trash-2" size="16" />
+                  </button>
+                } @else {
+                  <app-contract-upload
+                    [kotgroupId]="kotgroupId()"
+                    [memberId]="item.member.id"
+                    [compact]="true"
+                    (contractUploaded)="onContractUploaded(item.member.id, $event)"
+                  />
+                }
+              </div>
+
+              @if (item.contract) {
+                <span class="ct-badge ct-badge--ok">
+                  <lucide-icon name="file-check" size="12" />
+                  Contract aanwezig
+                </span>
+              } @else {
+                <span class="ct-badge ct-badge--missing">
+                  <lucide-icon name="file-x" size="12" />
+                  Geen contract
+                </span>
+              }
+            </div>
+
+            @if (item.contract && isPreviewOpen(item.member.id)) {
+              <div class="ct-card__preview">
+                <app-contract-viewer
+                  [contractUrl]="item.contract.url"
+                  [memberName]="fullName(item.member)"
+                  [actionsHidden]="true"
+                />
+              </div>
+            }
+
+          </li>
+        }
+      </ul>
+    }
+  }
+
+} @else {
+
+  @if (myContractLoading()) {
+    <div class="ct-loading">
+      <div class="spinner"></div>
+      <span>Contract laden…</span>
+    </div>
+  }
+
+  @if (!myContractLoading() && myContractError()) {
+    <p class="ct-error">{{ myContractError() }}</p>
+  }
+
+  @if (!myContractLoading() && !myContractError()) {
+    @if (myContract()) {
+      <div class="ct-my-contract">
+        <div class="ct-my-contract__info">
+          <lucide-icon name="file-text" size="18" class="ct-my-contract__icon" />
+          <div>
+            <p class="ct-my-contract__label">Jouw huurcontract</p>
+            <p class="ct-my-contract__hint">Bekijk of download je contract hieronder.</p>
+          </div>
+        </div>
+        <app-contract-viewer
+          [contractUrl]="myContract()!.url"
+          memberName="mijn contract"
+        />
+      </div>
+    } @else {
+      <div class="ct-no-contract">
+        <lucide-icon name="file-x" size="28" />
+        <div>
+          <p class="ct-no-contract__title">Nog geen contract beschikbaar</p>
+          <p class="ct-no-contract__sub">De kotbaas heeft nog geen contract voor jou geüpload.</p>
+        </div>
+      </div>
+    }
+  }
+
+}

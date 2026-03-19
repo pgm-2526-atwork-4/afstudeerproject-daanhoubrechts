@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+// compact modus: inline knop
+.upload-compact {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.upload-busy {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.upload-error-inline {
+  font-size: 0.8125rem;
+  color: var(--color-error);
+}
+
+// normale drag-drop zone
+.upload-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+
+  &--drag {
+    border-color: var(--color-primary);
+    background: #f0fdf4;
+  }
+
+  &--uploading {
+    cursor: default;
+    opacity: 0.7;
+  }
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.upload-icon {
+  color: var(--color-text-secondary);
+}
+
+.upload-label {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.upload-error {
+  margin-top: var(--spacing-xs);
+  font-size: 0.875rem;
+  color: var(--color-error);
+}
