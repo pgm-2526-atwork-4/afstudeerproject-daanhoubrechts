@@ -11,11 +11,12 @@ import { IssueCard } from '../../components/issue-card/issue-card';
 import { Modal } from '../../components/modal/modal';
 import { Alert } from '../../components/alert/alert';
 import { PageState } from '../../components/page-state/page-state';
+import { RichTextEditor } from '../../components/rich-text-editor/rich-text-editor';
 
 @Component({
   selector: 'app-issues',
   standalone: true,
-  imports: [RouterLink, FormsModule, IssueCard, Modal, Alert, PageState],
+  imports: [RouterLink, FormsModule, IssueCard, Modal, Alert, PageState, RichTextEditor],
   templateUrl: './issues.html',
   styleUrl: './issues.scss',
 })
@@ -219,17 +220,6 @@ export class Issues implements OnInit {
 
   onIssueUpdated(updated: Issue): void {
     this.issues.update((list) => list.map((i) => (i.id === updated.id ? updated : i)));
-  }
-
-  // rich text toolbar
-  applyFormat(command: string, editor: HTMLElement): void {
-    editor.focus();
-    document.execCommand(command, false, undefined);
-    this.contentInput = editor.innerHTML;
-  }
-
-  onEditorInput(editor: HTMLElement): void {
-    this.contentInput = editor.innerHTML;
   }
 
   onImagesSelected(event: Event): void {

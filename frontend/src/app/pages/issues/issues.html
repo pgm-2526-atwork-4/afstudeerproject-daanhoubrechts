@@ -36,28 +36,11 @@
         <!-- rich text inhoud -->
         <div class="issue-form__field">
             <label>Beschrijving (optioneel)</label>
-            <div class="issue-form__toolbar">
-                <button class="toolbar-btn" type="button" (mousedown)="$event.preventDefault()"
-                    (click)="applyFormat('bold', editor)" title="Vet">
-                    <strong>B</strong>
-                </button>
-                <button class="toolbar-btn toolbar-btn--italic" type="button" (mousedown)="$event.preventDefault()"
-                    (click)="applyFormat('italic', editor)" title="Cursief">
-                    <em>I</em>
-                </button>
-                <button class="toolbar-btn toolbar-btn--underline" type="button" (mousedown)="$event.preventDefault()"
-                    (click)="applyFormat('underline', editor)" title="Onderlijnd">
-                    <span>U</span>
-                </button>
-            </div>
-            <div #editor class="issue-editor" contenteditable="true" data-placeholder="Voeg details toe..."
-                (input)="onEditorInput(editor)"
-                (keydown.control.b)="$event.preventDefault(); applyFormat('bold', editor)"
-                (keydown.meta.b)="$event.preventDefault(); applyFormat('bold', editor)"
-                (keydown.control.i)="$event.preventDefault(); applyFormat('italic', editor)"
-                (keydown.meta.i)="$event.preventDefault(); applyFormat('italic', editor)"
-                (keydown.control.u)="$event.preventDefault(); applyFormat('underline', editor)"
-                (keydown.meta.u)="$event.preventDefault(); applyFormat('underline', editor)"></div>
+            <app-rich-text-editor
+                [initialValue]="contentInput"
+                placeholder="Voeg details toe..."
+                (valueChange)="contentInput = $event"
+            />
         </div>
 
         <!-- visibility -->
