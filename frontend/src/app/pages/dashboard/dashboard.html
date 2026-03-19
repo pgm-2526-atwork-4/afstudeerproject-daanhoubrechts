@@ -1,6 +1,214 @@
-<section class="dashboard">
-    <h1>Dashboard</h1>
-    <p>Dit is de dashboard pagina</p>
-    <div class="actions">
+<div class="dashboard">
+  <app-page-state [loading]="loading()" [error]="error()" />
+
+  @if (!loading() && !error()) {
+    <!-- Welcome -->
+    <section class="welcome-section">
+      <div class="welcome-left">
+        <app-user-avatar
+          [avatarUrl]="avatarUrl()"
+          [firstName]="firstNameVal()"
+          [lastName]="lastNameVal()"
+          size="lg"
+        />
+        <div class="welcome-text">
+          <h1>Welkom, {{ firstName() }}!</h1>
+          @if (roleLabel()) {
+            <span class="role-badge role-badge--{{ role() }}">{{ roleLabel() }}</span>
+          }
+        </div>
+      </div>
+      <a routerLink="/kotgroepen" class="btn-primary">
+        <lucide-icon name="building-2" size="16" />
+        Mijn kotgroepen
+      </a>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--blue">
+          <lucide-icon name="check-square" size="20" />
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ openTodoCount() }}</span>
+          <span class="stat-label">Open taken</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--orange">
+          <lucide-icon name="triangle-alert" size="20" />
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ recentPosts().length }}</span>
+          <span class="stat-label">Recente berichten</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--purple">
+          <lucide-icon name="user-check" size="20" />
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ myTodoCount() }}</span>
+          <span class="stat-label">Aan mij toegewezen</span>
+        </div>
+      </div>
     </div>
-</section>
+
+    <!-- Taken + Recente posts -->
+    <div class="content-grid">
+      <!-- Taken -->
+      <section class="card">
+        <div class="card-header">
+          <h2>
+            <lucide-icon name="check-square" size="18" />
+            Open taken
+          </h2>
+          @if (kotgroepen().length > 0) {
+            <a [routerLink]="['/kotgroepen', kotgroepen()[0].id, 'todos']" class="card-link">
+              Bekijk alles
+              <lucide-icon name="arrow-right" size="14" />
+            </a>
+          }
+        </div>
+
+        @if (activeTodos().length === 0) {
+          <div class="empty-state">
+            <lucide-icon name="check-circle-2" size="32" />
+            <p>Geen open taken</p>
+          </div>
+        } @else {
+          <ul class="item-list">
+            @for (todo of activeTodos(); track todo.id) {
+              <li class="item-row">
+                <div class="item-left">
+                  <span class="priority-dot priority-dot--{{ todo.priority }}"></span>
+                  <div class="item-info">
+                    <span class="item-title">{{ todo.title }}</span>
+                    <span class="item-meta">{{ todo.kotgroupName }}</span>
+                  </div>
+                </div>
+                <span class="status-badge status-badge--{{ todo.status }}">
+                  {{ todo.status === 'todo' ? 'Te doen' : 'Bezig' }}
+                </span>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- Recente posts -->
+      <section class="card">
+        <div class="card-header">
+          <h2>
+            <lucide-icon name="message-square" size="18" />
+            Recente berichten
+          </h2>
+          @if (kotgroepen().length > 0) {
+            <a [routerLink]="['/kotgroepen', kotgroepen()[0].id, 'posts']" class="card-link">
+              Bekijk alles
+              <lucide-icon name="arrow-right" size="14" />
+            </a>
+          }
+        </div>
+
+        @if (recentPosts().length === 0) {
+          <div class="empty-state">
+            <lucide-icon name="message-square" size="32" />
+            <p>Nog geen berichten geplaatst</p>
+          </div>
+        } @else {
+          <ul class="item-list">
+            @for (post of recentPosts(); track post.id) {
+              <li class="item-row">
+                <div class="item-left">
+                  <app-user-avatar
+                    [avatarUrl]="post.author?.avatar_url ?? null"
+                    [firstName]="post.author?.first_name ?? ''"
+                    [lastName]="post.author?.last_name ?? ''"
+                    size="sm"
+                  />
+                  <div class="item-info">
+                    <span class="item-title">{{ post.title ?? post.content ?? 'Bericht' }}</span>
+                    <span class="item-meta">
+                      {{ post.author?.first_name }} · {{ post.kotgroupName }} · {{ post.created_at | timeAgo }}
+                    </span>
+                  </div>
+                </div>
+                @if (post.comment_count > 0) {
+                  <span class="comment-count">
+                    <lucide-icon name="message-square" size="12" />
+                    {{ post.comment_count }}
+                  </span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+
+    <!-- Kotgroepen cards -->
+    @if (kotgroepen().length > 0) {
+      <section class="kotgroepen-section">
+        <h2 class="section-title">
+          <lucide-icon name="building-2" size="18" />
+          Mijn kotgroepen
+        </h2>
+        <div class="kotgroepen-grid">
+          @for (kg of kotgroepen(); track kg.id) {
+            <div class="kot-card">
+              <div class="kot-card-top">
+                <div class="kot-icon">
+                  <lucide-icon name="home" size="22" />
+                </div>
+                <div class="kot-info">
+                  <h3>{{ kg.name }}</h3>
+                  @if (kg.address) {
+                    <p>{{ kg.address }}</p>
+                  }
+                </div>
+              </div>
+              <div class="kot-card-links">
+                <a [routerLink]="['/kotgroepen', kg.id, 'kotinfo']" class="kot-link">
+                  <lucide-icon name="info" size="14" />
+                  Info
+                </a>
+                <a [routerLink]="['/kotgroepen', kg.id, 'posts']" class="kot-link">
+                  <lucide-icon name="message-square" size="14" />
+                  Prikbord
+                </a>
+                <a [routerLink]="['/kotgroepen', kg.id, 'todos']" class="kot-link">
+                  <lucide-icon name="check-square" size="14" />
+                  Taken
+                </a>
+                <a [routerLink]="['/kotgroepen', kg.id, 'issues']" class="kot-link">
+                  <lucide-icon name="triangle-alert" size="14" />
+                  Meldingen
+                </a>
+                <a [routerLink]="['/kotgroepen', kg.id, 'kotkas']" class="kot-link">
+                  <lucide-icon name="wallet" size="14" />
+                  KotKas
+                </a>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    } @else {
+      <section class="no-kotgroep-banner">
+        <lucide-icon name="building-2" size="40" />
+        <div>
+          <h3>Nog geen kotgroep</h3>
+          <p>Maak een kotgroep aan of join er één via een uitnodiging.</p>
+        </div>
+        <div class="banner-actions">
+          <a routerLink="/kotgroepen" class="btn-primary">Kotgroep aanmaken</a>
+          <a routerLink="/join" class="btn-secondary">Uitnodiging invoeren</a>
+        </div>
+      </section>
+    }
+  }
+</div>

@@ -30,6 +30,11 @@ import {
   Download,
   Eye,
   EyeOff,
+  TriangleAlert,
+  MessageSquare,
+  UserCheck,
+  ShieldCheck,
+  Wallet,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -69,6 +74,11 @@ export const appConfig: ApplicationConfig = {
         Download,
         Eye,
         EyeOff,
+        TriangleAlert,
+        MessageSquare,
+        UserCheck,
+        ShieldCheck,
+        Wallet,
       }),
     ),
     // wacht op auth init voor de router begint te navigeren
