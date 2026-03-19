@@ -12,13 +12,13 @@
           <app-user-avatar [avatarUrl]="p.avatar_url" [firstName]="p.first_name" [lastName]="p.last_name" size="sm" />
         }
         <span class="expense-card__share">
-          € {{ formatAmount(expense().amount / expense().participants.length) }} p.p.
+          € {{ expense().amount / expense().participants.length | formatAmount }} p.p.
         </span>
       </div>
     </div>
 
     <div class="expense-card__right">
-      <span class="expense-card__amount">€ {{ formatAmount(expense().amount) }}</span>
+      <span class="expense-card__amount">€ {{ expense().amount | formatAmount }}</span>
       <div class="expense-card__menu">
         <app-post-menu
           [actions]="menuActions"

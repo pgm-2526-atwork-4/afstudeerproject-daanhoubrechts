@@ -13,9 +13,9 @@
     <span class="balance-card__name">{{ entry().name }}</span>
     <span class="balance-card__amount">
       @if (entry().netBalance > 0.005) {
-        +€ {{ formatAmount(entry().netBalance) }}
+        +€ {{ entry().netBalance | formatAmount }}
       } @else if (entry().netBalance < -0.005) {
-        −€ {{ formatAmount(-entry().netBalance) }}
+        −€ {{ -entry().netBalance | formatAmount }}
       } @else {
         € 0,00
       }

@@ -1,13 +1,14 @@
 import { Component, input, output, signal } from '@angular/core';
 
 import { Expense } from '../../models/expense.interface';
+import { FormatAmountPipe } from '../../pipes/format-amount.pipe';
 import { UserAvatar } from '../user-avatar/user-avatar';
 import { PostMenu } from '../post-menu/post-menu';
 
 @Component({
   selector: 'app-expense-card',
   standalone: true,
-  imports: [UserAvatar, PostMenu],
+  imports: [UserAvatar, PostMenu, FormatAmountPipe],
   templateUrl: './expense-card.html',
   styleUrl: './expense-card.scss',
 })
@@ -40,10 +41,6 @@ export class ExpenseCard {
 
   closeMenu(): void {
     this.menuOpen.set(false);
-  }
-
-  formatAmount(amount: number): string {
-    return amount.toFixed(2).replace('.', ',');
   }
 
   formatDate(dateStr: string): string {

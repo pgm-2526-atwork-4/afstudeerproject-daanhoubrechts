@@ -75,7 +75,7 @@
       </div>
       @if (selectedParticipantIds.length > 0 && amountInput && amountInput > 0) {
         <p class="split-preview">
-          Per persoon: € {{ formatAmount(amountInput / selectedParticipantIds.length) }}
+          Per persoon: € {{ amountInput / selectedParticipantIds.length | formatAmount }}
         </p>
       }
     </div>

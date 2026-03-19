@@ -8,9 +8,9 @@
     @if (balance().netBalance === 0) {
       Alles verrekend
     } @else if (balance().netBalance > 0) {
-      Je krijgt nog € {{ formatAmount(balance().netBalance) }}
+      Je krijgt nog € {{ balance().netBalance | formatAmount }}
     } @else {
-      Je bent € {{ formatAmount(-balance().netBalance) }} verschuldigd
+      Je bent € {{ -balance().netBalance | formatAmount }} verschuldigd
     }
   </div>
 </div>

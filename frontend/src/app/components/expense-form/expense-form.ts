@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 
 import { Expense } from '../../models/expense.interface';
+import { FormatAmountPipe } from '../../pipes/format-amount.pipe';
 import { KotgroupMember } from '../members-tab/members-tab';
 import { UserAvatar } from '../user-avatar/user-avatar';
 
@@ -16,7 +17,7 @@ export interface ExpenseFormData {
 @Component({
   selector: 'app-expense-form',
   standalone: true,
-  imports: [FormsModule, LucideAngularModule, UserAvatar],
+  imports: [FormsModule, LucideAngularModule, UserAvatar, FormatAmountPipe],
   templateUrl: './expense-form.html',
   styleUrl: './expense-form.scss',
 })
@@ -64,10 +65,6 @@ export class ExpenseForm implements OnInit {
 
   memberName(member: KotgroupMember): string {
     return `${member.first_name} ${member.last_name}`.trim() || 'Onbekend';
-  }
-
-  formatAmount(amount: number): string {
-    return amount.toFixed(2).replace('.', ',');
   }
 
   submit(): void {
