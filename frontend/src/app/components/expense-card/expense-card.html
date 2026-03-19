@@ -1,0 +1,33 @@
+<div class="expense-card" (click)="closeMenu()">
+  <div class="expense-card__main">
+    <div class="expense-card__info">
+      <span class="expense-card__title">{{ expense().title }}</span>
+      <span class="expense-card__meta">
+        Betaald door
+        <strong>{{ expense().payer?.first_name }} {{ expense().payer?.last_name }}</strong>
+        · {{ formatDate(expense().created_at) }}
+      </span>
+      <div class="expense-card__participants">
+        @for (p of expense().participants; track p.id) {
+          <app-user-avatar [avatarUrl]="p.avatar_url" [firstName]="p.first_name" [lastName]="p.last_name" size="sm" />
+        }
+        <span class="expense-card__share">
+          € {{ formatAmount(expense().amount / expense().participants.length) }} p.p.
+        </span>
+      </div>
+    </div>
+
+    <div class="expense-card__right">
+      <span class="expense-card__amount">€ {{ formatAmount(expense().amount) }}</span>
+      <div class="expense-card__menu">
+        <app-post-menu
+          [actions]="menuActions"
+          [isOpen]="menuOpen()"
+          size="sm"
+          (trigger)="toggleMenu($event)"
+          (actionSelected)="onActionSelected($event)"
+        />
+      </div>
+    </div>
+  </div>
+</div>

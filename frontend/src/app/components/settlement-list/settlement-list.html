@@ -1,0 +1,12 @@
+<div class="settlements">
+  @for (s of settlements(); track s.from + s.to) {
+    <div class="settlement-row">
+      <span class="settlement-row__name settlement-row__name--from">{{ s.fromName }}</span>
+      <span class="settlement-row__arrow">
+        <lucide-icon name="arrow-right" size="16" />
+        <span class="settlement-row__amount">€ {{ formatAmount(s.amount) }}</span>
+      </span>
+      <span class="settlement-row__name settlement-row__name--to">{{ s.toName }}</span>
+    </div>
+  }
+</div>

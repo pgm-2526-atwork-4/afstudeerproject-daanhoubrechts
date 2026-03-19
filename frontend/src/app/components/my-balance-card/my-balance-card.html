@@ -1,0 +1,16 @@
+<div
+  class="my-balance-card"
+  [class.my-balance-card--positive]="balance().netBalance > 0"
+  [class.my-balance-card--negative]="balance().netBalance < 0"
+>
+  <div class="my-balance-card__label">Jouw saldo</div>
+  <div class="my-balance-card__amount">
+    @if (balance().netBalance === 0) {
+      Alles verrekend
+    } @else if (balance().netBalance > 0) {
+      Je krijgt nog € {{ formatAmount(balance().netBalance) }}
+    } @else {
+      Je bent € {{ formatAmount(-balance().netBalance) }} verschuldigd
+    }
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<form class="expense-form" (ngSubmit)="submit()">
+
+  <div class="form-group">
+    <label for="expense-title">Omschrijving <span class="required">*</span></label>
+    <input
+      id="expense-title"
+      type="text"
+      [(ngModel)]="titleInput"
+      name="title"
+      placeholder="Bv. boodschappen, poetsmiddelen..."
+      class="form-input"
+      [disabled]="saving()"
+      required
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="expense-amount">Bedrag (€) <span class="required">*</span></label>
+      <input
+        id="expense-amount"
+        type="number"
+        [(ngModel)]="amountInput"
+        name="amount"
+        placeholder="0,00"
+        class="form-input"
+        [disabled]="saving()"
+        min="0.01"
+        step="0.01"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="expense-paidby">Betaald door <span class="required">*</span></label>
+      <select
+        id="expense-paidby"
+        [(ngModel)]="paidByInput"
+        name="paidBy"
+        class="form-input form-select"
+        [disabled]="saving()"
+      >
+        @for (member of members(); track member.id) {
+          <option [value]="member.id">{{ memberName(member) }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (members().length > 0) {
+    <div class="form-group">
+      <label>Verdeeld onder</label>
+      <div class="participant-picker">
+        @for (member of members(); track member.id) {
+          <button
+            type="button"
+            class="participant-option"
+            [class.participant-option--selected]="isParticipantSelected(member.id)"
+            (click)="toggleParticipant(member.id)"
+            [disabled]="saving()"
+          >
+            <app-user-avatar
+              [avatarUrl]="member.avatar_url"
+              [firstName]="member.first_name"
+              [lastName]="member.last_name"
+              size="sm"
+            />
+            <span class="participant-name">{{ memberName(member) }}</span>
+            @if (isParticipantSelected(member.id)) {
+              <lucide-icon name="check" size="14" class="participant-check" />
+            }
+          </button>
+        }
+      </div>
+      @if (selectedParticipantIds.length > 0 && amountInput && amountInput > 0) {
+        <p class="split-preview">
+          Per persoon: € {{ formatAmount(amountInput / selectedParticipantIds.length) }}
+        </p>
+      }
+    </div>
+  }
+
+  @if (displayError) {
+    <p class="form-error">{{ displayError }}</p>
+  }
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary" [disabled]="saving()">
+      @if (saving()) { Opslaan… } @else { Opslaan }
+    </button>
+    <button type="button" class="btn btn--ghost" (click)="cancelled.emit()" [disabled]="saving()">
+      Annuleren
+    </button>
+  </div>
+
+</form>

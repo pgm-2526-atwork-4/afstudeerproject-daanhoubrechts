@@ -1,0 +1,24 @@
+<div
+  class="balance-card"
+  [class.balance-card--positive]="entry().netBalance > 0.005"
+  [class.balance-card--negative]="entry().netBalance < -0.005"
+>
+  <app-user-avatar
+    [avatarUrl]="entry().avatar_url"
+    [firstName]="firstName()"
+    [lastName]="lastName()"
+    size="sm"
+  />
+  <div class="balance-card__info">
+    <span class="balance-card__name">{{ entry().name }}</span>
+    <span class="balance-card__amount">
+      @if (entry().netBalance > 0.005) {
+        +€ {{ formatAmount(entry().netBalance) }}
+      } @else if (entry().netBalance < -0.005) {
+        −€ {{ formatAmount(-entry().netBalance) }}
+      } @else {
+        € 0,00
+      }
+    </span>
+  </div>
+</div>

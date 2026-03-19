@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.settlements {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.settlement-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &__name {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text);
+
+    &--from {
+      color: var(--color-error);
+    }
+
+    &--to {
+      color: var(--color-primary);
+    }
+  }
+
+  &__arrow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-text-secondary);
+    flex: 1;
+    justify-content: center;
+  }
+
+  &__amount {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+}

@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  margin-bottom: var(--spacing-xl);
+}
+
+.my-balance-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+
+  &--positive {
+    background: #f0fdf4;
+    border-color: #86efac;
+  }
+
+  &--negative {
+    background: #fef2f2;
+    border-color: #fca5a5;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+
+    .my-balance-card--positive & {
+      color: var(--color-primary);
+    }
+
+    .my-balance-card--negative & {
+      color: var(--color-error);
+    }
+  }
+}
