@@ -13,12 +13,13 @@ import { Alert } from '../../components/alert/alert';
 import { PageState } from '../../components/page-state/page-state';
 import { PostMenu } from '../../components/post-menu/post-menu';
 import { PollBlock } from '../../components/poll-block/poll-block';
+import { RichTextEditor } from '../../components/rich-text-editor/rich-text-editor';
 import { CommentsSection, ReplyTarget, SubmitCommentEvent, DeleteCommentEvent } from '../../components/comments-section/comments-section';
 
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [RouterLink, FormsModule, UserAvatar, Modal, Alert, PageState, PostMenu, PollBlock, CommentsSection],
+  imports: [RouterLink, FormsModule, UserAvatar, Modal, Alert, PageState, PostMenu, PollBlock, CommentsSection, RichTextEditor],
   templateUrl: './posts.html',
   styleUrl: './posts.scss',
 })
@@ -48,8 +49,9 @@ export class Posts implements OnInit {
     this.openMenuCommentId.set(null);
   }
 
-  // create modal state
+  // create/edit modal state
   readonly showCreateModal = signal(false);
+  readonly editingPost = signal<Post | null>(null);
   readonly creating = signal(false);
   readonly createError = signal<string | null>(null);
   titleInput = '';
@@ -96,7 +98,7 @@ export class Posts implements OnInit {
   // --- create modal ---
 
   openCreateModal(): void {
-    this.showCreateModal.set(true);
+    this.editingPost.set(null);
     this.createError.set(null);
     this.titleInput = '';
     this.contentInput = '';
@@ -104,10 +106,20 @@ export class Posts implements OnInit {
     this.imagePreview = null;
     this.hasPoll.set(false);
     this.pollOptions = ['', ''];
+    this.showCreateModal.set(true);
+  }
+
+  openEditModal(post: Post): void {
+    this.editingPost.set(post);
+    this.titleInput = post.title ?? '';
+    this.contentInput = post.content ?? '';
+    this.createError.set(null);
+    this.showCreateModal.set(true);
   }
 
   closeCreateModal(): void {
     this.showCreateModal.set(false);
+    this.editingPost.set(null);
   }
 
   toggleMenu(postId: string, event: MouseEvent): void {
@@ -117,6 +129,10 @@ export class Posts implements OnInit {
   }
 
   onPostMenuAction(index: number, postId: string): void {
+    if (index === 0) {
+      const post = this.posts().find((p) => p.id === postId);
+      if (post) this.openEditModal(post);
+    }
     if (index === 1) this.deletePost(postId);
   }
 
@@ -124,19 +140,6 @@ export class Posts implements OnInit {
     event.stopPropagation();
     this.openMenuPostId.set(null);
     this.openMenuCommentId.update((current) => (current === commentId ? null : commentId));
-  }
-
-  // vet, cursief of onderlijnd toepassen via execCommand
-  // mousedown op de knoppen verhindert dat de editor focus verliest,
-  // zodat de selectie bewaard blijft
-  applyFormat(command: string, editor: HTMLElement): void {
-    editor.focus();
-    document.execCommand(command, false, undefined);
-    this.contentInput = editor.innerHTML;
-  }
-
-  onEditorInput(editor: HTMLElement): void {
-    this.contentInput = editor.innerHTML;
   }
 
   onImageSelected(event: Event): void {
@@ -175,16 +178,33 @@ export class Posts implements OnInit {
       return;
     }
 
-    const validOptions = this.hasPoll() ? this.pollOptions.map((o) => o.trim()).filter(Boolean) : [];
-    if (this.hasPoll() && validOptions.length < 2) {
-      this.createError.set('Een poll heeft minstens 2 opties nodig.');
-      return;
-    }
-
     this.creating.set(true);
     this.createError.set(null);
 
+    const editing = this.editingPost();
+
     try {
+      if (editing) {
+        const updated = await firstValueFrom(
+          this.http.patch<Post>(`${environment.apiUrl}/posts/${editing.id}`, {
+            title: title || null,
+            content: rawText ? this.contentInput : null,
+          }),
+        );
+        this.posts.update((posts) =>
+          posts.map((p) => (p.id === updated.id ? { ...p, ...updated } : p)),
+        );
+        this.closeCreateModal();
+        return;
+      }
+
+      const validOptions = this.hasPoll() ? this.pollOptions.map((o) => o.trim()).filter(Boolean) : [];
+      if (this.hasPoll() && validOptions.length < 2) {
+        this.createError.set('Een poll heeft minstens 2 opties nodig.');
+        this.creating.set(false);
+        return;
+      }
+
       const post = await firstValueFrom(
         this.http.post<Post>(`${environment.apiUrl}/posts`, {
           kotgroup_id: kotgroupId,
@@ -207,7 +227,7 @@ export class Posts implements OnInit {
       this.closeCreateModal();
     } catch (err) {
       const e = err as HttpErrorResponse;
-      this.createError.set(e.error?.error ?? 'Post aanmaken mislukt.');
+      this.createError.set(e.error?.error ?? (editing ? 'Post bewerken mislukt.' : 'Post aanmaken mislukt.'));
     } finally {
       this.creating.set(false);
     }
