@@ -1,4 +1,174 @@
+<!-- Hero -->
 <section class="hero">
-  <h1>Welkom</h1>
-  <p>Dit is de homepage</p>
+  <div class="hero__content">
+    <div class="hero__text">
+      <h1>Samenleven op kot,<br /><span class="hero__highlight">samen geregeld.</span></h1>
+      <p class="hero__subtitle">
+        KotHub brengt alles samen op een plek: taken verdelen, kosten splitsen,
+        afspraken maken en problemen melden. Zo loopt het kotleven gewoon smooth.
+      </p>
+      <div class="hero__actions">
+        <a routerLink="/register" class="btn-hero btn-hero--primary">
+          Ik ben kotgenoot
+          <lucide-icon name="chevron-right" size="18" />
+        </a>
+        <a routerLink="/register" class="btn-hero btn-hero--secondary">
+          Ik ben kotbaas
+          <lucide-icon name="chevron-right" size="18" />
+        </a>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="hero__logo-wrapper">
+        <img src="assets/images/logo-kothub.png" width="180" height="180" alt="KotHub logo" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+  <div class="section-container">
+    <div class="section-header">
+      <h2>Alles wat je kot nodig heeft</h2>
+      <p>Van taken verdelen tot kosten splitsen, KotHub heeft het covered.</p>
+    </div>
+
+    <div class="features__grid">
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--green">
+          <lucide-icon name="message-square" size="24" />
+        </div>
+        <h3>Prikbord</h3>
+        <p>Post updates, stel vragen en hou iedereen in je kot op de hoogte.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--blue">
+          <lucide-icon name="check-square" size="24" />
+        </div>
+        <h3>Takenbord</h3>
+        <p>Verdeel taken eerlijk, stel deadlines in en wijs ze toe aan kotgenoten.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--orange">
+          <lucide-icon name="wallet" size="24" />
+        </div>
+        <h3>KotKas</h3>
+        <p>Hou gedeelde uitgaven bij en zie in een oogopslag wie wat verschuldigd is.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--red">
+          <lucide-icon name="wrench" size="24" />
+        </div>
+        <h3>Issues</h3>
+        <p>Meld problemen zoals een lekkende kraan en volg de status tot het opgelost is.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--purple">
+          <lucide-icon name="info" size="24" />
+        </div>
+        <h3>Kotinfo</h3>
+        <p>Alle huisregels, contracten en belangrijke documenten op een centrale plek.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--teal">
+          <lucide-icon name="building-2" size="24" />
+        </div>
+        <h3>Groepsbeheer</h3>
+        <p>Maak meerdere kotgroepen aan of beheer ze als kotbaas vanuit een dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-it-works">
+  <div class="section-container">
+    <div class="section-header">
+      <h2>In 3 stappen van start</h2>
+      <p>Binnen een paar minuten is je kot georganiseerd.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step__label">1</span>
+        <h3>Maak een account</h3>
+        <p>Registreer je als kotgenoot of kotbaas. Duurt minder dan een minuut.</p>
+      </div>
+
+      <div class="step">
+        <span class="step__label">2</span>
+        <h3>Start of join een kotgroep</h3>
+        <p>Maak een nieuwe groep aan of join er een via een uitnodigingscode.</p>
+      </div>
+
+      <div class="step">
+        <span class="step__label">3</span>
+        <h3>Beheer alles samen</h3>
+        <p>Taken, kosten, meldingen: alles overzichtelijk op een plek.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roles -->
+<section class="roles">
+  <div class="section-container">
+    <div class="section-header">
+      <h2>Voor iedereen in het kot</h2>
+      <p>Of je nu een kamer huurt of het pand beheert, KotHub werkt voor jou.</p>
+    </div>
+
+    <div class="roles__grid">
+      <div class="role-card">
+        <h3>Kotgenoot</h3>
+        <p class="role-card__desc">Je huurt een kamer en wil het samenleven makkelijker maken.</p>
+        <ul class="role-card__perks">
+          <li>Taken bekijken en afvinken</li>
+          <li>Gedeelde uitgaven bijhouden</li>
+          <li>Problemen melden aan de kotbaas</li>
+          <li>Posts en updates plaatsen</li>
+          <li>Huisregels en contracten raadplegen</li>
+        </ul>
+        <a routerLink="/register" class="role-card__cta role-card__cta--green">
+          Registreer als kotgenoot
+          <lucide-icon name="arrow-right" size="16" />
+        </a>
+      </div>
+
+      <div class="role-card">
+        <h3>Kotbaas</h3>
+        <p class="role-card__desc">Je beheert een of meerdere panden en wil alles overzichtelijk houden.</p>
+        <ul class="role-card__perks">
+          <li>Kotgroepen aanmaken en beheren</li>
+          <li>Issues van huurders opvolgen</li>
+          <li>Huisregels en contracten uploaden</li>
+          <li>Overzicht van alle koten</li>
+          <li>Financieel overzicht per groep</li>
+        </ul>
+        <a routerLink="/register" class="role-card__cta role-card__cta--orange">
+          Registreer als kotbaas
+          <lucide-icon name="arrow-right" size="16" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta">
+  <div class="section-container">
+    <img src="assets/images/logo-kothub.png" width="56" height="56" alt="" class="final-cta__logo" />
+    <h2>Klaar om je kot te organiseren?</h2>
+    <p>Maak gratis een account aan en begin vandaag nog.</p>
+    <a routerLink="/register" class="btn-hero btn-hero--white">
+      Aan de slag
+      <lucide-icon name="arrow-right" size="18" />
+    </a>
+  </div>
 </section>
