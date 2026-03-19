@@ -188,12 +188,31 @@
   font-size: 0.8rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .issues {
+    padding: var(--spacing-md) var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
   .issues {
     padding: var(--spacing-md) var(--spacing-sm);
   }
 
   .issues__title-row h1 {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
+  }
+
+  .issue-form {
+    padding: var(--spacing-md);
+
+    &__actions {
+      flex-wrap: wrap;
+
+      .btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
   }
 }

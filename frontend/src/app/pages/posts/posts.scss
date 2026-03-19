@@ -188,8 +188,27 @@
   font-size: 0.8rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .posts {
+    padding: var(--spacing-md) var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
   .posts {
     padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .post-form {
+    padding: var(--spacing-md);
+
+    &__actions {
+      flex-wrap: wrap;
+
+      .btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
   }
 }

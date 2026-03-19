@@ -6,6 +6,15 @@
   max-width: 1200px;
   margin: var(--spacing-xl) auto;
   padding: var(--spacing-lg);
+
+  @media (max-width: 768px) {
+    margin: var(--spacing-md) auto;
+    padding: var(--spacing-md);
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-sm);
+  }
 }
 
 .back-link {
@@ -42,6 +51,14 @@
     font-weight: 700;
     color: var(--color-text);
     margin: 0;
+
+    @media (max-width: 480px) {
+      font-size: 1.35rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    margin-bottom: var(--spacing-md);
   }
 }
 
@@ -60,6 +77,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: var(--spacing-md);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+  }
 }
 
 .kotkas__empty {
