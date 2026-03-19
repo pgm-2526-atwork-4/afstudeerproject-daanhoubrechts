@@ -1,0 +1,84 @@
+<article class="post-card">
+
+  <!-- header: avatar + auteur + tijd + menu -->
+  <div class="post-card__header">
+    <div class="post-card__avatar">
+      <app-user-avatar
+        [avatarUrl]="post().author?.avatar_url ?? null"
+        [firstName]="post().author?.first_name ?? ''"
+        [lastName]="post().author?.last_name ?? ''"
+        size="md"
+      />
+    </div>
+    <div class="post-card__author-info">
+      <span class="post-card__name">
+        {{ post().author?.first_name }} {{ post().author?.last_name }}
+      </span>
+      <span class="post-card__time">{{ post().created_at | timeAgo }}</span>
+    </div>
+    @if (post().author_id === currentUserId()) {
+      <app-post-menu
+        [actions]="[{ label: 'Bewerken' }, { label: 'Verwijderen', danger: true }]"
+        [isOpen]="openMenuPostId() === post().id"
+        (trigger)="onMenuTrigger($event)"
+        (actionSelected)="onMenuAction($event)"
+      />
+    }
+  </div>
+
+  <!-- body: titel, inhoud, afbeelding, poll -->
+  <div class="post-card__body">
+    @if (post().title) {
+      <h2 class="post-card__title">{{ post().title }}</h2>
+    }
+    @if (post().content) {
+      <p class="post-card__content" [innerHTML]="renderContent(post().content)"></p>
+    }
+    @if (post().image_url) {
+      <img
+        class="post-card__image"
+        [src]="post().image_url"
+        alt="Post afbeelding"
+        loading="lazy"
+      />
+    }
+    @if (post().poll_options.length > 0) {
+      <app-poll-block [post]="post()" (vote)="voted.emit({ postId: post().id, optionId: $event })" />
+    }
+  </div>
+
+  <!-- footer: reacties knop -->
+  <div class="post-card__footer">
+    <button
+      class="post-card__comments-btn"
+      type="button"
+      (click)="toggleComments()"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      {{ commentCount }} {{ commentCount === 1 ? 'reactie' : 'reacties' }}
+      <span class="post-card__chevron" [class.post-card__chevron--open]="showComments()">›</span>
+    </button>
+  </div>
+
+  <!-- comments sectie -->
+  @if (showComments()) {
+    <app-comments-section
+      [postId]="post().id"
+      [comments]="comments()"
+      [loading]="commentsLoading()"
+      [openMenuCommentId]="openMenuCommentId()"
+      [replyingTo]="replyingTo()"
+      [submittingComment]="submittingComment()"
+      [commentError]="commentError()"
+      [currentUserId]="currentUserId()"
+      (toggleMenu)="toggleCommentMenu($event.commentId, $event.event)"
+      (startReply)="onStartReply($event)"
+      (cancelReply)="onCancelReply()"
+      (submitComment)="onSubmitComment($event)"
+      (deleteComment)="onDeleteComment($event)"
+    />
+  }
+
+</article>

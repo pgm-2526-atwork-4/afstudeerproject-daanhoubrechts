@@ -1,11 +1,8 @@
 <section class="posts">
-  <header class="posts__header">
-    <a [routerLink]="backLink()" class="back-link">← Terug</a>
-    <div class="posts__title-row">
-      <h1>Posts</h1>
-      <button class="btn btn--primary" type="button" (click)="openCreateModal()">+ Nieuwe post</button>
-    </div>
-  </header>
+  <app-page-header [backLink]="backLink()">
+    <h1 title>Posts</h1>
+    <button cta class="btn btn--primary" type="button" (click)="openCreateModal()">+ Nieuwe post</button>
+  </app-page-header>
 
   <app-page-state
     [loading]="loading()"
@@ -17,92 +14,14 @@
   @if (!loading() && !error() && posts().length > 0) {
     <div class="feed">
       @for (post of posts(); track post.id) {
-        <article class="post-card">
-
-          <!-- header: avatar + auteur + tijd + menu -->
-          <div class="post-card__header">
-            <div class="post-card__avatar">
-              <app-user-avatar
-                [avatarUrl]="post.author?.avatar_url ?? null"
-                [firstName]="post.author?.first_name ?? ''"
-                [lastName]="post.author?.last_name ?? ''"
-                size="md"
-              />
-            </div>
-            <div class="post-card__author-info">
-              <span class="post-card__name">
-                {{ post.author?.first_name }} {{ post.author?.last_name }}
-              </span>
-              <span class="post-card__time">{{ timeAgo(post.created_at) }}</span>
-            </div>
-            @if (post.author_id === currentUserId()) {
-              <app-post-menu
-                [actions]="[{ label: 'Bewerken' }, { label: 'Verwijderen', danger: true }]"
-                [isOpen]="openMenuPostId() === post.id"
-                (trigger)="toggleMenu(post.id, $event)"
-                (actionSelected)="onPostMenuAction($event, post.id)"
-              />
-            }
-          </div>
-
-          <!-- body: titel, inhoud, afbeelding, poll -->
-          <div class="post-card__body">
-            @if (post.title) {
-              <h2 class="post-card__title">{{ post.title }}</h2>
-            }
-            @if (post.content) {
-              <p class="post-card__content" [innerHTML]="renderContent(post.content)"></p>
-            }
-            @if (post.image_url) {
-              <img
-                class="post-card__image"
-                [src]="post.image_url"
-                alt="Post afbeelding"
-                loading="lazy"
-              />
-            }
-            @if (post.poll_options.length > 0) {
-              <app-poll-block [post]="post" (vote)="voteOnPoll(post.id, $event)" />
-            }
-          </div>
-
-          <!-- footer: reacties knop -->
-          <div class="post-card__footer">
-            <button
-              class="post-card__comments-btn"
-              type="button"
-              (click)="toggleComments(post.id)"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-              {{ post.comment_count }} {{ post.comment_count === 1 ? 'reactie' : 'reacties' }}
-              <span class="post-card__chevron" [class.post-card__chevron--open]="expandedPosts().has(post.id)">
-                ›
-              </span>
-            </button>
-          </div>
-
-          <!-- comments sectie -->
-          @if (expandedPosts().has(post.id)) {
-            <app-comments-section
-              [postId]="post.id"
-              [comments]="postComments().get(post.id) ?? []"
-              [loading]="loadingComments().has(post.id)"
-              [openMenuCommentId]="openMenuCommentId()"
-              [replyingTo]="replyingTo()"
-              [submittingComment]="submittingComment()"
-              [commentError]="commentError()"
-              [currentUserId]="currentUserId()"
-              (toggleMenu)="toggleCommentMenu($event.commentId, $event.event)"
-              (startReply)="onStartReply($event)"
-              (cancelReply)="onCancelReply()"
-              (submitComment)="onSubmitComment($event)"
-              (deleteComment)="onDeleteComment($event)"
-            />
-          }
-
-        </article>
+        <app-post-card
+          [post]="post"
+          [currentUserId]="currentUserId()"
+          [openMenuPostId]="openMenuPostId()"
+          (menuTrigger)="toggleMenu($event.postId, $event.event)"
+          (menuAction)="onPostMenuAction($event.index, $event.postId)"
+          (voted)="voteOnPoll($event.postId, $event.optionId)"
+        />
       }
     </div>
   }
