@@ -32,8 +32,14 @@
   color: var(--color-primary-dark);
 }
 
-.logo-icon {
-  font-size: 1.5rem;
+.logo-image {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.logo-text {
+  line-height: 1;
 }
 
 .sidebar__nav {
