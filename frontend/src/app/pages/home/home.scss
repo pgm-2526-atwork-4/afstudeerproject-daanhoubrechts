@@ -481,3 +481,49 @@
     font-size: 1.4rem;
   }
 }
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 2rem var(--spacing-md) 2rem;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.95rem;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  .feature-card {
+    padding: 1.25rem;
+  }
+
+  .role-card {
+    padding: 1.25rem;
+  }
+
+  .final-cta {
+    padding: 2.5rem 0;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+}
