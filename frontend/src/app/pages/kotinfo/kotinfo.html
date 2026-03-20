@@ -11,24 +11,26 @@
 
   @if (!loading() && !error() && group()) {
   <header class="kotinfo__header">
-    <a routerLink="/kotgroepen" class="back-link">← Terug</a>
+    <a routerLink="/kotgroepen" class="back-link kotinfo__back">← Terug</a>
 
-    <div class="kotinfo__title-block">
-      <h1>{{ group()!.name }}</h1>
-      @if (group()!.address) {
-      <p class="address">{{ group()!.address }}</p>
-      }
+    <div class="kotinfo__header-main">
+      <div class="kotinfo__title-block">
+        <h1>{{ group()!.name }}</h1>
+        @if (group()!.address) {
+        <p class="address">{{ group()!.address }}</p>
+        }
+        @if (isKotbaas()) {
+        <button class="btn btn--ghost btn--sm edit-btn" (click)="openEditModal()">
+          <lucide-icon name="pencil" size="14" />
+          Bewerken
+        </button>
+        }
+      </div>
+
       @if (isKotbaas()) {
-      <button class="btn btn--ghost btn--sm edit-btn" (click)="openEditModal()">
-        <lucide-icon name="pencil" size="14" />
-        Bewerken
-      </button>
+      <app-invite-card [kotgroupId]="group()!.id" />
       }
     </div>
-
-    @if (isKotbaas()) {
-    <app-invite-card [kotgroupId]="group()!.id" />
-    }
   </header>
 
   <app-tabs [tabs]="kotinfoTabs" [activeTab]="activeTab()" (tabChange)="setTab($any($event))">
