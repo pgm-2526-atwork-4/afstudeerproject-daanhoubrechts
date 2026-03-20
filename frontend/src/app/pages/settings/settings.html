@@ -88,9 +88,6 @@
         <section class="settings-section">
           <h2>Voorkeuren</h2>
 
-          <app-preference-toggle label="Meldingen" description="Ontvang meldingen over je kot en kotgroep."
-            [value]="notifications()" [disabled]="preferencesLoading()" (toggled)="toggleNotifications()" />
-
           <app-preference-toggle label="Donkere modus" description="Schakel over naar een donker thema."
             [value]="lightDarkMode()" [disabled]="preferencesLoading()" (toggled)="toggleLightDarkMode()" />
 
