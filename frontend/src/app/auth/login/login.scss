@@ -25,6 +25,12 @@
     padding: 1.5rem;
     border-radius: var(--radius-sm);
   }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
 }
 
 .error-banner {
@@ -80,7 +86,7 @@ button[type='submit'] {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
-  margin-top: 0.5rem;
+  margin-top: 0;
 
   &:hover:not(:disabled) {
     background: var(--color-primary-hover);

@@ -15,7 +15,7 @@
   max-width: 480px;
 
   h1 {
-    margin: 0 0 1rem;
+    margin: 0 0 var(--spacing-xl);
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--color-text);
@@ -52,6 +52,9 @@
 }
 
 .step-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
   min-height: 200px;
 }
 
@@ -59,13 +62,13 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--color-text);
-  margin: 0 0 0.75rem;
+  margin: 0;
 }
 
 .step-hint {
   font-size: 0.8125rem;
   color: var(--color-text-secondary);
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .role-options {
