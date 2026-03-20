@@ -2,6 +2,8 @@
   <button
     class="toolbar-btn"
     type="button"
+    [class.toolbar-btn--active]="isBoldActive()"
+    [attr.aria-pressed]="isBoldActive()"
     (mousedown)="$event.preventDefault()"
     (click)="applyFormat('bold')"
     title="Vet (Ctrl+B)"
@@ -11,6 +13,8 @@
   <button
     class="toolbar-btn toolbar-btn--italic"
     type="button"
+    [class.toolbar-btn--active]="isItalicActive()"
+    [attr.aria-pressed]="isItalicActive()"
     (mousedown)="$event.preventDefault()"
     (click)="applyFormat('italic')"
     title="Cursief (Ctrl+I)"
@@ -20,6 +24,8 @@
   <button
     class="toolbar-btn toolbar-btn--underline"
     type="button"
+    [class.toolbar-btn--active]="isUnderlineActive()"
+    [attr.aria-pressed]="isUnderlineActive()"
     (mousedown)="$event.preventDefault()"
     (click)="applyFormat('underline')"
     title="Onderlijnd (Ctrl+U)"

@@ -24,6 +24,16 @@
     background: var(--color-border);
   }
 
+  &--active {
+    background: var(--color-text-secondary);
+    border-color: var(--color-text-secondary);
+    color: var(--color-surface);
+
+    &:hover {
+      filter: brightness(1.08);
+    }
+  }
+
   &--italic em {
     font-style: italic;
   }
