@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  signal,
-  effect,
-  OnInit,
-} from '@angular/core';
+import { Component, computed, inject, signal, effect, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
@@ -77,15 +70,6 @@ export class Sidebar implements OnInit {
       next: (data) => this.kotgroepen.set(data),
       error: () => {},
     });
-  }
-
-  switchKotgroep(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const value = target.value;
-    if (value) {
-      this.sidebarState.close();
-      this.router.navigate(['/kotgroepen', value, 'kotinfo']);
-    }
   }
 
   async logout(): Promise<void> {

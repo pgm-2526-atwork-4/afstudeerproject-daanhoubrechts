@@ -16,8 +16,7 @@
         <lucide-icon name="bar-chart-2" class="icon"></lucide-icon>
         Dashboard
       </a>
-      <a routerLink="/kotgroepen" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-        class="nav-item">
+      <a routerLink="/kotgroepen" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
         <lucide-icon name="building-2" class="icon"></lucide-icon>
         Kotgroepen
       </a>
@@ -27,15 +26,7 @@
     <div class="nav-section context-section">
       <h3 class="section-title">Jouw Kot</h3>
 
-      @if (kotgroepen().length > 1) {
-      <div class="kot-switcher">
-        <select [ngModel]="currentKotgroepId()" (change)="switchKotgroep($event)" class="switcher-select">
-          @for (kg of kotgroepen(); track kg.id) {
-          <option [value]="kg.id">{{ kg.name }}</option>
-          }
-        </select>
-      </div>
-      } @else if (currentKotgroep()) {
+      @if (currentKotgroep()) {
       <div class="kot-active-name">
         {{ currentKotgroep()?.name }}
       </div>
