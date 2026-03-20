@@ -1,12 +1,13 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { LucideAngularModule } from 'lucide-angular';
 
 import { environment } from '../../../environments/environment';
 import { Alert } from '../alert/alert';
 
 @Component({
   selector: 'app-invite-card',
-  imports: [Alert],
+  imports: [Alert, LucideAngularModule],
   templateUrl: './invite-card.html',
   styleUrl: './invite-card.scss',
 })

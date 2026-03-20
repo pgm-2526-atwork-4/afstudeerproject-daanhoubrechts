@@ -40,6 +40,7 @@ import {
   Sparkles,
   Menu,
   X,
+  Copy,
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -89,6 +90,7 @@ export const appConfig: ApplicationConfig = {
         Sparkles,
         Menu,
         X,
+        Copy,
       }),
     ),
     // wacht op auth init voor de router begint te navigeren

@@ -12,10 +12,21 @@
   </div>
 
   @if (inviteUrl) {
-    <div class="invite-link-row">
-      <input class="invite-input" [value]="inviteUrl" readonly />
-      <button type="button" class="btn btn--ghost" (click)="copyInviteUrl()">
-        Kopieer link
+    <div class="invite-link-field">
+      <input
+        class="invite-input"
+        [value]="inviteUrl"
+        readonly
+        aria-label="Uitnodigingslink"
+      />
+      <button
+        type="button"
+        class="invite-copy-btn"
+        (click)="copyInviteUrl()"
+        aria-label="Link kopiëren"
+        title="Link kopiëren"
+      >
+        <lucide-icon name="copy" size="18" aria-hidden="true" />
       </button>
     </div>
   }
