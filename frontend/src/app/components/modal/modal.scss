@@ -7,6 +7,10 @@
   justify-content: center;
   z-index: 100;
   padding: 1rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem var(--spacing-sm);
+  }
 }
 
 .modal {
@@ -50,5 +54,15 @@
 
   &__body {
     padding: 1.25rem 1.5rem 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    &__header {
+      padding: 1.25rem var(--spacing-sm) 0;
+    }
+
+    &__body {
+      padding: 1.25rem var(--spacing-sm) var(--spacing-lg);
+    }
   }
 }
