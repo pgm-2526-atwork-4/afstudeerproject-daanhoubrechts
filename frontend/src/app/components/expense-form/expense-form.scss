@@ -96,7 +96,9 @@
   border: 1px solid transparent;
   cursor: pointer;
   text-align: left;
-  transition: background 0.1s, border-color 0.1s;
+  transition:
+    background 0.1s,
+    border-color 0.1s;
   width: 100%;
 
   &:hover:not(:disabled) {
@@ -104,8 +106,8 @@
   }
 
   &--selected {
-    background: #f0fdf4;
-    border-color: #86efac;
+    background: var(--color-balance-highlight-positive-bg);
+    border-color: var(--color-balance-highlight-positive-border);
   }
 
   .participant-name {
