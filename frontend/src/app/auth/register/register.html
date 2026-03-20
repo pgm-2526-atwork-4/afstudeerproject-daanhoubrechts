@@ -84,6 +84,11 @@
         }
       }
 
+      <p class="auth-link">
+        Al een account?
+        <a [routerLink]="['/login']" [queryParams]="returnUrl ? { returnUrl } : {}">Log hier in</a>
+      </p>
+
       <div class="form-actions">
         @if (currentStep() > 1) {
           <button type="button" class="btn-secondary" (click)="prevStep()">
@@ -101,10 +106,5 @@
         }
       </div>
     </form>
-
-    <p class="auth-link">
-      Al een account?
-      <a [routerLink]="['/login']" [queryParams]="returnUrl ? { returnUrl } : {}">Log hier in</a>
-    </p>
   </div>
 </div>

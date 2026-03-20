@@ -136,7 +136,7 @@
 .form-actions {
   display: flex;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: var(--spacing-md);
   flex-wrap: wrap;
 
   button:last-child {
@@ -241,7 +241,7 @@
 
 .auth-link {
   text-align: center;
-  margin: 1.25rem 0 0;
+  margin: var(--spacing-lg) 0 0;
   font-size: 0.875rem;
   color: var(--color-text-secondary);
 
