@@ -135,6 +135,7 @@ export class AuthService {
       this.http.patch<Profile>(`${environment.apiUrl}/profiles/me`, update),
     );
     this._userProfile.set(updated);
+    this.syncThemeFromProfile(updated);
   }
 
   async uploadAvatar(file: File): Promise<string> {
@@ -149,6 +150,7 @@ export class AuthService {
     );
 
     this._userProfile.set(response.profile);
+    this.syncThemeFromProfile(response.profile);
     return response.avatar_url;
   }
 
@@ -163,9 +165,15 @@ export class AuthService {
       );
       this._currentUser.set(response.user);
       this._userProfile.set(response.profile);
+      this.syncThemeFromProfile(response.profile);
     } catch {
       this.clearSession();
     }
+  }
+
+  private syncThemeFromProfile(profile: Profile | null): void {
+    const isDark = profile?.light_dark_mode ?? false;
+    document.body.classList.toggle('dark-mode', isDark);
   }
 
   private storeTokens(tokens: AuthTokens): void {
@@ -182,5 +190,6 @@ export class AuthService {
     localStorage.removeItem(EXPIRES_KEY);
     this._currentUser.set(null);
     this._userProfile.set(null);
+    this.syncThemeFromProfile(null);
   }
 }
