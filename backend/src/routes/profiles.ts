@@ -44,14 +44,13 @@ profileRoutes.patch('/me', requireAuth, async (req, res) => {
   const userId = req.user!.id;
 
   // alleen whitelisted velden doorlaten
-  const { first_name, last_name, phone_number, notifications, light_dark_mode, avatar_url } =
+  const { first_name, last_name, phone_number, light_dark_mode, avatar_url } =
     req.body as Record<string, unknown>;
 
   const update: Record<string, unknown> = {};
   if (first_name !== undefined) update['first_name'] = first_name;
   if (last_name !== undefined) update['last_name'] = last_name;
   if (phone_number !== undefined) update['phone_number'] = phone_number;
-  if (notifications !== undefined) update['notifications'] = notifications;
   if (light_dark_mode !== undefined) update['light_dark_mode'] = light_dark_mode;
   if (avatar_url !== undefined) update['avatar_url'] = avatar_url;
 

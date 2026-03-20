@@ -48,6 +48,12 @@
     </div>
     }
 
+    @if (activeTab() === 'contract') {
+    <div class="tab-panel" role="tabpanel">
+      <app-contract-tab [kotgroupId]="group()!.id" [isKotbaas]="isKotbaas()" />
+    </div>
+    }
+
     @if (activeTab() === 'leden') {
     <div class="tab-panel" role="tabpanel">
       <app-members-tab [kotgroupId]="group()!.id" />

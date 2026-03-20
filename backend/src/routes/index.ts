@@ -6,6 +6,7 @@ import { invitesRoutes } from "./invites.js";
 import { postsRoutes } from "./posts.js";
 import { issuesRoutes } from "./issues.js";
 import { todosRoutes } from "./todos.js";
+import { kotkasRoutes } from "./kotkas.js";
 
 export const routes = Router();
 
@@ -16,3 +17,4 @@ routes.use("/invites", invitesRoutes);
 routes.use("/posts", postsRoutes);
 routes.use("/issues", issuesRoutes);
 routes.use("/todos", todosRoutes);
+routes.use("/kotkas", kotkasRoutes);

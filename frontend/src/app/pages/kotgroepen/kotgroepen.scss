@@ -7,10 +7,23 @@
   margin: var(--spacing-xl) auto;
   padding: var(--spacing-lg);
 
+  @media (max-width: 768px) {
+    margin: var(--spacing-md) auto;
+    padding: var(--spacing-md);
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-sm);
+  }
+
   h1 {
     font-size: 2.5rem;
     margin-bottom: var(--spacing-md);
     color: var(--color-text);
+
+    @media (max-width: 480px) {
+      font-size: 1.75rem;
+    }
   }
 
   .intro {

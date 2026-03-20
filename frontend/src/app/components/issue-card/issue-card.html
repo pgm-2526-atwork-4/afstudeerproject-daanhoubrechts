@@ -36,7 +36,7 @@
         <span class="issue-card__author">
             {{ issue().author?.first_name }} {{ issue().author?.last_name }}
         </span>
-        <span class="issue-card__time">{{ timeAgo(issue().created_at) }}</span>
+        <span class="issue-card__time">{{ issue().created_at | timeAgo }}</span>
 
         <!-- visibility icon -->
         <span class="issue-card__visibility" [title]="issue().visibility">
@@ -98,7 +98,7 @@
                     [firstName]="comment.author?.first_name ?? ''" [lastName]="comment.author?.last_name ?? ''"
                     size="sm" />
                 <span class="comment__author">{{ comment.author?.first_name }} {{ comment.author?.last_name }}</span>
-                <span class="comment__time">{{ timeAgo(comment.created_at) }}</span>
+                <span class="comment__time">{{ comment.created_at | timeAgo }}</span>
                 @if (comment.author_id === currentUserId() || isKotbaas()) {
                 <app-post-menu size="sm" [actions]="[{ label: 'Verwijderen', danger: true }]"
                     [isOpen]="openMenuCommentId() === comment.id" (trigger)="toggleCommentMenu(comment.id, $event)"

@@ -8,6 +8,8 @@ import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../core/auth/auth.service';
 import { Todo, TodoPriority, TodoStatus } from '../../models/todo.interface';
 import { environment } from '../../../environments/environment';
+import { PageHeader } from '../../components/page-header/page-header';
+import { FormField } from '../../components/form-field/form-field';
 import { TodoCard } from '../../components/todo-card/todo-card';
 import { Modal } from '../../components/modal/modal';
 import { PageState } from '../../components/page-state/page-state';
@@ -22,7 +24,7 @@ interface MembersResponse {
 @Component({
   selector: 'app-todos',
   standalone: true,
-  imports: [RouterLink, FormsModule, TodoCard, Modal, PageState, LucideAngularModule, UserAvatar],
+  imports: [RouterLink, FormsModule, PageHeader, FormField, TodoCard, Modal, PageState, LucideAngularModule, UserAvatar],
   templateUrl: './todos.html',
   styleUrl: './todos.scss',
 })
@@ -47,6 +49,10 @@ export class Todos implements OnInit {
   readonly todoItems = computed(() => this.todos().filter((t) => t.status === 'todo'));
   readonly bezigItems = computed(() => this.todos().filter((t) => t.status === 'bezig'));
   readonly klaarItems = computed(() => this.todos().filter((t) => t.status === 'klaar'));
+
+  // drag state
+  readonly draggingId = signal<string | null>(null);
+  readonly dragOverStatus = signal<TodoStatus | null>(null);
 
   // modal state
   readonly showModal = signal(false);
@@ -184,6 +190,37 @@ export class Todos implements OnInit {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  onDragStart(id: string): void {
+    this.draggingId.set(id);
+  }
+
+  onDragEnd(): void {
+    this.draggingId.set(null);
+    this.dragOverStatus.set(null);
+  }
+
+  onDragOver(event: DragEvent, status: TodoStatus): void {
+    event.preventDefault();
+    this.dragOverStatus.set(status);
+  }
+
+  onDragLeave(event: DragEvent): void {
+    const target = event.currentTarget as HTMLElement;
+    const related = event.relatedTarget as Node | null;
+    if (related && target.contains(related)) return;
+    this.dragOverStatus.set(null);
+  }
+
+  async onDrop(status: TodoStatus): Promise<void> {
+    const id = this.draggingId();
+    if (!id) return;
+    const todo = this.todos().find((t) => t.id === id);
+    this.draggingId.set(null);
+    this.dragOverStatus.set(null);
+    if (!todo || todo.status === status) return;
+    await this.onStatusChanged({ id, status });
   }
 
   async onStatusChanged(event: { id: string; status: TodoStatus }): Promise<void> {

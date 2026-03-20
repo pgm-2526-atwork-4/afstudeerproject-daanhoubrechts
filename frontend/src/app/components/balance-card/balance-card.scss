@@ -1,0 +1,52 @@
+:host {
+  display: contents;
+}
+
+.balance-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+
+  &--positive {
+    border-color: var(--color-balance-positive-border);
+  }
+
+  &--negative {
+    border-color: var(--color-balance-negative-border);
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__amount {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+
+    .balance-card--positive & {
+      color: var(--color-primary);
+    }
+
+    .balance-card--negative & {
+      color: var(--color-error);
+    }
+  }
+}

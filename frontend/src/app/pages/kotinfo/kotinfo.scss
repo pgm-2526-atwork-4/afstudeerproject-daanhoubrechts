@@ -6,6 +6,15 @@
   max-width: 800px;
   margin: var(--spacing-xl) auto;
   padding: var(--spacing-lg);
+
+  @media (max-width: 768px) {
+    margin: var(--spacing-md) auto;
+    padding: var(--spacing-md);
+  }
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-sm);
+  }
 }
 
 .back-link {
@@ -36,6 +45,10 @@
     font-size: 2rem;
     margin: var(--spacing-xs) 0 var(--spacing-sm);
     color: var(--color-text);
+
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+    }
   }
 
   .address {

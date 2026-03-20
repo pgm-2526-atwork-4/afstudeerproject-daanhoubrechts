@@ -2,35 +2,6 @@
   max-width: 680px;
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-md);
-
-  &__header {
-    margin-bottom: var(--spacing-xl);
-  }
-
-  &__title-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-sm);
-
-    h1 {
-      margin: 0;
-      font-size: 1.75rem;
-      font-weight: 600;
-      color: var(--color-text-main);
-    }
-  }
-}
-
-.back-link {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-size: 0.875rem;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 // --- feed ---
@@ -39,129 +10,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
-}
-
-// --- post card ---
-
-.post-card {
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-md) var(--spacing-md) 0;
-  }
-
-  &__avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--color-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  &__author-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  &__name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--color-text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  &__time {
-    font-size: 0.78rem;
-    color: var(--color-text-muted);
-  }
-
-  &__body {
-    padding: var(--spacing-md);
-  }
-
-  &__title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0 0 var(--spacing-sm);
-    color: var(--color-text-main);
-  }
-
-  &__content {
-    font-size: 0.95rem;
-    color: var(--color-text-main);
-    line-height: 1.6;
-    margin: 0 0 var(--spacing-sm);
-  }
-
-  &__image {
-    width: 100%;
-    display: block;
-    border-radius: var(--radius-sm);
-    margin-top: var(--spacing-sm);
-    max-height: 420px;
-    object-fit: cover;
-  }
-
-  &__footer {
-    padding: 0 var(--spacing-md) var(--spacing-md);
-    border-top: 1px solid #f3f4f6;
-    margin-top: var(--spacing-sm);
-    padding-top: var(--spacing-sm);
-  }
-
-  &__comments-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-text-muted);
-    font-size: 0.875rem;
-    padding: var(--spacing-xs) 0;
-    transition: color 0.15s;
-
-    &:hover {
-      color: var(--color-primary);
-    }
-
-    svg {
-      flex-shrink: 0;
-    }
-  }
-
-  &__chevron {
-    margin-left: auto;
-    display: inline-block;
-    transition: transform 0.2s;
-    font-size: 1rem;
-    line-height: 1;
-
-    &--open {
-      transform: rotate(90deg);
-    }
-  }
 }
 
 // --- post form (create modal) ---
@@ -186,11 +34,13 @@
     input[type='text'],
     textarea {
       width: 100%;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--color-border);
       border-radius: var(--radius-sm);
       padding: var(--spacing-sm) var(--spacing-md);
       font-size: 0.9rem;
       font-family: inherit;
+      background: var(--color-surface);
+      color: var(--color-text);
       transition: border-color 0.15s, box-shadow 0.15s;
       box-sizing: border-box;
 
@@ -202,82 +52,28 @@
     }
   }
 
-  &__toolbar {
-    display: flex;
-    gap: var(--spacing-xs);
-  }
-
   &__poll {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
     padding: var(--spacing-md);
-    background: #f9fafb;
+    background: var(--color-surface-subtle);
     border-radius: var(--radius-sm);
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
   }
 
   &__actions {
     display: flex;
     gap: var(--spacing-sm);
     padding-top: var(--spacing-sm);
-    border-top: 1px solid #e5e7eb;
-  }
-}
-
-.toolbar-btn {
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  padding: 4px 12px;
-  font-size: 0.875rem;
-  transition: background 0.15s, border-color 0.15s;
-  line-height: 1.5;
-
-  &:hover {
-    background: #e5e7eb;
-  }
-
-  &--italic em {
-    font-style: italic;
-  }
-
-  &--underline span {
-    text-decoration: underline;
-  }
-}
-
-.post-editor {
-  min-height: 120px;
-  border: 1px solid #e5e7eb;
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: 0.9rem;
-  font-family: inherit;
-  line-height: 1.6;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  color: var(--color-text-main);
-
-  &:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-  }
-
-  // placeholder via CSS wanneer leeg
-  &:empty::before {
-    content: attr(data-placeholder);
-    color: #9ca3af;
-    pointer-events: none;
-    display: block;
+    border-top: 1px solid var(--color-border);
   }
 }
 
 .file-upload-label {
   display: inline-block;
-  background: #f3f4f6;
-  border: 1.5px dashed #d1d5db;
+  background: var(--color-file-upload-bg);
+  border: 1.5px dashed var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
   padding: var(--spacing-sm) var(--spacing-md);
@@ -286,7 +82,7 @@
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 
   &:hover {
-    background: #eff6ff;
+    background: var(--color-file-upload-hover-bg);
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
@@ -330,11 +126,13 @@
 
   input {
     flex: 1;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: 0.875rem;
     font-family: inherit;
+    background: var(--color-surface);
+    color: var(--color-text);
 
     &:focus {
       outline: none;
@@ -371,7 +169,7 @@
 
   &--primary {
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-on-primary);
 
     &:hover:not(:disabled) {
       background: var(--color-primary-hover);
@@ -381,10 +179,10 @@
   &--ghost {
     background: transparent;
     color: var(--color-text-secondary, #6b7280);
-    border: 1px solid var(--color-border, #e5e7eb);
+    border: 1px solid var(--color-border);
 
     &:hover:not(:disabled) {
-      background: #f3f4f6;
+      background: var(--color-ghost-hover-bg);
     }
   }
 }
@@ -394,18 +192,27 @@
   font-size: 0.8rem;
 }
 
-// --- responsive ---
+@media (max-width: 768px) {
+  .posts {
+    padding: var(--spacing-md) var(--spacing-md);
+  }
+}
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .posts {
     padding: var(--spacing-md) var(--spacing-sm);
   }
 
-  .posts__title-row h1 {
-    font-size: 1.4rem;
-  }
+  .post-form {
+    padding: var(--spacing-md);
 
-  .post-card__comments-btn {
-    font-size: 0.8rem;
+    &__actions {
+      flex-wrap: wrap;
+
+      .btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
   }
 }

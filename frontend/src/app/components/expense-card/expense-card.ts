@@ -1,0 +1,53 @@
+import { Component, input, output, signal } from '@angular/core';
+
+import { Expense } from '../../models/expense.interface';
+import { FormatAmountPipe } from '../../pipes/format-amount.pipe';
+import { UserAvatar } from '../user-avatar/user-avatar';
+import { PostMenu } from '../post-menu/post-menu';
+
+@Component({
+  selector: 'app-expense-card',
+  standalone: true,
+  imports: [UserAvatar, PostMenu, FormatAmountPipe],
+  templateUrl: './expense-card.html',
+  styleUrl: './expense-card.scss',
+})
+export class ExpenseCard {
+  readonly expense = input.required<Expense>();
+
+  readonly editRequested = output<Expense>();
+  readonly deleteRequested = output<string>();
+
+  readonly menuOpen = signal(false);
+
+  readonly menuActions = [
+    { label: 'Bewerken' },
+    { label: 'Verwijderen', danger: true },
+  ];
+
+  toggleMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    this.menuOpen.update((v) => !v);
+  }
+
+  onActionSelected(index: number): void {
+    this.menuOpen.set(false);
+    if (index === 0) {
+      this.editRequested.emit(this.expense());
+    } else if (index === 1) {
+      this.deleteRequested.emit(this.expense().id);
+    }
+  }
+
+  closeMenu(): void {
+    this.menuOpen.set(false);
+  }
+
+  formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('nl-BE', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+  }
+}

@@ -6,35 +6,17 @@ import { firstValueFrom } from 'rxjs';
 
 import { Issue, IssueComment, FlatIssueComment, IssueStatus } from '../../models/issue.interface';
 import { environment } from '../../../environments/environment';
+import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
+import { buildCommentTree, flattenCommentTree } from '../../utils/comment-tree';
 import { IssueStatusBadge } from '../issue-status-badge/issue-status-badge';
 import { PostMenu } from '../post-menu/post-menu';
 import { UserAvatar } from '../user-avatar/user-avatar';
 import { Alert } from '../alert/alert';
 
-// comment boom opbouwen vanuit flat array
-function buildTree(flat: IssueComment[]): IssueComment[] {
-  const map = new Map(flat.map((c) => [c.id, { ...c, replies: [] as IssueComment[] }]));
-  const roots: IssueComment[] = [];
-  for (const c of map.values()) {
-    if (c.parent_comment_id) {
-      const parent = map.get(c.parent_comment_id);
-      if (parent) parent.replies!.push(c);
-      else roots.push(c);
-    } else {
-      roots.push(c);
-    }
-  }
-  return roots;
-}
-
-function flattenTree(nodes: IssueComment[], depth = 0): FlatIssueComment[] {
-  return nodes.flatMap((c) => [{ ...c, depth }, ...flattenTree(c.replies ?? [], depth + 1)]);
-}
-
 @Component({
   selector: 'app-issue-card',
   standalone: true,
-  imports: [FormsModule, IssueStatusBadge, PostMenu, UserAvatar, Alert],
+  imports: [FormsModule, TimeAgoPipe, IssueStatusBadge, PostMenu, UserAvatar, Alert],
   templateUrl: './issue-card.html',
   styleUrl: './issue-card.scss',
 })
@@ -72,17 +54,6 @@ export class IssueCard {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  timeAgo(dateString: string): string {
-    const now = new Date();
-    const date = new Date(dateString);
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    if (seconds < 60) return 'Zonet';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} min geleden`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} uur geleden`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)} dagen geleden`;
-    return date.toLocaleDateString('nl-BE', { day: 'numeric', month: 'short', year: 'numeric' });
-  }
-
   toggleComments(): void {
     this.showComments.update((v) => !v);
     if (this.showComments() && !this.commentsLoaded()) {
@@ -96,7 +67,7 @@ export class IssueCard {
       .get<IssueComment[]>(`${environment.apiUrl}/issues/${this.issue().id}/comments`)
       .subscribe({
         next: (data) => {
-          this.comments.set(flattenTree(buildTree(data)));
+          this.comments.set(flattenCommentTree(buildCommentTree(data)) as FlatIssueComment[]);
           this.commentsLoading.set(false);
           this.commentsLoaded.set(true);
         },

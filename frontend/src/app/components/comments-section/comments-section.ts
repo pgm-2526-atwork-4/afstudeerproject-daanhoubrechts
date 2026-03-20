@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { FlatComment } from '../../models/post.interface';
+import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 import { Alert } from '../alert/alert';
 import { PostMenu } from '../post-menu/post-menu';
 import { UserAvatar } from '../user-avatar/user-avatar';
@@ -25,7 +26,7 @@ export interface DeleteCommentEvent {
 
 @Component({
   selector: 'app-comments-section',
-  imports: [FormsModule, Alert, PostMenu, UserAvatar],
+  imports: [FormsModule, TimeAgoPipe, Alert, PostMenu, UserAvatar],
   templateUrl: './comments-section.html',
   styleUrl: './comments-section.scss',
 })
@@ -73,14 +74,4 @@ export class CommentsSection {
     return `${Math.min(depth * 1.5, 5)}rem`;
   }
 
-  timeAgo(dateString: string): string {
-    const now = new Date();
-    const date = new Date(dateString);
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    if (seconds < 60) return 'Zonet';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} min geleden`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} uur geleden`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)} dagen geleden`;
-    return date.toLocaleDateString('nl-BE', { day: 'numeric', month: 'short', year: 'numeric' });
-  }
 }

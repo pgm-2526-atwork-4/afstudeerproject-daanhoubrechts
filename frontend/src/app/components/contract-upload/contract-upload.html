@@ -1,0 +1,63 @@
+@if (compact()) {
+  <div class="upload-compact">
+    <input
+      #fileInput
+      type="file"
+      accept="application/pdf"
+      class="upload-input"
+      (change)="onFileSelected($event)"
+    />
+
+    @if (uploading()) {
+      <div class="upload-busy">
+        <div class="spinner"></div>
+        <span>Uploaden…</span>
+      </div>
+    } @else {
+      <button type="button" class="btn btn--ghost btn--sm upload-btn" (click)="openPicker()">
+        <lucide-icon name="upload" size="14" />
+        PDF uploaden
+      </button>
+    }
+
+    @if (error()) {
+      <span class="upload-error-inline">{{ error() }}</span>
+    }
+  </div>
+} @else {
+  <div
+    class="upload-zone"
+    [class.upload-zone--drag]="dragOver()"
+    [class.upload-zone--uploading]="uploading()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()"
+    (drop)="onDrop($event)"
+  >
+    <input
+      #fileInput
+      type="file"
+      accept="application/pdf"
+      class="upload-input"
+      (change)="onFileSelected($event)"
+    />
+
+    @if (uploading()) {
+      <div class="upload-state">
+        <div class="spinner"></div>
+        <span>Uploaden…</span>
+      </div>
+    } @else {
+      <div class="upload-state">
+        <lucide-icon name="upload" size="22" class="upload-icon" />
+        <span class="upload-label">Sleep een PDF hierheen of</span>
+        <button type="button" class="btn btn--ghost btn--sm" (click)="openPicker()">
+          Bestand kiezen
+        </button>
+      </div>
+    }
+  </div>
+
+  @if (error()) {
+    <p class="upload-error">{{ error() }}</p>
+  }
+}

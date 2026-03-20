@@ -58,8 +58,12 @@ authRoutes.post('/register', async (req, res) => {
   }
 
   // Trigger maakt profiel aan maar zet role niet uit metadata; wij zetten role expliciet
+  // light_dark_mode altijd false bij nieuw account, geen default uit OS of DB die dark forceert
   if (data.user) {
-    await supabaseAdmin.from('profiles').update({ role: profileRole }).eq('id', data.user.id);
+    await supabaseAdmin
+      .from('profiles')
+      .update({ role: profileRole, light_dark_mode: false })
+      .eq('id', data.user.id);
   }
 
   if (!data.session) {

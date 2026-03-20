@@ -2,23 +2,540 @@
   display: block;
 }
 
-.hero {
-  max-width: 800px;
-  margin: var(--spacing-xl) auto;
-  padding: var(--spacing-lg);
-  text-align: center;
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+.section-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+}
 
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: var(--spacing-md);
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
     color: var(--color-text);
+    margin-bottom: 0.5rem;
   }
 
   p {
-    font-size: 1.125rem;
+    font-size: 1.05rem;
     color: var(--color-text-secondary);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+/* ===================== HERO ===================== */
+
+.hero {
+  padding: 5rem var(--spacing-xl) 4rem;
+  background: var(--color-bg);
+}
+
+.hero__content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+.hero__text {
+  flex: 1;
+}
+
+.hero h1 {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--color-text);
+  letter-spacing: -0.025em;
+  margin-bottom: 1.25rem;
+}
+
+.hero__highlight {
+  color: var(--color-primary);
+}
+
+.hero__subtitle {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+.hero__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.hero__visual {
+  flex-shrink: 0;
+}
+
+.hero__logo-wrapper {
+  width: 240px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: 24px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ===================== BUTTONS ===================== */
+
+.btn-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s, box-shadow 0.2s;
+
+  &--primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+    }
+  }
+
+  &--secondary {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+
+    &:hover {
+      border-color: var(--color-text-secondary);
+    }
+  }
+
+  &--white {
+    background-color: var(--color-white);
+    color: var(--color-primary-dark);
+
+    &:hover {
+      background-color: #f0fdf4;
+    }
+  }
+}
+
+/* op groene band geen wit vlak in dark mode */
+:host-context(body.dark-mode) .final-cta .btn-hero--white {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #f9fafb;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+}
+
+/* ===================== FEATURES ===================== */
+
+.features {
+  padding: 5rem 0;
+  background: var(--color-surface);
+}
+
+.features__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.feature-card {
+  padding: 1.75rem;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 650;
+    color: var(--color-text);
+    margin-bottom: 0.35rem;
+  }
+
+  p {
+    font-size: 0.925rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+}
+
+.feature-card__icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  margin-bottom: 0.85rem;
+
+  &--green {
+    background: rgba(22, 163, 74, 0.1);
+    color: #16a34a;
+  }
+
+  &--blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+
+  &--orange {
+    background: rgba(249, 115, 22, 0.1);
+    color: #f97316;
+  }
+
+  &--red {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+
+  &--purple {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+  }
+
+  &--teal {
+    background: rgba(20, 184, 166, 0.1);
+    color: #14b8a6;
+  }
+}
+
+/* ===================== HOW IT WORKS ===================== */
+
+.how-it-works {
+  padding: 5rem 0;
+  background: var(--color-bg);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.step {
+  text-align: center;
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 650;
+    color: var(--color-text);
+    margin-bottom: 0.35rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+}
+
+.step__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 50%;
+  margin-bottom: 0.75rem;
+}
+
+/* ===================== ROLES ===================== */
+
+.roles {
+  padding: 5rem 0;
+  background: var(--color-surface);
+}
+
+.roles__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.role-card {
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.35rem;
+  }
+}
+
+.role-card__desc {
+  font-size: 0.925rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.role-card__perks {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    font-size: 0.925rem;
+    color: var(--color-text);
+    padding-left: 1rem;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--color-text-secondary);
+    }
+  }
+}
+
+.role-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s;
+  width: 100%;
+  justify-content: center;
+
+  &--green {
+    background: var(--color-primary);
+    color: var(--color-white);
+
+    &:hover {
+      background: var(--color-primary-hover);
+    }
+  }
+
+  &--orange {
+    background: var(--color-accent);
+    color: var(--color-white);
+
+    &:hover {
+      background: #ea580c;
+    }
+  }
+}
+
+/* ===================== FINAL CTA ===================== */
+
+.final-cta {
+  padding: 4.5rem 0;
+  background: var(--color-cta-band-bg);
+  text-align: center;
+
+  .section-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--color-white);
+  }
+
+  p {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 0.5rem;
+  }
+}
+
+.final-cta__logo {
+  opacity: 0.85;
+  filter: brightness(0) invert(1);
+  margin-bottom: 0.25rem;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 900px) {
+  .hero__content {
+    flex-direction: column;
+    text-align: center;
+    gap: 2.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2.15rem;
+  }
+
+  .hero__subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero__actions {
+    justify-content: center;
+  }
+
+  .hero__logo-wrapper {
+    width: 180px;
+    height: 180px;
+
+    img {
+      width: 130px;
+      height: 130px;
+    }
+  }
+
+  .features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .roles__grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 3rem var(--spacing-md) 2.5rem;
+  }
+
+  .hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .hero__subtitle {
+    font-size: 1rem;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    .btn-hero {
+      justify-content: center;
+    }
+  }
+
+  .hero__logo-wrapper {
+    width: 150px;
+    height: 150px;
+
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .features__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .section-container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .features,
+  .how-it-works,
+  .roles,
+  .final-cta {
+    padding: 3rem 0;
+  }
+
+  .final-cta h2 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 2rem var(--spacing-md) 2rem;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.95rem;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  .feature-card {
+    padding: 1.25rem;
+  }
+
+  .role-card {
+    padding: 1.25rem;
+  }
+
+  .final-cta {
+    padding: 2.5rem 0;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
   }
 }

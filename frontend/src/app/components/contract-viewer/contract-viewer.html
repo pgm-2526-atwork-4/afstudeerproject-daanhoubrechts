@@ -1,0 +1,29 @@
+<div class="contract-viewer">
+  @if (!actionsHidden()) {
+    <div class="contract-viewer__actions">
+      <button class="btn btn--secondary" (click)="togglePreview()">
+        <lucide-icon [name]="showPreview() ? 'eye-off' : 'eye'" size="15" />
+        {{ showPreview() ? 'Preview verbergen' : 'Preview tonen' }}
+      </button>
+      <a
+        [href]="contractUrl()"
+        download
+        target="_blank"
+        class="btn btn--primary"
+      >
+        <lucide-icon name="download" size="15" />
+        Downloaden
+      </a>
+    </div>
+  }
+
+  @if (showPreview() || actionsHidden()) {
+    <div class="contract-viewer__preview">
+      <iframe
+        [src]="safeUrl()"
+        class="contract-viewer__iframe"
+        title="Contract preview"
+      ></iframe>
+    </div>
+  }
+</div>

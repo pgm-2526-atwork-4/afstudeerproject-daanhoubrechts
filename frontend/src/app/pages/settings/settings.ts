@@ -54,8 +54,7 @@ export class Settings {
     { updateOn: 'blur' },
   );
 
-  // losse signals voor de toggles zodat ze direct reageren
-  readonly notifications = signal(this.authService.userProfile()?.notifications ?? false);
+  // signal zodat dark mode toggle direct reageert
   readonly lightDarkMode = signal(this.authService.userProfile()?.light_dark_mode ?? false);
 
   readonly pendingAvatarFile = signal<File | null>(null);
@@ -154,11 +153,6 @@ export class Settings {
     }
   }
 
-  async toggleNotifications(): Promise<void> {
-    this.notifications.update(v => !v);
-    await this.savePreferences();
-  }
-
   async toggleLightDarkMode(): Promise<void> {
     this.lightDarkMode.update(v => !v);
     document.body.classList.toggle('dark-mode', this.lightDarkMode());
@@ -171,7 +165,6 @@ export class Settings {
 
     try {
       await this.authService.updateProfile({
-        notifications: this.notifications(),
         light_dark_mode: this.lightDarkMode(),
       });
       this.preferencesSuccess.set(true);

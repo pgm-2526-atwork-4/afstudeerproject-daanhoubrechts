@@ -2,6 +2,15 @@
   max-width: 600px;
   margin: var(--spacing-xl) auto;
   padding: 0 var(--spacing-lg);
+
+  @media (max-width: 768px) {
+    margin: var(--spacing-md) auto;
+    padding: 0 var(--spacing-md);
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 var(--spacing-sm);
+  }
 }
 
 .card {

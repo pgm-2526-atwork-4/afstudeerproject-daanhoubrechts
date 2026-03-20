@@ -81,11 +81,6 @@
     }
   }
 
-  &__toolbar {
-    display: flex;
-    gap: var(--spacing-xs);
-  }
-
   &__actions {
     display: flex;
     gap: var(--spacing-sm);
@@ -94,62 +89,10 @@
   }
 }
 
-.toolbar-btn {
-  background: #f3f4f6;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  padding: 4px 12px;
-  font-size: 0.875rem;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
-  line-height: 1.5;
-
-  &:hover {
-    background: #e5e7eb;
-  }
-
-  &--italic em {
-    font-style: italic;
-  }
-
-  &--underline span {
-    text-decoration: underline;
-  }
-}
-
-.issue-editor {
-  min-height: 100px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: 0.9rem;
-  font-family: inherit;
-  line-height: 1.6;
-  outline: none;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
-  color: var(--color-text);
-
-  &:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-  }
-
-  &:empty::before {
-    content: attr(data-placeholder);
-    color: #9ca3af;
-    pointer-events: none;
-    display: block;
-  }
-}
-
 .file-upload-label {
   display: inline-block;
-  background: #f3f4f6;
-  border: 1.5px dashed #d1d5db;
+  background: var(--color-file-upload-bg);
+  border: 1.5px dashed var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
   padding: var(--spacing-sm) var(--spacing-md);
@@ -161,7 +104,7 @@
     color 0.15s;
 
   &:hover {
-    background: #eff6ff;
+    background: var(--color-file-upload-hover-bg);
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
@@ -222,7 +165,7 @@
 
   &--primary {
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-on-primary);
 
     &:hover:not(:disabled) {
       background: var(--color-primary-hover);
@@ -232,10 +175,10 @@
   &--ghost {
     background: transparent;
     color: var(--color-text-secondary, #6b7280);
-    border: 1px solid var(--color-border, #e5e7eb);
+    border: 1px solid var(--color-border);
 
     &:hover:not(:disabled) {
-      background: #f3f4f6;
+      background: var(--color-ghost-hover-bg);
     }
   }
 }
@@ -245,12 +188,31 @@
   font-size: 0.8rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .issues {
+    padding: var(--spacing-md) var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
   .issues {
     padding: var(--spacing-md) var(--spacing-sm);
   }
 
   .issues__title-row h1 {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
+  }
+
+  .issue-form {
+    padding: var(--spacing-md);
+
+    &__actions {
+      flex-wrap: wrap;
+
+      .btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
   }
 }

@@ -1,0 +1,43 @@
+<div class="toolbar">
+  <button
+    class="toolbar-btn"
+    type="button"
+    (mousedown)="$event.preventDefault()"
+    (click)="applyFormat('bold')"
+    title="Vet (Ctrl+B)"
+  >
+    <strong>B</strong>
+  </button>
+  <button
+    class="toolbar-btn toolbar-btn--italic"
+    type="button"
+    (mousedown)="$event.preventDefault()"
+    (click)="applyFormat('italic')"
+    title="Cursief (Ctrl+I)"
+  >
+    <em>I</em>
+  </button>
+  <button
+    class="toolbar-btn toolbar-btn--underline"
+    type="button"
+    (mousedown)="$event.preventDefault()"
+    (click)="applyFormat('underline')"
+    title="Onderlijnd (Ctrl+U)"
+  >
+    <span>U</span>
+  </button>
+</div>
+
+<div
+  #editor
+  class="editor"
+  contenteditable="true"
+  [attr.data-placeholder]="placeholder()"
+  (input)="onEditorInput()"
+  (keydown.control.b)="$event.preventDefault(); applyFormat('bold')"
+  (keydown.meta.b)="$event.preventDefault(); applyFormat('bold')"
+  (keydown.control.i)="$event.preventDefault(); applyFormat('italic')"
+  (keydown.meta.i)="$event.preventDefault(); applyFormat('italic')"
+  (keydown.control.u)="$event.preventDefault(); applyFormat('underline')"
+  (keydown.meta.u)="$event.preventDefault(); applyFormat('underline')"
+></div>

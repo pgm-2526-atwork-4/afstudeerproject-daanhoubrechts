@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md) 0;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--color-border-subtle);
 
   &:last-of-type {
     border-bottom: none;
@@ -34,7 +34,7 @@
   width: 48px;
   height: 28px;
   border-radius: 14px;
-  background: #d1d5db;
+  background: var(--color-toggle-track-off);
   transition: background 0.2s;
   flex-shrink: 0;
 
@@ -59,7 +59,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--color-white);
+  background: var(--color-on-primary);
   box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
   transition: transform 0.2s;
 

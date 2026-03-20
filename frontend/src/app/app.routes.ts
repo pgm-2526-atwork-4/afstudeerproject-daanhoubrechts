@@ -12,6 +12,7 @@ import { Register } from './auth/register/register';
 import { Join } from './pages/join/join';
 import { Issues } from './pages/issues/issues';
 import { Todos } from './pages/todos/todos';
+import { Kotkas } from './pages/kotkas/kotkas';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'kotgroepen/:id/posts', component: Posts, canActivate: [authGuard] },
   { path: 'kotgroepen/:id/issues', component: Issues, canActivate: [authGuard] },
   { path: 'kotgroepen/:id/todos', component: Todos, canActivate: [authGuard] },
+  { path: 'kotgroepen/:id/kotkas', component: Kotkas, canActivate: [authGuard] },
   { path: 'join', component: Join, canActivate: [authGuard] },
   { path: 'settings', component: Settings, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },

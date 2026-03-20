@@ -1,76 +1,82 @@
-<aside class="sidebar">
-    <div class="sidebar__brand">
-        <a routerLink="/" class="sidebar__logo">
-            <lucide-icon name="home" class="logo-icon"></lucide-icon>
-            <span class="logo-text">KotApp</span>
-        </a>
+<aside class="sidebar" [class.sidebar--open]="sidebarState.isOpen()">
+  <div class="sidebar__brand">
+    <a routerLink="/" class="sidebar__logo">
+      <img src="assets/images/logo-kothub.png" width="40" height="40" alt="KotHub logo" class="logo-image" />
+      <span class="logo-text">KotHub</span>
+    </a>
+    <button class="sidebar__close" (click)="sidebarState.close()" aria-label="Menu sluiten">
+      <lucide-icon name="x" [size]="20"></lucide-icon>
+    </button>
+  </div>
+
+  <nav class="sidebar__nav">
+    <div class="nav-section">
+      <h3 class="section-title">Menu</h3>
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <lucide-icon name="bar-chart-2" class="icon"></lucide-icon>
+        Dashboard
+      </a>
+      <a routerLink="/kotgroepen" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+        class="nav-item">
+        <lucide-icon name="building-2" class="icon"></lucide-icon>
+        Kotgroepen
+      </a>
     </div>
 
-    <nav class="sidebar__nav">
-        <div class="nav-section">
-            <h3 class="section-title">Menu</h3>
-            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-                <lucide-icon name="bar-chart-2" class="icon"></lucide-icon>
-                Dashboard
-            </a>
-            <a routerLink="/kotgroepen" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                class="nav-item">
-                <lucide-icon name="building-2" class="icon"></lucide-icon>
-                Kotgroepen
-            </a>
-        </div>
+    @if (currentKotgroepId() && kotgroepen().length > 0) {
+    <div class="nav-section context-section">
+      <h3 class="section-title">Jouw Kot</h3>
 
-        @if (currentKotgroepId() && kotgroepen().length > 0) {
-        <div class="nav-section context-section">
-            <h3 class="section-title">Jouw Kot</h3>
+      @if (kotgroepen().length > 1) {
+      <div class="kot-switcher">
+        <select [ngModel]="currentKotgroepId()" (change)="switchKotgroep($event)" class="switcher-select">
+          @for (kg of kotgroepen(); track kg.id) {
+          <option [value]="kg.id">{{ kg.name }}</option>
+          }
+        </select>
+      </div>
+      } @else if (currentKotgroep()) {
+      <div class="kot-active-name">
+        {{ currentKotgroep()?.name }}
+      </div>
+      }
 
-            @if (kotgroepen().length > 1) {
-            <div class="kot-switcher">
-                <select [ngModel]="currentKotgroepId()" (change)="switchKotgroep($event)" class="switcher-select">
-                    @for (kg of kotgroepen(); track kg.id) {
-                    <option [value]="kg.id">{{ kg.name }}</option>
-                    }
-                </select>
-            </div>
-            } @else if (currentKotgroep()) {
-            <div class="kot-active-name">
-                {{ currentKotgroep()?.name }}
-            </div>
-            }
+      <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'kotinfo']" routerLinkActive="active" class="nav-item">
+        <lucide-icon name="info" class="icon"></lucide-icon>
+        Info & Regels
+      </a>
+      <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'posts']" routerLinkActive="active" class="nav-item">
+        <lucide-icon name="file-text" class="icon"></lucide-icon>
+        Posts
+      </a>
+      <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'issues']" routerLinkActive="active" class="nav-item">
+        <lucide-icon name="wrench" class="icon"></lucide-icon>
+        Issues
+      </a>
+      <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'todos']" routerLinkActive="active" class="nav-item">
+        <lucide-icon name="check-square" class="icon"></lucide-icon>
+        Taken
+      </a>
+      <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'kotkas']" routerLinkActive="active" class="nav-item">
+        <lucide-icon name="receipt" class="icon"></lucide-icon>
+        KotKas
+      </a>
+    </div>
+    }
+  </nav>
 
-            <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'kotinfo']" routerLinkActive="active"
-                class="nav-item">
-                <lucide-icon name="info" class="icon"></lucide-icon>
-                Info & Regels
-            </a>
-            <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'posts']" routerLinkActive="active" class="nav-item">
-                <lucide-icon name="file-text" class="icon"></lucide-icon>
-                Posts
-            </a>
-            <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'issues']" routerLinkActive="active" class="nav-item">
-                <lucide-icon name="wrench" class="icon"></lucide-icon>
-                Issues
-            </a>
-            <a [routerLink]="['/kotgroepen', currentKotgroepId(), 'todos']" routerLinkActive="active" class="nav-item">
-                <lucide-icon name="check-square" class="icon"></lucide-icon>
-                Taken
-            </a>
-        </div>
+  <div class="sidebar__footer">
+    <a routerLink="/settings" routerLinkActive="active" class="user-profile">
+      <app-user-avatar [avatarUrl]="avatarUrl()" [firstName]="firstName()" [lastName]="lastName()" size="sm" />
+      <div class="user-info">
+        <span class="user-name">{{ authService.fullName() }}</span>
+        @if (authService.userRole()) {
+        <span class="user-role">{{ authService.userRole() }}</span>
         }
-    </nav>
-
-    <div class="sidebar__footer">
-        <a routerLink="/settings" routerLinkActive="active" class="user-profile">
-            <app-user-avatar [avatarUrl]="avatarUrl()" [firstName]="firstName()" [lastName]="lastName()" size="sm" />
-            <div class="user-info">
-                <span class="user-name">{{ authService.fullName() }}</span>
-                @if (authService.userRole()) {
-                <span class="user-role">{{ authService.userRole() }}</span>
-                }
-            </div>
-        </a>
-        <button class="logout-btn" (click)="logout()" title="Uitloggen">
-            <lucide-icon name="log-out"></lucide-icon>
-        </button>
-    </div>
+      </div>
+    </a>
+    <button class="logout-btn" (click)="logout()" title="Uitloggen">
+      <lucide-icon name="log-out"></lucide-icon>
+    </button>
+  </div>
 </aside>

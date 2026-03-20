@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [RouterLink, LucideAngularModule],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
