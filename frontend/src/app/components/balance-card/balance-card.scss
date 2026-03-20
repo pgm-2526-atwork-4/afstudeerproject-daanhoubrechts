@@ -13,11 +13,11 @@
   border: 1px solid var(--color-border);
 
   &--positive {
-    border-color: #86efac;
+    border-color: var(--color-balance-positive-border);
   }
 
   &--negative {
-    border-color: #fca5a5;
+    border-color: var(--color-balance-negative-border);
   }
 
   &__info {

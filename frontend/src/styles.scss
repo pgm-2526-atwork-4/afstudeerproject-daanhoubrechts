@@ -2,6 +2,11 @@
 
 @import './reset.scss';
 
+html {
+  /* altijd licht tot user expliciet dark kiest, anders volgt de browser het OS */
+  color-scheme: light;
+}
+
 :root {
   /* kleuren */
   --color-primary: #16a34a;
@@ -9,19 +14,52 @@
   --color-accent: #f97316;
 
   --color-primary-dark: #166534;
+  /* homepage final CTA band, niet primary-dark in dark mode hergebruiken */
+  --color-cta-band-bg: #166534;
 
   --color-bg: #f9fafb;
   --color-surface: #ffffff;
 
   --color-white: #ffffff;
+  --color-on-primary: #ffffff;
 
   --color-text: #111827;
   --color-text-secondary: #6b7280;
+  --color-text-main: var(--color-text);
+  --color-text-muted: var(--color-text-secondary);
 
   --color-dark: #1f2937;
 
   --color-border: #e5e7eb;
+  /* iets donkerder, o.a. settings inputs zoals voorheen */
+  --color-control-border: #d1d5db;
+  --color-border-subtle: #f3f4f6;
   --color-error: #dc2626;
+
+  --color-surface-subtle: #f9fafb;
+  --color-surface-muted: #f3f4f6;
+
+  --color-footer-bg: #f1f3f5;
+  --color-topnav-bg: rgba(255, 255, 255, 0.85);
+
+  --color-ghost-hover-bg: #f3f4f6;
+  --color-file-upload-bg: #f3f4f6;
+  --color-file-upload-hover-bg: #eff6ff;
+
+  --color-poll-voted-bg: #f0fdf4;
+  --color-poll-hover-bg: #f9fafb;
+  --color-poll-bar: rgba(22, 163, 74, 0.1);
+
+  --color-balance-positive-border: #86efac;
+  --color-balance-negative-border: #fca5a5;
+  --color-balance-highlight-positive-bg: #f0fdf4;
+  --color-balance-highlight-positive-border: #86efac;
+  --color-balance-highlight-negative-bg: #fef2f2;
+  --color-balance-highlight-negative-border: #fca5a5;
+
+  --color-danger-soft-bg: #fef2f2;
+
+  --color-toggle-track-off: #d1d5db;
 
   /* spacing */
   --spacing-xs: 0.25rem;
@@ -42,4 +80,61 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--color-text);
   background-color: var(--color-bg);
+}
+
+html:has(body.dark-mode) {
+  color-scheme: dark;
+}
+
+body.dark-mode {
+  --color-primary: #22c55e;
+  --color-primary-hover: #16a34a;
+  --color-accent: #fb923c;
+
+  --color-primary-dark: #4ade80;
+  --color-cta-band-bg: #15251c;
+
+  --color-bg: #111827;
+  --color-surface: #1f2937;
+
+  --color-white: #ffffff;
+  --color-on-primary: #ffffff;
+
+  --color-text: #f9fafb;
+  --color-text-secondary: #9ca3af;
+  --color-text-main: var(--color-text);
+  --color-text-muted: var(--color-text-secondary);
+
+  --color-dark: #e5e7eb;
+
+  --color-border: #4b5563;
+  --color-control-border: #52525b;
+  --color-border-subtle: #374151;
+
+  --color-surface-subtle: #273549;
+  --color-surface-muted: #323d4f;
+
+  --color-footer-bg: #0f172a;
+  --color-topnav-bg: rgba(17, 24, 39, 0.92);
+
+  --color-ghost-hover-bg: #374151;
+  --color-file-upload-bg: #273549;
+  --color-file-upload-hover-bg: rgba(34, 197, 94, 0.14);
+
+  --color-poll-voted-bg: rgba(22, 163, 74, 0.18);
+  --color-poll-hover-bg: rgba(75, 85, 99, 0.35);
+  --color-poll-bar: rgba(34, 197, 94, 0.14);
+
+  --color-balance-positive-border: rgba(34, 197, 94, 0.35);
+  --color-balance-negative-border: rgba(248, 113, 113, 0.38);
+  --color-balance-highlight-positive-bg: rgba(22, 163, 74, 0.14);
+  --color-balance-highlight-positive-border: rgba(34, 197, 94, 0.4);
+  --color-balance-highlight-negative-bg: rgba(220, 38, 38, 0.14);
+  --color-balance-highlight-negative-border: rgba(248, 113, 113, 0.42);
+
+  --color-danger-soft-bg: rgba(239, 68, 68, 0.14);
+
+  --color-toggle-track-off: #4b5563;
+
+  --shadow-card: 0 10px 25px rgba(0, 0, 0, 0.35);
 }

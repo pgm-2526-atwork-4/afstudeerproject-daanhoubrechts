@@ -33,7 +33,7 @@
 .settings-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
@@ -41,8 +41,8 @@
 
 // content
 .settings-content {
-  background: var(--color-white);
-  border-top: 2px solid var(--color-border, #e5e7eb);
+  background: var(--color-surface);
+  border-top: 2px solid var(--color-border);
   padding: var(--spacing-lg);
 }
 
@@ -53,7 +53,7 @@
     color: var(--color-dark);
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-sm);
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
 
     &:not(:first-child) {
       margin-top: var(--spacing-lg);
@@ -97,11 +97,11 @@
   textarea,
   select {
     padding: 0.6rem 0.75rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-control-border);
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
     color: var(--color-text);
-    background: var(--color-white);
+    background: var(--color-surface);
     transition:
       border-color 0.15s,
       box-shadow 0.15s;
@@ -132,11 +132,11 @@
 
   input {
     padding: 10px 12px;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-control-border);
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
     color: var(--color-text);
-    background: var(--color-white);
+    background: var(--color-surface);
     transition: border-color 0.15s;
 
     &:focus {
@@ -178,7 +178,7 @@
 
 .btn--primary {
   background: var(--color-primary);
-  color: var(--color-white);
+  color: var(--color-on-primary);
 
   &:hover:not(:disabled) {
     background: var(--color-primary-hover);
@@ -191,7 +191,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md) 0;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--color-border-subtle);
 
   &:last-of-type {
     border-bottom: none;
@@ -223,7 +223,7 @@
   width: 48px;
   height: 28px;
   border-radius: 14px;
-  background: #d1d5db;
+  background: var(--color-toggle-track-off);
   transition: background 0.2s;
   flex-shrink: 0;
 
@@ -248,7 +248,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--color-white);
+  background: var(--color-on-primary);
   box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
   transition: transform 0.2s;
 

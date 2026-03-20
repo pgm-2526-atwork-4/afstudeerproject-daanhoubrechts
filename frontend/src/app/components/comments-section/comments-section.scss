@@ -1,5 +1,5 @@
 .comments-section {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-border);
   padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
@@ -90,11 +90,13 @@
 
   &__input {
     width: 100%;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     padding: var(--spacing-sm);
     font-size: 0.875rem;
     font-family: inherit;
+    background: var(--color-surface);
+    color: var(--color-text);
     resize: vertical;
     transition: border-color 0.15s, box-shadow 0.15s;
 
@@ -116,15 +118,17 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   padding-top: var(--spacing-sm);
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--color-border-subtle);
 
   .reply-form__input {
     width: 100%;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     padding: var(--spacing-sm);
     font-size: 0.875rem;
     font-family: inherit;
+    background: var(--color-surface);
+    color: var(--color-text);
     resize: vertical;
 
     &:focus {
@@ -142,7 +146,7 @@
   font-size: 0.85rem;
   color: var(--color-text-muted);
   padding: var(--spacing-xs) 0;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--color-border-subtle);
   text-align: left;
   transition: color 0.15s;
 
@@ -182,7 +186,7 @@
 
   &--primary {
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-on-primary);
 
     &:hover:not(:disabled) {
       background: var(--color-primary-hover);
@@ -192,10 +196,10 @@
   &--ghost {
     background: transparent;
     color: var(--color-text-secondary, #6b7280);
-    border: 1px solid var(--color-border, #e5e7eb);
+    border: 1px solid var(--color-border);
 
     &:hover:not(:disabled) {
-      background: #f3f4f6;
+      background: var(--color-ghost-hover-bg);
     }
   }
 

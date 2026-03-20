@@ -14,13 +14,13 @@
   gap: var(--spacing-xs);
 
   &--positive {
-    background: #f0fdf4;
-    border-color: #86efac;
+    background: var(--color-balance-highlight-positive-bg);
+    border-color: var(--color-balance-highlight-positive-border);
   }
 
   &--negative {
-    background: #fef2f2;
-    border-color: #fca5a5;
+    background: var(--color-balance-highlight-negative-bg);
+    border-color: var(--color-balance-highlight-negative-border);
   }
 
   &__label {

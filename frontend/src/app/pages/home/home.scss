@@ -130,6 +130,18 @@
   }
 }
 
+/* op groene band geen wit vlak in dark mode */
+:host-context(body.dark-mode) .final-cta .btn-hero--white {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #f9fafb;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+}
+
 /* ===================== FEATURES ===================== */
 
 .features {
@@ -348,7 +360,7 @@
 
 .final-cta {
   padding: 4.5rem 0;
-  background: var(--color-primary-dark);
+  background: var(--color-cta-band-bg);
   text-align: center;
 
   .section-container {
