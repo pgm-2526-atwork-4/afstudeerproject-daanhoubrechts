@@ -2,8 +2,7 @@
 
 Een webapplicatie om **studentenkoten en kotgroepen** te organiseren: praktische kotinfo, een muur met berichten en polls, meldingen, gedeelde taken, een kotkas en instellingen. **Kotbaas** en **kotgenoot** hebben verschillende rechten binnen een groep.
 
-**Live:** [kothub.netlify.app](https://kothub.netlify.app/)  
-**Repository:** [pgm-2526-atwork-4/afstudeerproject-daanhoubrechts](https://github.com/pgm-2526-atwork-4/afstudeerproject-daanhoubrechts)
+**Live:** [kothub.netlify.app](https://kothub.netlify.app/)
 
 ## Ontwikkelaars
 
@@ -17,19 +16,18 @@ Dit project is ontwikkeld door:
 
 ### Backend
 
-- **Node.js** — server runtime
-- **Express.js** — web framework en REST API (`/api`)
-- **TypeScript** — type-safe server code
-- **Supabase** — database en auth
-- **multer** — file uploads (o.a. documenten / afbeeldingen)
-- **cors** — cross-origin requests voor de Angular app
-- **dotenv** — environment variables uit `.env`
+- **Node.js**
+- **Express.js**
+- **TypeScript**
+- **Supabase**
+- **multer**
+- **cors**
+- **dotenv**
 
 ### Frontend
 
-- **Angular 21** — SPA met standalone components en signals
-- **Tailwind CSS 4** — styling
-- **Lucide Angular** — icons
+- **Angular 21**
+- **Lucide Angular**
 
 ## Projectstructuur
 
@@ -104,10 +102,10 @@ App: [http://localhost:4200](http://localhost:4200).
 
 Voor testen van de applicatie zijn er voorbeeldaccounts (kotbaas vs. kotgenoot):
 
-| Rol       | E-mail                                      | Wachtwoord                |
-| --------- | ------------------------------------------- | ------------------------- |
-| Kotbaas   | `kotbaas.voorbeeld@student.hogeschool.be`   | `VoorbeeldWachtwoord123!` |
-| Kotgenoot | `kotgenoot.voorbeeld@student.hogeschool.be` | `AndersVoorbeeld456!`     |
+| Rol       | E-mail                   | Wachtwoord  |
+| --------- | ------------------------ | ----------- |
+| Kotbaas   | `fonsdesmet@test.be`     | `Azerty123` |
+| Kotgenoot | `jantjejanssens@test.be` | `Azerty123` |
 
 ## Functionaliteiten
 
@@ -117,7 +115,7 @@ Voor testen van de applicatie zijn er voorbeeldaccounts (kotbaas vs. kotgenoot):
 - **Posts:** berichten, reacties, polls
 - **Issues:** meldingen opvolgen met status
 - **Todos:** gedeelde taken per kotgroep
-- **KotKas:** uitgaven, saldi en afrekenen tussen kotgenoten
+- **KotKas:** uitgaven, saldo en afrekenen tussen kotgenoten
 - **Dashboard:** overzicht na aanmelden
 - **Instellingen:** profiel en voorkeuren
 - **Responsive UI:** gebruik op desktop en mobiel
