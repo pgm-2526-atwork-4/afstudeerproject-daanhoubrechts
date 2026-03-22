@@ -59,6 +59,11 @@ export class Kotinfo implements OnInit {
     return !!user && !!g && g.created_by === user.id;
   });
 
+  // delete modal state
+  readonly deleteModalOpen = signal(false);
+  readonly deletingGroup = signal(false);
+  readonly deleteError = signal<string | null>(null);
+
   readonly kotinfoTabs: TabItem[] = [
     { id: 'regels', label: 'Regels' },
     { id: 'wifi', label: 'Wifi' },
@@ -138,5 +143,35 @@ export class Kotinfo implements OnInit {
           this.savingHeader.set(false);
         },
       });
+  }
+
+  openDeleteModal(): void {
+    this.deleteError.set(null);
+    this.deleteModalOpen.set(true);
+  }
+
+  closeDeleteModal(): void {
+    if (this.deletingGroup()) return;
+    this.deleteModalOpen.set(false);
+    this.deleteError.set(null);
+  }
+
+  deleteGroup(): void {
+    const g = this.group();
+    if (!g) return;
+
+    this.deletingGroup.set(true);
+    this.deleteError.set(null);
+
+    this.http.delete(`${environment.apiUrl}/kotgroepen/${g.id}`).subscribe({
+      next: () => {
+        // redirect naar kotgroepen pagina na verwijdering
+        window.location.href = '/kotgroepen';
+      },
+      error: (err) => {
+        this.deleteError.set(err.error?.error ?? err.message ?? 'Verwijdering mislukt.');
+        this.deletingGroup.set(false);
+      },
+    });
   }
 }

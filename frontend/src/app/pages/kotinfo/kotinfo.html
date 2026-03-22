@@ -94,7 +94,36 @@
       <button type="button" class="btn btn--ghost" (click)="closeEditModal()" [disabled]="savingHeader()">
         Annuleren
       </button>
+      <button type="button" class="btn btn--danger" (click)="openDeleteModal()" [disabled]="savingHeader()">
+        <lucide-icon name="trash-2" size="14" />
+        Groep verwijderen
+      </button>
     </div>
   </form>
+</app-modal>
+}
+
+<!-- Modal: Verwijdering bevestigen -->
+@if (deleteModalOpen()) {
+<app-modal title="Kotgroep verwijderen" (closed)="closeDeleteModal()">
+  <div class="delete-confirm">
+    <p class="delete-warning">
+      Dit zal de kotgroep permanent verwijderen. Alle leden, contracten en gegevens zullen
+      verloren gaan. Dit kan niet ongedaan gemaakt worden.
+    </p>
+
+    @if (deleteError()) {
+    <p class="edit-error">{{ deleteError() }}</p>
+    }
+
+    <div class="edit-actions">
+      <button type="button" class="btn btn--danger" (click)="deleteGroup()" [disabled]="deletingGroup()">
+        @if (deletingGroup()) { Verwijderen… } @else { Groep verwijderen }
+      </button>
+      <button type="button" class="btn btn--ghost" (click)="closeDeleteModal()" [disabled]="deletingGroup()">
+        Annuleren
+      </button>
+    </div>
+  </div>
 </app-modal>
 }

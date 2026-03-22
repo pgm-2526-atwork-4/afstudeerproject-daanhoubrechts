@@ -479,3 +479,75 @@ kotgroepenRoutes.post('/:id/invites', requireAuth, async (req, res) => {
     res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
   }
 });
+
+// kotgroep verwijderen (alleen kotbaas)
+kotgroepenRoutes.delete('/:id', requireAuth, async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const kotgroupId = req.params['id'];
+
+    if (!(await isKotbaas(userId, kotgroupId))) {
+      res.status(403).json({ error: 'Alleen de kotbaas kan de groep verwijderen.' });
+      return;
+    }
+
+    // verwijder alle contracten eerst
+    const { data: files, error: listError } = await supabaseAdmin.storage
+      .from('contracts')
+      .list(kotgroupId);
+
+    if (listError) {
+      res.status(500).json({ error: listError.message });
+      return;
+    }
+
+    if ((files ?? []).length > 0) {
+      const filePaths = (files ?? []).map((f) => `${kotgroupId}/${f.name}`);
+      const { error: deleteFilesError } = await supabaseAdmin.storage
+        .from('contracts')
+        .remove(filePaths);
+
+      if (deleteFilesError) {
+        res.status(500).json({ error: deleteFilesError.message });
+        return;
+      }
+    }
+
+    // verwijder alle leden uit de groep
+    const { error: deleteMembersError } = await supabaseAdmin
+      .from('kotgroup_members')
+      .delete()
+      .eq('kotgroup_id', kotgroupId);
+
+    if (deleteMembersError) {
+      res.status(500).json({ error: deleteMembersError.message });
+      return;
+    }
+
+    // verwijder alle uitnodigingen
+    const { error: deleteInvitesError } = await supabaseAdmin
+      .from('kotgroup_invites')
+      .delete()
+      .eq('kotgroup_id', kotgroupId);
+
+    if (deleteInvitesError) {
+      res.status(500).json({ error: deleteInvitesError.message });
+      return;
+    }
+
+    // verwijder de kotgroep zelf
+    const { error: deleteGroupError } = await supabaseAdmin
+      .from('kotgroups')
+      .delete()
+      .eq('id', kotgroupId);
+
+    if (deleteGroupError) {
+      res.status(500).json({ error: deleteGroupError.message });
+      return;
+    }
+
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error' });
+  }
+});

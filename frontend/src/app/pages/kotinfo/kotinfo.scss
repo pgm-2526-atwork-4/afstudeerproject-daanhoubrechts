@@ -149,6 +149,17 @@
   font-size: 0.8125rem;
 }
 
+.btn--danger {
+  background: var(--color-danger, #e53e3e);
+  color: #fff;
+  border-color: var(--color-danger, #e53e3e);
+
+  &:hover:not(:disabled) {
+    background: var(--color-danger-hover, #c53030);
+    border-color: var(--color-danger-hover, #c53030);
+  }
+}
+
 /* Stijlen voor het formulier binnen de modal */
 .edit-form {
   display: flex;
@@ -188,6 +199,36 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+  }
+
+  .edit-error {
+    font-size: 0.875rem;
+    color: var(--color-danger, #e53e3e);
+    margin: 0;
+  }
+
+  .edit-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-xs);
+  }
+}
+
+/* Verwijdering bevestiging modal */
+.delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+
+  .delete-warning {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    padding: var(--spacing-md);
+    background: var(--color-bg, #f7fafc);
+    border-left: 4px solid var(--color-danger, #e53e3e);
+    border-radius: var(--radius-md);
   }
 
   .edit-error {
