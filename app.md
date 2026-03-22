@@ -11,12 +11,10 @@
 
 ### Kotbaas
 
-- **E-mail:** `kotbaas.voorbeeld@student.hogeschool.be`
-- **Wachtwoord:** `VoorbeeldWachtwoord123!`
-- **Gebruik:** flows waar de kotbaas iets beheert of aanmaakt
+- **E-mail:** `fonsdesmet@test.be`
+- **Wachtwoord:** `Azerty123`
 
 ### Kotgenoot
 
-- **E-mail:** `kotgenoot.voorbeeld@student.hogeschool.be`
-- **Wachtwoord:** `AndersVoorbeeld456!`
-- **Gebruik:** normale bewoner in het kot, geen kotbaas-rollen
+- **E-mail:** `jantjejanssens@test.be`
+- **Wachtwoord:** `Azerty123`
